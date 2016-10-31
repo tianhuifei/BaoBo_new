@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			html,
+			body {
+				height: 100%;
+			}
+			
+			.login-box {
+				padding-top:20%;
+				background: url(images/login.png) no-repeat center center;
+				background-size: cover;
+			}
+			
+			.mui-content {
+				height: 100%;
+			}
+			
+			.login-logo {
+				position: relative;
+				/*top: 20%;
+				left: 50%;*/
+				width: 80px;
+				height: 114px;
+				/*-webkit-transform: translate(-50%, -20%);*/
+				margin: 0 auto;
+			}
+			
+			.login-logo img {
+				width: 100%;
+			}
+			
+			.login-form {
+				
+				width: 70%;
+				padding-top:20%;
+				/*top: 70%;
+				left: 50%;
+				-webkit-transform: translate(-50%, -70%);*/
+				margin:0 auto;
+			}
+			
+			.login-input {
+				border: none !important;
+				background: #b8c8d8 !important;
+				border-radius: 25px !important;
+			}
+			
+			.login-input::-webkit-input-placeholder {
+				color: #cddff0;
+			}
+			
+			.mui-btn-block {
+				padding: 5px 0 !important;
+			}
+			
+			.login-btn {
+				color: #fb8052;
+			}
+			
+			.scan-btn {
+				color: #b8c8d8;
+			}
+			
+			.login-btn,
+			.scan-btn {
+				border-color: #b8c8d8 !important;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div class="mui-content">
+			<div class="login-box">
+				<div class="login-logo">
+					<img src="images/logo.png" />
+				</div>
+			</div>
+			<div class="login-form">
+				<div class="mui-input-row ">
+					<input type="text" class="mui-input login-input mui-input-clear" placeholder="请输入用户名"></span>
+				</div>
+				<div class="mui-input-row mui-password">
+					<input type="password" class="mui-input-password login-input" placeholder="请输入密码"></span>
+				</div>
+
+				<button type="button" class="mui-btn mui-btn-block mui-btn-outlined login-btn">登录系统</button>
+
+				<!--<button type="button" class="mui-btn mui-btn-block mui-btn-outlined scan-btn">扫一扫</button>-->
+			</div>
+		</div>
+
+		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+	</body>
+
+</html>

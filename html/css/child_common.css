@@ -1,0 +1,59 @@
+.login-box {
+	padding-top: 20%;
+	background: url(images/login.png) no-repeat center center;
+	background-size: cover;
+}
+
+.mui-content {
+	height: 100%;
+}
+
+.login-logo {
+	position: relative;
+	/*top: 20%;
+				left: 50%;*/
+	width: 80px;
+	height: 114px;
+	/*-webkit-transform: translate(-50%, -20%);*/
+	margin: 0 auto;
+}
+
+.login-logo img {
+	width: 100%;
+}
+
+.login-form {
+	width: 70%;
+	padding-top: 20%;
+	/*top: 70%;
+				left: 50%;
+				-webkit-transform: translate(-50%, -70%);*/
+	margin: 0 auto;
+}
+
+.login-input {
+	border: none !important;
+	background: #b8c8d8 !important;
+	border-radius: 25px !important;
+}
+
+.login-input::-webkit-input-placeholder {
+	color: #cddff0;
+}
+
+.mui-btn-block {
+	padding: 5px 0 !important;
+}
+
+.login-btn {
+	color: #fb8052;
+}
+
+.scan-btn {
+	color: #b8c8d8;
+}
+
+.login-btn,
+.scan-btn {
+	border-color: #b8c8d8 !important;
+}

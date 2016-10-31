@@ -1,0 +1,11 @@
+{
+  "html/login/login.html": {
+    "resources": [
+      "html/login/images/login.png",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "html/login/images/logo.png"
+    ]
+  }
+}
