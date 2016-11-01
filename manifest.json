@@ -10,7 +10,7 @@
 	"icons": {
 		"72": "icon.png"
 	},
-	"launch_path": "html/login/login.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+	"launch_path": "index.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
 	"developer": {
 		"name": "",/*开发者名称*/
 		"email": "",/*开发者邮箱地址*/
@@ -202,19 +202,52 @@
 				],
 				"refer": [],
 				"priority": 0
+			},
+			"html/locker/locker.html": {
+				"resources": [
+					"images/user.png",
+					"js/mui.min.js",
+					"css/common.css",
+					"css/app.css",
+					"css/mui.min.css",
+					"js/mui.locker.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/home/tab-webview-main.html": {
+				"resources": [
+					"html/home/tab-webview-subpage-about.html",
+					"fonts/mui.ttf",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"html/home/tab-webview-subpage-chat.html",
+					"html/home/tab-webview-subpage-contact.html",
+					"html/home/tab-webview-subpage-setting.html",
+					"html/home/home-furnishing.html",
+					"html/home/monitoring.html",
+					"html/home/circumstance.html",
+					"html/home/tool.html"
+				],
+				"priority": 0
+			},
+			"index.html": {
+				"resources": [
+					"html/home/tab-webview-main.html",
+					"js/mui.min.js",
+					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
 			}
 		},
 		"idle": {
 			"resources": [
-				"html/home/tab-webview-subpage-about.html",
-				"html/home/tab-webview-main.html",
-				"index.html",
 				"git.txt",
 				"js/mui.js",
-				"html/home/tab-webview-subpage-chat.html",
-				"css/mui.css",
-				"html/home/tab-webview-subpage-contact.html",
-				"html/home/tab-webview-subpage-setting.html"
+				"css/mui.css"
 			]
 		}
 	}

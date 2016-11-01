@@ -1,11 +1,50 @@
 {
-  "html/login/login.html": {
-    "resources": [
-      "html/login/images/login.png",
-      "js/mui.min.js",
-      "fonts/mui.ttf",
-      "css/mui.min.css",
-      "html/login/images/logo.png"
-    ]
-  }
+	"html/login/login.html": {
+		"resources": [
+			"html/login/images/login.png",
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"html/login/images/logo.png"
+		],
+		"refer": []
+	},
+	"html/locker/locker.html": {
+		"resources": [
+			"images/user.png",
+			"js/mui.min.js",
+			"css/common.css",
+			"css/app.css",
+			"css/mui.min.css",
+			"js/mui.locker.js"
+		]
+	},
+	"html/home/tab-webview-main.html": {
+		"resources": [
+			"html/home/tab-webview-subpage-about.html",
+			"fonts/mui.ttf",
+			"js/mui.min.js",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"html/home/tab-webview-subpage-about.html",
+			"html/home/tab-webview-subpage-chat.html",
+			"html/home/tab-webview-subpage-contact.html",
+			"html/home/tab-webview-subpage-setting.html",
+			"html/home/home-furnishing.html",
+			"html/home/monitoring.html",
+			"html/home/circumstance.html",
+			"html/home/tool.html"
+		]
+	},
+	"index.html": {
+		"resources": [
+			"html/home/tab-webview-main.html",
+			"js/mui.min.js",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"html/home/tab-webview-main.html"
+		]
+	}
 }

@@ -8,10 +8,10 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<!--标准mui.css-->
-		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
 		<!--App自定义的css-->
-		<link rel="stylesheet" type="text/css" href="../../css/app.css"/>
-		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/app.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
 		<style>
 			html,
 			body {
@@ -22,6 +22,7 @@
 				overflow: hidden;
 				background-color: #efeff4;
 			}
+			
 			#holder {
 				width: 300px;
 				height: 300px;
@@ -30,24 +31,54 @@
 				margin: 40px auto;
 				background-color: transparent;
 			}
+			
 			#alert {
 				text-align: center;
 				padding: 20px 10px;
 			}
 			/*body{background: url(../../images/login.png) no-repeat center center; background-size: cover;}*/
-			.user-img{width:71px;height: 111px;margin:0 auto;padding-top:40px;}
-			.user-img img{width:100%;}
+			
+			.user-img {
+				width: 71px;
+				height: 111px;
+				margin: 0 auto;
+				padding-top: 40px;
+			}
+			
+			.user-img img {
+				width: 100%;
+			}
 		</style>
 	</head>
 
 	<body>
-		
+
 		<div class="mui-content">
 			<div class="user-img">
-				<img src="../../images/user.png"/>
+				<img src="../../images/user.png" />
 			</div>
 			<div id='holder' class="mui-locker" data-locker-options='{"ringColor":"rgba(210,210,210,1)","fillColor":"#ffffff","pointColor":"rgba(0,136,204,1)","lineColor":"rgba(0,136,204,1)"}' data-locker-width='300' data-locker-height='300'></div>
-			<div id='alert'></div>
+			<div id='alert'>
+				<a href="#picture" class="mui-btn">更多选项</a>
+			</div>
+		</div>
+		<div id="picture" class="mui-popover mui-popover-action mui-popover-bottom">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a href="#">其他用户</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="#">网络配置</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="#">修改手势密码</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a href="#picture"><b>取消</b></a>
+				</li>
+			</ul>
 		</div>
 
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
@@ -56,33 +87,51 @@
 			(function($, doc) {
 				$.init();
 				var holder = doc.querySelector('#holder'),
-					alert = doc.querySelector('#alert'),
 					record = [];
 				//处理事件
 				holder.addEventListener('done', function(event) {
 					var rs = event.detail;
-					if (rs.points.length < 4) {
-						alert.innerText = '设定的手势太简单了';
+					if(rs.points.length < 4) {
+						mui.toast('设定的手势太简单了');
 						record = [];
 						rs.sender.clear();
 						return;
 					}
-					console.log(rs.points.join(''));//结果
+					console.log(rs.points.join('')); //结果
 					record.push(rs.points.join(''));
-					if (record.length >= 2) {
-						if (record[0] == record[1]) {
-							alert.innerText = '手势设定完成';
+					if(record.length >= 2) {
+						if(record[0] == record[1]) {
+							mui.toast('手势设定完成');
 						} else {
-							alert.innerText = '两次手势设定不一致';
+							mui.toast('两次手势设定不一致');
 						}
 						rs.sender.clear();
 						record = [];
 					} else {
-						alert.innerText = '请确认手势设定';
+						mui.toast('请确认手势设定')
 						rs.sender.clear();
 					}
 				});
 			}(mui, document));
+			mui('body').on('tap', '.mui-popover-action li>a', function() {
+				var a = this,
+					parent;
+				//根据点击按钮，反推当前是哪个actionsheet
+				for(parent = a.parentNode; parent != document.body; parent = parent.parentNode) {
+					if(parent.classList.contains('mui-popover-action')) {
+						break;
+					}
+				}
+				//关闭actionsheet
+				mui('#' + parent.id).popover('toggle');
+				//info.innerHTML = "你刚点击了\"" + a.innerHTML + "\"按钮";
+			});
+			mui('body').on('shown', '.mui-popover', function(e) {
+				console.log('shown', e.detail.id);//detail为当前popover元素
+			});
+			mui('body').on('hidden', '.mui-popover', function(e) {
+				console.log('hidden', e.detail.id);//detail为当前popover元素
+			});
 		</script>
 	</body>
 
