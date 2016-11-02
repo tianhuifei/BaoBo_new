@@ -53,7 +53,7 @@
 
 	<body>
 
-		<div class="mui-content">
+		<div class="mui-content" id="locker">
 			<div class="user-img">
 				<img src="../../images/user.png" />
 			</div>
@@ -61,29 +61,65 @@
 			<div id='alert'>
 				<a href="#picture" class="mui-btn">更多选项</a>
 			</div>
-		</div>
-		<div id="picture" class="mui-popover mui-popover-action mui-popover-bottom">
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell">
-					<a href="#">其他用户</a>
-				</li>
-				<li class="mui-table-view-cell">
-					<a href="#">网络配置</a>
-				</li>
-				<li class="mui-table-view-cell">
-					<a href="#">修改手势密码</a>
-				</li>
-			</ul>
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell">
-					<a href="#picture"><b>取消</b></a>
-				</li>
-			</ul>
+			<div id="picture" class="mui-popover mui-popover-action mui-popover-bottom">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<a href="javascript:void(0);" @tap="otherLogin">其他用户</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="javascript:void(0);" @tap="setWIFI">网络配置</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="javascript:void(0);" @tap="editLocker">修改手势密码</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell">
+						<a href="#picture"><b>取消</b></a>
+					</li>
+				</ul>
+			</div>
 		</div>
 
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/mui.locker.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script>
+			var vLocker,
+				login, self, setWIFI;
+			mui.plusReady(function() {
+				login = plus.webview.getWebviewById("login");
+				setWIFI = plus.webview.getWebviewById("setWIFI");
+				self = plus.webview.currentWebview();
+			});
+
+			mui.ready(function() {
+				initVue(); 
+			})
+
+			function initVue() {
+				vLocker = new Vue({
+					el: "#picture",
+					data: {},
+					methods: {
+						otherLogin: function() { //其他用户
+							login.show();
+							setTimeout(function() {
+								self.hide();
+							}, 300)
+						},
+						setWIFI: function() {
+							setWIFI.show();
+							setTimeout(function() {
+								self.hide();
+							}, 300)
+						},
+						editLocker: function() {
+							mui.toast("修改密码")
+						}
+					}
+				})
+			}
 			(function($, doc) {
 				$.init();
 				var holder = doc.querySelector('#holder'),
@@ -127,11 +163,31 @@
 				//info.innerHTML = "你刚点击了\"" + a.innerHTML + "\"按钮";
 			});
 			mui('body').on('shown', '.mui-popover', function(e) {
-				console.log('shown', e.detail.id);//detail为当前popover元素
+				console.log('shown', e.detail.id); //detail为当前popover元素
 			});
 			mui('body').on('hidden', '.mui-popover', function(e) {
-				console.log('hidden', e.detail.id);//detail为当前popover元素
+				console.log('hidden', e.detail.id); //detail为当前popover元素
 			});
+
+			//首页返回键处理
+			//处理逻辑：1秒内，连续两次按返回键，则退出应用
+			if(mui.os.android) {
+				var first = null;
+				mui.back = function() {
+					//首次按键，提示‘再按一次退出应用’
+					if(!first) {
+						first = new Date().getTime();
+						mui.toast('再按一次退出应用');
+						setTimeout(function() {
+							first = null;
+						}, 1000);
+					} else {
+						if(new Date().getTime() - first < 1000) {
+							plus.runtime.quit();
+						}
+					}
+				};
+			}
 		</script>
 	</body>
 

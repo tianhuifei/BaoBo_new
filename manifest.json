@@ -198,7 +198,9 @@
 					"js/mui.min.js",
 					"fonts/mui.ttf",
 					"css/mui.min.css",
-					"html/login/images/logo.png"
+					"html/login/images/logo.png",
+					"js/vue.min.js",
+					"js/vue.js"
 				],
 				"refer": [],
 				"priority": 0
@@ -210,7 +212,8 @@
 					"css/common.css",
 					"css/app.css",
 					"css/mui.min.css",
-					"js/mui.locker.js"
+					"js/mui.locker.js",
+					"js/vue.js"
 				],
 				"refer": [],
 				"priority": 0
@@ -220,16 +223,19 @@
 					"html/home/tab-webview-subpage-about.html",
 					"fonts/mui.ttf",
 					"js/mui.min.js",
-					"css/mui.min.css"
+					"css/mui.min.css",
+					"html/home/home-furnishing.html"
 				],
 				"refer": [
 					"html/home/tab-webview-subpage-chat.html",
 					"html/home/tab-webview-subpage-contact.html",
 					"html/home/tab-webview-subpage-setting.html",
-					"html/home/home-furnishing.html",
 					"html/home/monitoring.html",
 					"html/home/circumstance.html",
-					"html/home/tool.html"
+					"html/home/tool.html",
+					"html/login/login.html",
+					"html/locker/locker.html",
+					"html/setWIFI/setWIFI.html"
 				],
 				"priority": 0
 			},
@@ -238,6 +244,18 @@
 					"html/home/tab-webview-main.html",
 					"js/mui.min.js",
 					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"html/setWIFI/setWIFI.html": {
+				"resources": [
+					"html/css/child_common.css",
+					"html/setWIFI/images/logo.png",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"js/vue.js"
 				],
 				"refer": [],
 				"priority": 0

@@ -10,7 +10,7 @@
 	</head>
 
 	<body>
-		<div class="mui-content">
+		<div class="mui-content" id="setWIFI">
 			<div class="login-box">
 				<div class="login-logo">
 					<img src="images/logo.png" />
@@ -18,19 +18,51 @@
 			</div>
 			<div class="login-form">
 				<div class="mui-input-row ">
-					<input type="text" class="mui-input login-input mui-input-clear" placeholder="WIFI名称"></span>
+					<input type="text" v-model="wifiName" class="mui-input login-input mui-input-clear" placeholder="WIFI名称"></span>
 				</div>
 				<div class="mui-input-row mui-password">
-					<input type="password" class="mui-input-password login-input" placeholder="WIFI密码"></span>
+					<input type="password" v-model="wifiPwd" class="mui-input-password login-input" placeholder="WIFI密码"></span>
 				</div>
 
 
-				<button type="button" class="mui-btn mui-btn-block mui-btn-outlined scan-btn">开始设置</button>
+				<button type="button" @tap="setWIFI" class="mui-btn mui-btn-block mui-btn-outlined scan-btn">开始设置</button>
 			</div>
 		</div>
 		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			mui.init()
+			mui.init();
+			var locker,//手势webview
+				vSetWIFI,//vue实例
+				self;
+			mui.plusReady(function(){
+				locker = plus.webview.getWebviewById("locker");
+				self = plus.webview.currentWebview();
+			});
+			
+			mui.ready(function(){
+				initVue();
+			})
+			
+			function initVue (){
+				vSetWIFI = new Vue({
+					el:"#setWIFI",
+					data:{
+						wifiName:"",
+						wifiPwd:""
+					},
+					methods:{
+						setWIFI:function(){
+							locker.show();
+							setTimeout(function(){
+								self.hide();
+							},300)
+						}
+					}
+				})
+			}
+			var _back = mui.back;
+			mui.back = function(){};
 		</script>
 	</body>
 

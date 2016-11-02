@@ -75,9 +75,9 @@
 		</style>
 	</head>
 
-	<body>
+	<body >
 
-		<div class="mui-content">
+		<div class="mui-content" id="login">
 			<div class="login-box">
 				<div class="login-logo">
 					<img src="images/logo.png" />
@@ -85,21 +85,53 @@
 			</div>
 			<div class="login-form">
 				<div class="mui-input-row ">
-					<input type="text" class="mui-input login-input mui-input-clear" placeholder="请输入用户名"></span>
+					<input type="text" v-model="userName" class="mui-input login-input mui-input-clear" placeholder="请输入用户名"></span>
 				</div>
 				<div class="mui-input-row mui-password">
-					<input type="password" class="mui-input-password login-input" placeholder="请输入密码"></span>
+					<input type="password" v-model="passWord" class="mui-input-password login-input" placeholder="请输入密码"></span>
 				</div>
 
-				<button type="button" class="mui-btn mui-btn-block mui-btn-outlined login-btn">登录系统</button>
+				<button type="button" @tap="login" class="mui-btn mui-btn-block mui-btn-outlined login-btn">登录系统</button>
 
 				<!--<button type="button" class="mui-btn mui-btn-block mui-btn-outlined scan-btn">扫一扫</button>-->
 			</div>
 		</div>
-
-		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			mui.init()
+			mui.init();
+			var vLogin,//登录页面vue实例
+				self,setWIFI;
+			mui.plusReady(function(){
+				self = plus.webview.currentWebview();
+				setWIFI = plus.webview.getWebviewById("setWIFI");
+			});
+			
+			mui.ready(function(){
+				initVue();
+			})
+			
+			function initVue (){
+				vLogin = new Vue({ 
+					el:"#login",
+					data:{
+						userName:"",
+						passWord:""
+						
+					},
+					methods:{
+						login:function(){
+							localStorage.setItem("isLogin","true");
+							setWIFI.show();
+							setTimeout(function(){
+								self.hide();
+							},300)
+						}
+					}
+				});
+			}
+			var _back = mui.back;
+			mui.back = function(){};
 		</script>
 	</body>
 
