@@ -105,8 +105,8 @@
 	},
 	"plus": {
 		"splashscreen": {
-			"autoclose": true,/*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
-			"waiting": true
+			"autoclose": false,/*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
+			"waiting": true,"delay":"1000"
 		},
 		"runmode": "liberate",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
 		"signature": "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",/*可选，保留给应用签名，暂不使用*/
@@ -200,7 +200,8 @@
 					"css/mui.min.css",
 					"html/login/images/logo.png",
 					"js/vue.min.js",
-					"js/vue.js"
+					"js/vue.js",
+					"js/common.js"
 				],
 				"refer": [],
 				"priority": 0
@@ -215,7 +216,9 @@
 					"js/mui.locker.js",
 					"js/vue.js"
 				],
-				"refer": [],
+				"refer": [
+					"html/login/login.html"
+				],
 				"priority": 0
 			},
 			"html/home/tab-webview-main.html": {
@@ -224,7 +227,9 @@
 					"fonts/mui.ttf",
 					"js/mui.min.js",
 					"css/mui.min.css",
-					"html/home/home-furnishing.html"
+					"html/home/home-furnishing.html",
+					"js/common.js",
+					"html/house/house.html"
 				],
 				"refer": [
 					"html/home/tab-webview-subpage-chat.html",
@@ -235,7 +240,8 @@
 					"html/home/tool.html",
 					"html/login/login.html",
 					"html/locker/locker.html",
-					"html/setWIFI/setWIFI.html"
+					"html/setWIFI/setWIFI.html",
+					"html/house/addHouse/addHouse.html"
 				],
 				"priority": 0
 			},
@@ -255,6 +261,36 @@
 					"js/mui.min.js",
 					"fonts/mui.ttf",
 					"css/mui.min.css",
+					"js/vue.js",
+					"js/common.js"
+				],
+				"refer": [
+					"html/locker/locker.html"
+				],
+				"priority": 0
+			},
+			"html/house/house.html": {
+				"resources": [
+					"fonts/mui.ttf",
+					"fonts/iconfont.ttf",
+					"js/common.js",
+					"js/vue.js",
+					"js/mui.min.js",
+					"css/common.css",
+					"css/mui.min.css"
+				],
+				"refer": [
+					"html/house/addHouse/addHouse.html"
+				],
+				"priority": 0
+			},
+			"html/house/addHouse/addHouse.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/common.css",
+					"fonts/iconfont.ttf",
 					"js/vue.js"
 				],
 				"refer": [],

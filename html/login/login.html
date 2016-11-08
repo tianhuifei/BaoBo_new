@@ -13,7 +13,7 @@
 			}
 			
 			.login-box {
-				padding-top:20%;
+				padding-top: 20%;
 				background: url(images/login.png) no-repeat center center;
 				background-size: cover;
 			}
@@ -37,13 +37,12 @@
 			}
 			
 			.login-form {
-				
 				width: 70%;
-				padding-top:20%;
+				padding-top: 20%;
 				/*top: 70%;
 				left: 50%;
 				-webkit-transform: translate(-50%, -70%);*/
-				margin:0 auto;
+				margin: 0 auto;
 			}
 			
 			.login-input {
@@ -75,7 +74,7 @@
 		</style>
 	</head>
 
-	<body >
+	<body>
 
 		<div class="mui-content" id="login">
 			<div class="login-box">
@@ -98,40 +97,143 @@
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://cdn.wilddog.com/sdk/js/2.1.2/wilddog.js"></script>
 		<script type="text/javascript">
 			mui.init();
-			var vLogin,//登录页面vue实例
-				self,setWIFI;
-			mui.plusReady(function(){
+			var vLogin, //登录页面vue实例
+				self, setWIFI, ws, //websocket
+				tag; //事件类别
+			mui.plusReady(function() {
+				
 				self = plus.webview.currentWebview();
 				setWIFI = plus.webview.getWebviewById("setWIFI");
+				self.addEventListener("show", function() {
+
+					//ws = new WebSocket("ws://123.56.176.67:9010/ws");
+					ws = new WebSocket("ws://123.56.176.67:9010/ws"); //开启长连接
+					console.log("loginPage---show")
+				});
+				/*self.addEventListener("hide", function() {
+					ws.close();
+				})*/
 			});
-			
-			mui.ready(function(){
+
+			mui.ready(function() {
 				initVue();
-			})
-			
-			function initVue (){
-				vLogin = new Vue({ 
-					el:"#login",
-					data:{
-						userName:"",
-						passWord:""
-						
+			});
+			ws = new WebSocket("ws://123.56.176.67:9010/ws");
+			ws.onopen = function(event) {
+				console.log("长连接开启")
+			};
+			ws.onmessage = function(event) {
+				var data = dataDispose(event.data)
+				if(data == CENTRT) {
+					console.log("心跳")
+					ws.send(data);
+					return;
+				}
+				switch(data.TAG) {
+					case tag:
+						mui.toast("登录成功！");
+						loginSuccess();
+						break;
+					default:
+						break;
+				}
+
+				console.log(JSON.stringify(data));
+			}
+			ws.onclose = function(event) {
+				console.log("连接关闭");
+			}
+			ws.onerror = function(event) {
+				console.log('websocked error');
+			}
+
+			function initVue() {
+				vLogin = new Vue({
+					el: "#login",
+					data: {
+						userName: "13811928431",
+						passWord: "432121"
+
 					},
-					methods:{
-						login:function(){
-							localStorage.setItem("isLogin","true");
-							setWIFI.show();
-							setTimeout(function(){
-								self.hide();
-							},300)
+					methods: {
+						login: function() {
+							console.log(ws.readyState)
+							var _self = this;
+							tag = "1323232";
+							//登录
+							var message = '#{ "CMD":"login","UserName":"' + _self.userName + '","PassWord":"' + _self.passWord + '","TAG":"' + tag + '","Type":"' + os + '"}*';
+							console.log("登录消息   " + message)
+							if(ws.readyState == ws.OPEN) {
+								ws.send(message);
+							}
 						}
 					}
 				});
 			}
-			var _back = mui.back;
-			mui.back = function(){};
+
+			function loginSuccess() {
+				var user = {};
+				var config = {
+					syncURL: "https://baobo.wilddogio.com/" //输入节点 URL
+				};
+				wilddog.initializeApp(config);
+				var ref = wilddog.sync().ref("users");
+				var userQuery = wilddog.sync().ref("users/" + vLogin.$data.userName);
+
+				//查用户
+				userQuery.on("value", function(snapshot, error) {
+					if(error != null) {
+						return false;
+					}
+
+					var re = snapshot.val(); //用户，无用户信息为null
+					console.log("login    " + JSON.stringify(re))
+					if(re) {
+						user.userName = re.userName;
+						user.passWord = re.passWord;
+						user.locker = re.locker;
+					} else {
+						user.userName = vLogin.$data.userName
+						user.passWord = vLogin.$data.passWord;
+						user.locker = "";
+						ref.child(vLogin.$data.userName).set(user)
+					}
+
+					localStorage.setItem("isLogin", "true");
+					localStorage.setItem("user", JSON.stringify(user));
+
+				})
+
+				setWIFI.show();
+				setTimeout(function() {
+					self.hide();
+				}, 300)
+				return false;
+			}
+
+			//首页返回键处理
+			//处理逻辑：1秒内，连续两次按返回键，则退出应用
+			if(mui.os.android) {
+				var first = null;
+				mui.back = function() {
+					//首次按键，提示‘再按一次退出应用’
+					if(!first) {
+						first = new Date().getTime();
+						mui.toast('再按一次退出应用');
+						setTimeout(function() {
+							first = null;
+						}, 1000);
+					} else {
+						if(new Date().getTime() - first < 1000) {
+							plus.runtime.quit();
+						}
+					}
+				};
+			}
 		</script>
 	</body>
 

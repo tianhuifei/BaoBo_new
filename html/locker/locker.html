@@ -48,6 +48,15 @@
 			.user-img img {
 				width: 100%;
 			}
+			
+			#deblocking {
+				width: 300px;
+				height: 300px;
+				border: 0 !important;
+				border-radius: 5px;
+				margin: 40px auto;
+				background-color: transparent;
+			}
 		</style>
 	</head>
 
@@ -57,7 +66,13 @@
 			<div class="user-img">
 				<img src="../../images/user.png" />
 			</div>
-			<div id='holder' class="mui-locker" data-locker-options='{"ringColor":"rgba(210,210,210,1)","fillColor":"#ffffff","pointColor":"rgba(0,136,204,1)","lineColor":"rgba(0,136,204,1)"}' data-locker-width='300' data-locker-height='300'></div>
+			<div class="setting-locker">
+				<div id='holder' class="mui-locker" data-locker-options='{"ringColor":"rgba(210,210,210,1)","fillColor":"#ffffff","pointColor":"rgba(0,136,204,1)","lineColor":"rgba(0,136,204,1)"}' data-locker-width='300' data-locker-height='300'></div>
+			</div>
+			<div class="setting-locker">
+				<div id='deblocking' style="display: none;" class="mui-locker" data-locker-options='{"ringColor":"rgba(210,210,210,1)","fillColor":"#ffffff","pointColor":"rgba(0,136,204,1)","lineColor":"rgba(0,136,204,1)"}' data-locker-width='300' data-locker-height='300'></div>
+			</div>
+
 			<div id='alert'>
 				<a href="#picture" class="mui-btn">更多选项</a>
 			</div>
@@ -84,17 +99,61 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/mui.locker.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://cdn.wilddog.com/sdk/js/2.1.2/wilddog.js"></script>
 		<script>
 			var vLocker,
-				login, self, setWIFI;
+				login, self, setWIFI, ref, user, network = false,
+				userQuery;
 			mui.plusReady(function() {
-				login = plus.webview.getWebviewById("login");
+				/*login = plus.webview.getWebviewById("login");*/
 				setWIFI = plus.webview.getWebviewById("setWIFI");
 				self = plus.webview.currentWebview();
+				user = JSON.parse(localStorage.getItem("user"));
+				console.log(user && user.locker)
+				if(user && user.locker) { 
+					showDeblocking();
+				};
+				/*if(plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
+						mui.toast("当前网络不给力，无法连接云端数据库~");
+					} else {
+						network = true;
+						var config = {
+							syncURL: "https://baobo.wilddogio.com/" //输入节点 URL
+						};
+						wilddog.initializeApp(config);
+						ref = wilddog.sync().ref("users");
+						userQuery = wilddog.sync().ref("users/" + user.userName);
+						userQuery.on("value", function(snapshot, error) {
+							if(error != null) {
+								return false;
+							}
+							var re = snapshot.val(); //用户，无用户信息为null
+							if(re) {
+								user.userName = re.userName;
+								user.passWord = re.passWord;
+								user.locker = re.locker;
+								showDeblocking();
+							}
+						})
+					}*/
+
+				
+
+				self.addEventListener("hide", function() {
+					var config = {
+						syncURL: "https://baobo.wilddogio.com/" //输入节点 URL
+					};
+					wilddog.initializeApp(config);
+					ref = wilddog.sync().ref("users");
+					userUpdate = ref.child(user.userName);
+					userUpdate.update(user);
+				}, false);
+
 			});
 
 			mui.ready(function() {
-				initVue(); 
+				console.log("locker ready  执行几次")
+				initVue();
 			})
 
 			function initVue() {
@@ -103,7 +162,9 @@
 					data: {},
 					methods: {
 						otherLogin: function() { //其他用户
-							login.show();
+							mui.openWindow({
+							url:"../login/login.html"
+						})
 							setTimeout(function() {
 								self.hide();
 							}, 300)
@@ -113,9 +174,13 @@
 							setTimeout(function() {
 								self.hide();
 							}, 300)
-						},
+						}, 
 						editLocker: function() {
-							mui.toast("修改密码")
+							mui.toast("修改密码");
+							user = JSON.parse(localStorage.getItem("user"))
+							user.locker = "";
+							showSettingLocker();
+							
 						}
 					}
 				})
@@ -136,17 +201,51 @@
 					console.log(rs.points.join('')); //结果
 					record.push(rs.points.join(''));
 					if(record.length >= 2) {
-						if(record[0] == record[1]) {
+						if(record[0] == record[1]) { 
+							 
+							user.locker = rs.points.join('');
+							localStorage.setItem("user", JSON.stringify(user));
 							mui.toast('手势设定完成');
+						
+							self.hide();
+
 						} else {
 							mui.toast('两次手势设定不一致');
 						}
 						rs.sender.clear();
 						record = [];
 					} else {
-						mui.toast('请确认手势设定')
+						mui.toast('请确认手势设定');
 						rs.sender.clear();
 					}
+				});
+			}(mui, document));
+
+			(function($, doc) {
+				$.init();
+				var holder = doc.querySelector('#deblocking'),
+					record = [];
+				//处理事件
+				holder.addEventListener('done', function(event) {
+					var rs = event.detail;
+					if(rs.points.length < 4) { 
+						mui.toast('至少连接4个节点');
+						record = [];
+						rs.sender.clear(); 
+
+					}
+					console.log(rs.points.join('')); //结果
+					record.push(rs.points.join(''));
+					if(rs.points.join('') == user.locker) {
+						record = [];
+						rs.sender.clear();
+						self.hide();
+					}else{
+						mui.toast("密码无效！")
+						record = [];
+						rs.sender.clear();  
+					}
+					
 				});
 			}(mui, document));
 			mui('body').on('tap', '.mui-popover-action li>a', function() {
@@ -168,6 +267,21 @@
 			mui('body').on('hidden', '.mui-popover', function(e) {
 				console.log('hidden', e.detail.id); //detail为当前popover元素
 			});
+
+			/**
+			 * 显示设置手势密码，隐藏手势解锁界面
+			 */
+			function showSettingLocker() {
+				document.getElementById("holder").style.display = "block";
+				document.getElementById("deblocking").style.display = "none";
+			}
+			/**
+			 * 隐藏设置手势密码，显示手势解锁界面
+			 */
+			function showDeblocking() {
+				document.getElementById("holder").style.display = "none";
+				document.getElementById("deblocking").style.display = "block";
+			}
 
 			//首页返回键处理
 			//处理逻辑：1秒内，连续两次按返回键，则退出应用

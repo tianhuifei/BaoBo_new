@@ -6,7 +6,7 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css" href="../css/child_common.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/child_common.css" />
 	</head>
 
 	<body>
@@ -24,45 +24,95 @@
 					<input type="password" v-model="wifiPwd" class="mui-input-password login-input" placeholder="WIFI密码"></span>
 				</div>
 
-
 				<button type="button" @tap="setWIFI" class="mui-btn mui-btn-block mui-btn-outlined scan-btn">开始设置</button>
 			</div>
 		</div>
 		<script src="../../js/mui.min.js"></script>
 		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			mui.init();
-			var locker,//手势webview
-				vSetWIFI,//vue实例
-				self;
-			mui.plusReady(function(){
+			var locker, //手势webview
+				vSetWIFI, //vue实例
+				self,
+				ws;
+			mui.plusReady(function() {
 				locker = plus.webview.getWebviewById("locker");
 				self = plus.webview.currentWebview();
 			});
-			
-			mui.ready(function(){
+
+			mui.ready(function() {
 				initVue();
 			})
-			
-			function initVue (){
+
+			function initVue() {
 				vSetWIFI = new Vue({
-					el:"#setWIFI",
-					data:{
-						wifiName:"",
-						wifiPwd:""
+					el: "#setWIFI",
+					data: {
+						wifiName: "",
+						wifiPwd: ""
 					},
-					methods:{
-						setWIFI:function(){
-							locker.show();
-							setTimeout(function(){
+					methods: {
+						setWIFI: function() {
+							/*initWebSocket();
+							var message = '[NSString stringWithFormat:@"1234,13811928431,13811928431,Tenda_3A9548,27143726"]';
+							if(ws.readyState == ws.OPEN){
+								ws.send(message)
+							}else{
+								mui.alert("请连接硬件WIFI！");
+								return false;
+							}*/
+
+							mui.openWindow({
+								url: "../locker/locker.html",
+								id: "locker"
+							});
+							setTimeout(function() {
 								self.hide();
-							},300)
+							}, 500)
+
 						}
 					}
 				})
+			};
+
+			/**
+			 * 连接硬件WIFI
+			 */
+			function initWebSocket() {
+
+				ws = new WebSocket("ws://192.168.4.1:8080/");
+				ws.onopen = function(e) {
+
+				};
+				ws.onmessage = function(e) {
+					var re = dataDispose(e.data);
+					if(re == CENTRT) {
+						ws.send(CENTRT);
+						return;
+					}
+
+					switch(re) {
+						case "":
+							ws.send(CENTRT)
+							break;
+						default:
+							locker.show();
+							setTimeout(function() {
+								self.hide();
+							}, 300)
+							break;
+					}
+				};
+				ws.onerror = function(e) {
+
+				};
+				ws.onclose = function(e) {
+
+				}
 			}
 			var _back = mui.back;
-			mui.back = function(){};
+			mui.back = function() {};
 		</script>
 	</body>
 

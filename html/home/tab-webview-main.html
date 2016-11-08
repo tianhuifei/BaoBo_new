@@ -18,11 +18,11 @@
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
+		<!--<header class="mui-bar mui-bar-nav">
 			<h1 id="title" class="mui-title">首页</h1>
-		</header>
-		<nav class="mui-bar mui-bar-tab">
-			<a id="defaultTab" class="mui-tab-item mui-active" href="home-furnishing.html">
+		</header>-->
+		<nav class="mui-bar mui-bar-tab"><!--home-furnishing.html -->
+			<a id="defaultTab" class="mui-tab-item mui-active" href="../house/house.html">
 				<span class="mui-icon mui-icon-home"></span>
 				<span class="mui-tab-label">家居</span>
 			</a>
@@ -40,22 +40,25 @@
 			</a>
 		</nav>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
+			var ws = new WebSocket("ws://123.56.176.67:9010/ws"); //开启长连接
 			//mui初始化
 			mui.init();
-			var subpages = ['home-furnishing.html', 'monitoring.html', 'circumstance.html', 'tool.html'];
+			var subpages = ['../house/house.html', 'monitoring.html', 'circumstance.html', 'tool.html'];
 			var subpage_style = {
-				top: '45px',
+				top: '0',
 				bottom: '51px'
 			};
 
 			var aniShow = {},
-				login,//登录webview
-				setWIFI,//设置WIFIwebview
-				locker;//手势webview
+				login, //登录webview
+				setWIFI, //设置WIFIwebview
+				locker; //手势webview
 
 			//创建子页面，首个选项卡页面显示，其它均隐藏；
 			mui.plusReady(function() {
+				preload(); //预加载页面
 				var self = plus.webview.currentWebview();
 
 				for(var i = 0; i < 4; i++) {
@@ -69,14 +72,25 @@
 					}
 					self.append(sub);
 				}
-				preload();//预加载页面
+				
 				//读取本地存储，检查是否登录 true 登录过    false 没有登录过
-				var isLogin = localStorage.getItem("isLogin");
-				if(isLogin) {
-					locker.show();
-				} else {
-					login.show();
-				}
+				setTimeout(function() {
+					var isLogin = localStorage.getItem("isLogin");
+					if(isLogin) {
+						
+						var tag = "1323232";
+						var user =JSON.parse(localStorage.getItem("user")) 
+						var message = '#{ "CMD":"login","UserName":"' + user.userName + '","PassWord":"' + user.passWord + '","TAG":"' + tag + '","Type":"' + os + '"}*';
+						if(ws.readyState == ws.OPEN) {
+								ws.send(message);
+						}
+					} else {
+						/*login.show();*/
+						mui.openWindow({
+							url:"../login/login.html"
+						})
+					}
+				}, 500);
 			});
 			//当前激活选项
 			var activeTab = subpages[0];
@@ -121,19 +135,52 @@
 			 * 预加载
 			 */
 			function preload() {
-				login = mui.preload({
+				/*login = mui.preload({
 					id: "login",
 					url: "../login/login.html"
-				});
+				});*/
+				/*locker = mui.preload({
+					id: "locker",
+					url: "../locker/locker.html"
+				})*/
 				setWIFI = mui.preload({
-					id:"setWIFI",
-					url:"../setWIFI/setWIFI.html"
+					id: "setWIFI",
+					url: "../setWIFI/setWIFI.html"
 				});
-				locker = mui.preload({
-					id:"locker",
-					url:"../locker/locker.html"
-				})
+				
+				
+			};
+			
+			ws.onopen = function(e){
+				
+			};
+			ws.onmessage = function(e){
+				var data = dataDispose(e.data);
+				if(data == CENTRT){
+					ws.send(CENTRT);
+					console.log("首页心跳数据" +  data);
+					return;
+				}
+				
+				switch (data.TAG){
+					case "1323232":
+						mui.openWindow({
+							url:"../locker/locker.html",
+							id:"locker"
+						});
+						break;
+					default:
+						break;
+				}
+			};
+			ws.onerror = function(e){
+				
 			}
+			ws.onclose = function(e){
+				
+			}
+			
+			
 		</script>
 	</body>
 

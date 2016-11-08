@@ -6,6 +6,7 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link rel="stylesheet" type="text/css" href="../../../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../css/common.css"/>
 		<style type="text/css">
 			.mui-content,
 			body {
@@ -26,63 +27,69 @@
 	</head>
 
 	<body>
+		<div id="addHouse">
+			<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">添加房间</h1>
+		    <button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right" @tap="addHouse">确定</button>
+		</header>
 		<div class="mui-content">
 			<div class="class_type">
 				<ul class="mui-table-view mui-grid-view mui-grid-9">
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " data-type="type-1">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-chuang">
 						<a href="#">
-							<span class="mui-icon mui-icon-home"></span>
+							<span class="mui-icon baobo-icon icon-chuang"></span>
 							<!--<div class="mui-media-body">Home</div>-->
 						</a>
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " data-type="type-2">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-chuang">
 						<a href="#">
-							<span class="mui-icon mui-icon-email"></span>
+							<span class="mui-icon baobo-icon icon-chuang"></span>
 							<!--<div class="mui-media-body">Email</div>-->
 						</a>
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " data-type="type-3">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-iconketing">
 						<a href="#">
-							<span class="mui-icon mui-icon-chatbubble"></span>
+							<span class="mui-icon baobo-icon icon-iconketing"></span>
 							<!--<div class="mui-media-body">Chat</div>-->
 						</a>
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " data-type="type-4">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-weiyu">
 						<a href="#">
-							<span class="mui-icon mui-icon-location"></span>
+							<span class="mui-icon baobo-icon icon-weiyu"></span>
 							<!--<div class="mui-media-body">Location</div>-->
 						</a>
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " data-type="type-5">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-ertongleyuan">
 						<a href="#">
-							<span class="mui-icon mui-icon-search"></span>
+							<span class="mui-icon baobo-icon icon-ertongleyuan"></span>
 							<!--<div class="mui-media-body">Search</div>-->
 						</a>
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " data-type="type-6">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-icon8">
 						<a href="#">
-							<span class="mui-icon mui-icon-phone"></span>
+							<span class="mui-icon baobo-icon icon-icon8"></span>
 							<!--<div class="mui-media-body">Phone</div>-->
 						</a>
 
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " data-type="type-7">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-gonglu">
 						<a href="#">
-							<span class="mui-icon mui-icon-phone"></span>
+							<span class="mui-icon baobo-icon icon-gonglu"></span>
 							<!--<div class="mui-media-body">Phone</div>-->
 						</a>
 
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " data-type="type-8">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-canting">
 						<a href="#">
-							<span class="mui-icon mui-icon-phone"></span>
+							<span class="mui-icon baobo-icon icon-canting"></span>
 							<!--<div class="mui-media-body">Phone</div>-->
 						</a>
 
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " data-type="type-9">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-keyongweiyu">
 						<a href="#">
-							<span class="mui-icon mui-icon-phone"></span>
+							<span class="mui-icon baobo-icon icon-keyongweiyu"></span>
 							<!--<div class="mui-media-body">Phone</div>-->
 						</a>
 
@@ -90,12 +97,64 @@
 				</ul>
 			</div>
 			<div class="mui-input-row house-name">
-				<input type="text" class="mui-input mui-input-clear" placeholder="请输入房间名">
+				<input type="text" v-model="houseName" class="mui-input mui-input-clear" placeholder="请输入房间名">
 			</div>
 		</div>
+		</div>
+		
 		<script src="../../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			mui.init()
+			mui.init();
+			var vAddHouse,self;
+			mui.plusReady(function(){
+				self = plus.webview.currentWebview();
+				openerPage = self.opener();
+			});
+			
+			mui.ready(function(){
+				initVue();
+			});
+			
+			
+			function initVue (){
+				vAddHouse = new Vue({
+					el:"#addHouse",
+					data:{
+						houseName:"",
+						houseType:""
+					},
+					methods:{
+						houseActive:function(e){
+							var domThis = e.currentTarget
+							var _self = this;
+							_self.houseType = domThis.getAttribute("data-type");
+						},
+						addHouse:function(){
+							var _self = this;
+							if(!_self.houseName ){
+								mui.toast("请选择房间类型!")
+								return false;
+							}
+							if( !_self.houseType){
+								mui.toast("请输入房间名称!")
+								return false;
+							}
+							var houses = JSON.parse(localStorage.getItem("houses")) | [];
+							console.log(houses)
+							var house = {};
+							house.houseName = _self.houseName;
+							house.houseClass = _self.houseType;
+							house.houseId = uuid(8,10);
+							houses.push(house)
+							localStorage.setItem("houses",JSON.stringify(houses));
+							openerPage.evalJS("loadHouses()");
+							self.hide();
+						}
+					}
+				})
+			}
 		</script>
 	</body>
 

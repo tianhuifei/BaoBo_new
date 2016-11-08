@@ -10,6 +10,17 @@
 		<style type="text/css">
 			.mui-grid-view.mui-grid-9 {
 				background-color: transparent !important;
+				border: 0 !important;
+				padding: 0 5px;
+			}
+			
+			.mui-grid-view.mui-grid-9 .mui-table-view-cell {
+				border: 0 !important;
+				border-radius: 50% !important;
+			}
+			
+			.mui-media-body {
+				font-size: 12px !important;
 			}
 		</style>
 	</head>
@@ -20,20 +31,68 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">欢迎使用宝泊智能家居系统</h1>
 		</header>
-		<div class="mui-content">
+		<div class="mui-content" id="house">
 			<ul class="mui-table-view mui-grid-view mui-grid-9">
+				<template v-for="(item,index) in houses">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4" v-bind:data-houseId="item.houseId">
+						<a href="#">
+							<span class="mui-icon baobo-icon " v-bind:class="item.houseClass"></span>
+							<div class="mui-media-body">{{item.houseName}}</div> 
+						</a>
+					</li>
+				</template>
 
-				<li class="mui-table-view-cell mui-media mui-col-xs-4">
+				<li class="mui-table-view-cell mui-media mui-col-xs-4" @tap="addHouse">
 					<a href="#">
-						<span class="mui-icon mui-icon-more"></span>
+						<span class="mui-icon baobo-icon icon-tianjia"></span>
 						<div class="mui-media-body">添加房间</div>
 					</a>
 				</li>
 			</ul>
 		</div>
 		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			mui.init()
+			mui.init();
+			var vHouse,
+			addHouse;//添加房间webview
+			mui.plusReady(function() {
+				preloadHtml();
+			});
+
+			mui.ready(function() {
+				initVue();
+			});
+
+			function initVue() {
+				vHouse = new Vue({
+					el: "#house",
+					data: {
+						houses: [{
+							houseName: "主卧室",
+							houseId: "zws123456",
+							houseClass:"icon-chuang"
+						}]
+					},
+					methods: {
+						addHouse: function() {
+							addHouse.show()
+						}
+					}
+				})
+			}
+			
+			function loadHouses (){
+				vHouse.$data.houses = JSON.parse(localStorage.getItem("houses"))
+			}
+			
+			function preloadHtml () {
+				addHouse = mui.preload({
+					id:"addHouse",
+					url:"../house/addHouse/addHouse.html"
+				})
+			}
 		</script>
 	</body>
 
