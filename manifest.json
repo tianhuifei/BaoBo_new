@@ -214,7 +214,9 @@
 					"css/app.css",
 					"css/mui.min.css",
 					"js/mui.locker.js",
-					"js/vue.js"
+					"js/vue.js",
+					"js/common.js",
+					null
 				],
 				"refer": [
 					"html/login/login.html"

@@ -42,6 +42,7 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
+			var mloginTag;
 			var ws = new WebSocket("ws://123.56.176.67:9010/ws"); //开启长连接
 			//mui初始化
 			mui.init();
@@ -78,17 +79,17 @@
 					var isLogin = localStorage.getItem("isLogin");
 					if(isLogin) {
 						
-						var tag = "1323232";
-						var user =JSON.parse(localStorage.getItem("user")) 
-						var message = '#{ "CMD":"login","UserName":"' + user.userName + '","PassWord":"' + user.passWord + '","TAG":"' + tag + '","Type":"' + os + '"}*';
+						var mloginTag = "mainLogin";
+						var account =JSON.parse(localStorage.getItem("account")) 
+						var message = '#{ "CMD":"login","UserName":"' + account.userName + '","PassWord":"' + account.passWord + '","TAG":"' + mloginTag + '","Type":"' + os + '"}*';
 						if(ws.readyState == ws.OPEN) {
 								ws.send(message);
 						}
 					} else {
-						/*login.show();*/
-						mui.openWindow({
+						login.show();
+						/*mui.openWindow({
 							url:"../login/login.html"
-						})
+						})*/
 					}
 				}, 500);
 			});
@@ -135,10 +136,10 @@
 			 * 预加载
 			 */
 			function preload() {
-				/*login = mui.preload({
+				login = mui.preload({
 					id: "login",
 					url: "../login/login.html"
-				});*/
+				});
 				/*locker = mui.preload({
 					id: "locker",
 					url: "../locker/locker.html"
@@ -152,22 +153,27 @@
 			};
 			
 			ws.onopen = function(e){
-				
+				console.log("main-----开启")
 			};
 			ws.onmessage = function(e){
-				var data = dataDispose(e.data);
-				if(data == CENTRT){
+				
+				var data = dataDispose(e.data,ws);
+				if(!data) return false;
+				/*if(data == CENTRT){
 					ws.send(CENTRT);
-					console.log("首页心跳数据" +  data);
+					console.log("首页心跳数据" +  data); 
 					return;
-				}
+				}*/
 				
 				switch (data.TAG){
-					case "1323232":
-						mui.openWindow({
-							url:"../locker/locker.html",
-							id:"locker"
-						});
+					case "mainLogin":
+						if(errorDispose(data)){
+							mui.openWindow({
+								url:"../locker/locker.html",
+								id:"locker"
+							});
+						}
+						
 						break;
 					default:
 						break;

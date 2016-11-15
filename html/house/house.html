@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title></title>
+		<title>房间</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
@@ -31,13 +31,13 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">欢迎使用宝泊智能家居系统</h1>
 		</header>
-		<div class="mui-content" id="house">
+		<div class="mui-content" id="house"> 
 			<ul class="mui-table-view mui-grid-view mui-grid-9">
 				<template v-for="(item,index) in houses">
-					<li class="mui-table-view-cell mui-media mui-col-xs-4" v-bind:data-houseId="item.houseId">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4" v-bind:data-houseId="item.houseName">
 						<a href="#">
-							<span class="mui-icon baobo-icon " v-bind:class="item.houseClass"></span>
-							<div class="mui-media-body">{{item.houseName}}</div> 
+							<span class="mui-icon baobo-icon "></span>
+							<div class="mui-media-body">{{item.houseName}}</div>
 						</a>
 					</li>
 				</template>
@@ -55,25 +55,66 @@
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			mui.init();
-			var vHouse,
-			addHouse;//添加房间webview
+			var vHouse, ws, account,self,
+				addHouse; //添加房间webview
 			mui.plusReady(function() {
 				preloadHtml();
+				self = plus.webview.currentWebview();
+				self.addEventListener("show",function(){
+					account = JSON.parse(localStorage.getItem("account"));
+				},false)
 			});
 
 			mui.ready(function() {
 				initVue();
+				initWebSocket();
 			});
 
 			function initVue() {
 				vHouse = new Vue({
 					el: "#house",
 					data: {
-						houses: [{
-							houseName: "主卧室",
-							houseId: "zws123456",
-							houseClass:"icon-chuang"
-						}]
+						/*houses: {
+							"宝宝卧室":[
+							{"type":"1","deviceid":"2144231","devicename":"灯1"},
+							{"type":"1","deviceid":"2144231","devicename":"灯1"},
+							{"type":"1","deviceid":"2144231","devicename":"灯1"}
+							],
+							"主卧室":[
+							{"type":"1","deviceid":"2144231","devicename":"灯1"},
+							{"type":"1","deviceid":"2144231","devicename":"灯1"},
+							{"type":"1","deviceid":"2144231","devicename":"灯1"}
+							],
+							"次卧室":[
+							{"type":"1","deviceid":"2144231","devicename":"灯1"},
+							{"type":"1","deviceid":"2144231","devicename":"灯1"},
+							{"type":"1","deviceid":"2144231","devicename":"灯1"}
+							]
+						}*/
+						houses:[
+							{
+								houseName:"宝宝卧室",
+								imgUrl:"",
+								device:[
+								{"type":"1","deviceid":"2144231","devicename":"灯1"},
+								{"type":"1","deviceid":"2144231","devicename":"灯1"},
+								{"type":"1","deviceid":"2144231","devicename":"灯1"}
+								]
+							},
+							{
+								houseName:"宝宝卧室",
+								device:[
+								{"type":"1","deviceid":"2144231","devicename":"灯1"},
+								]
+							},
+							{
+								houseName:"宝宝卧室",
+								device:[
+								{"type":"1","deviceid":"2144231","devicename":"灯1"},
+								]
+							}
+							
+						]
 					},
 					methods: {
 						addHouse: function() {
@@ -82,16 +123,58 @@
 					}
 				})
 			}
-			
-			function loadHouses (){
-				vHouse.$data.houses = JSON.parse(localStorage.getItem("houses"))
+
+			function loadHouses() {
+				account = JSON.parse(localStorage.getItem("account"));
+				if(ws.readyState == ws.OPEN){
+					ws.send('#{"CMD":"allDevice","UserID":"'+account.currentID+'","TAG":"queryHouse","Type":"'+os+'"}*')
+				}
+				
+			}
+
+			function preloadHtml() {
+				addHouse = mui.preload({
+					id: "addHouse",
+					url: "../house/addHouse/addHouse.html"
+				})
+			}
+
+			function initWebSocket() {
+				ws = new WebSocket("ws://123.56.176.67:9010/ws");
+				ws.onopen = function(e) {
+
+					if(ws.readyState == ws.OPEN) {
+						/*ws.send('#{"CMD":"allDevice","UserID":"'+account.currentID+'","TAG":"queryHouse","Type":"'+os+'"}*')*/
+					}
+				}
+				ws.onmessage = function(e) {
+					var data = dataDispose(e.data, ws);
+					if(!data) return false;
+					switch (data.TAG){
+						case "queryHouse":
+							var houses;	
+							if(errorDispose(data)) {
+								for(item in data.list){
+									houses.push({"houseName":item,"device":data.list[item]});
+								}
+								vHouse.$data.houses =houses;
+							}
+							break;
+						default:
+							break;
+					}
+					
+				}
+				ws.onerror = function(e) {
+
+				}
+				ws.onclose = function(e) {
+
+				}
 			}
 			
-			function preloadHtml () {
-				addHouse = mui.preload({
-					id:"addHouse",
-					url:"../house/addHouse/addHouse.html"
-				})
+			function getLocalHouse (){
+				vHouse.$data.houses = JSON.parse(localStorage.getItem("houses"))
 			}
 		</script>
 	</body>

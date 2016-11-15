@@ -99,55 +99,25 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/mui.locker.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
-		<script src="https://cdn.wilddog.com/sdk/js/2.1.2/wilddog.js"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script>
 			var vLocker,
-				login, self, setWIFI, ref, user, network = false,
-				userQuery;
+				login, self, setWIFI, account, ws,editLocker,house;
 			mui.plusReady(function() {
-				/*login = plus.webview.getWebviewById("login");*/
+				
+				login = plus.webview.getWebviewById("login");
 				setWIFI = plus.webview.getWebviewById("setWIFI");
 				self = plus.webview.currentWebview();
-				user = JSON.parse(localStorage.getItem("user"));
-				console.log(user && user.locker)
-				if(user && user.locker) { 
+				account = JSON.parse(localStorage.getItem("account"));
+				console.log(JSON.stringify(account))
+				if(account && account.locker) {
 					showDeblocking();
 				};
-				/*if(plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
-						mui.toast("当前网络不给力，无法连接云端数据库~");
-					} else {
-						network = true;
-						var config = {
-							syncURL: "https://baobo.wilddogio.com/" //输入节点 URL
-						};
-						wilddog.initializeApp(config);
-						ref = wilddog.sync().ref("users");
-						userQuery = wilddog.sync().ref("users/" + user.userName);
-						userQuery.on("value", function(snapshot, error) {
-							if(error != null) {
-								return false;
-							}
-							var re = snapshot.val(); //用户，无用户信息为null
-							if(re) {
-								user.userName = re.userName;
-								user.passWord = re.passWord;
-								user.locker = re.locker;
-								showDeblocking();
-							}
-						})
-					}*/
-
 				
-
-				self.addEventListener("hide", function() {
-					var config = {
-						syncURL: "https://baobo.wilddogio.com/" //输入节点 URL
-					};
-					wilddog.initializeApp(config);
-					ref = wilddog.sync().ref("users");
-					userUpdate = ref.child(user.userName);
-					userUpdate.update(user);
-				}, false);
+				self.addEventListener("show",function(){
+					house = plus.webview.getWebviewById("../house/house.html");
+					house.evalJS("loadHouses()");
+				},false)
 
 			});
 
@@ -155,36 +125,74 @@
 				console.log("locker ready  执行几次")
 				initVue();
 			})
-
+			initWebSocket();
 			function initVue() {
 				vLocker = new Vue({
 					el: "#picture",
 					data: {},
 					methods: {
 						otherLogin: function() { //其他用户
-							mui.openWindow({
-							url:"../login/login.html"
-						})
+							login.show();
 							setTimeout(function() {
 								self.hide();
-							}, 300)
+							}, 300);
 						},
 						setWIFI: function() {
 							setWIFI.show();
 							setTimeout(function() {
 								self.hide();
 							}, 300)
-						}, 
+						},
 						editLocker: function() {
-							mui.toast("修改密码");
-							user = JSON.parse(localStorage.getItem("user"))
-							user.locker = "";
+							
+							
 							showSettingLocker();
 							
+
 						}
 					}
 				})
 			}
+
+			function initWebSocket() {
+				ws = new WebSocket("ws://123.56.176.67:9010/ws");
+				ws.onopen = function(event) {
+					console.log("locker-----长连接开启")
+				};
+				ws.onmessage = function(event) {
+					var data = dataDispose(event.data,ws)
+					/*if(data == CENTRT) {
+						console.log("locker------心跳")
+						ws.send(data);
+						return;
+					}*/
+					if(!data) return false;
+					switch(data.TAG) {
+						case "lockerEdit":
+							plus.nativeUI.closeWaiting();
+							if(errorDispose(data)) {
+								account.locker = editLocker;
+								localStorage.setItem("account", JSON.stringify(account));
+								mui.toast(data.errorMsg);
+								showDeblocking();
+								console.log("success---" + JSON.stringify(account.locker) + editLocker)
+								return false;
+							}
+
+							break;
+						default:
+							break;
+					}
+
+				}
+				ws.onclose = function(event) {
+					console.log("连接关闭");
+				}
+				ws.onerror = function(event) {
+					console.log('websocked error');
+				}
+			}
+			//设置密码
 			(function($, doc) {
 				$.init();
 				var holder = doc.querySelector('#holder'),
@@ -201,13 +209,17 @@
 					console.log(rs.points.join('')); //结果
 					record.push(rs.points.join(''));
 					if(record.length >= 2) {
-						if(record[0] == record[1]) { 
-							 
-							user.locker = rs.points.join('');
-							localStorage.setItem("user", JSON.stringify(user));
-							mui.toast('手势设定完成');
-						
-							self.hide();
+						if(record[0] == record[1]) {
+
+							
+							var tag = "lockerEdit";
+							editLocker = rs.points.join('');
+							var editMsg = '#{"CMD":"resetpassword","UserName":"'+account.userName+'","PassWord":"'+account.passWord+'","TAG":"'+tag+'","Gesture":"'+editLocker+'","Type":"'+os+'"}*'
+							console.log(editMsg)
+							if(ws.readyState == ws.OPEN) {
+								ws.send(editMsg);
+								plus.nativeUI.showWaiting("请稍后......");
+							}
 
 						} else {
 							mui.toast('两次手势设定不一致');
@@ -228,24 +240,25 @@
 				//处理事件
 				holder.addEventListener('done', function(event) {
 					var rs = event.detail;
-					if(rs.points.length < 4) { 
+					if(rs.points.length < 4) {
 						mui.toast('至少连接4个节点');
 						record = [];
-						rs.sender.clear(); 
+						rs.sender.clear();
 
 					}
 					console.log(rs.points.join('')); //结果
 					record.push(rs.points.join(''));
-					if(rs.points.join('') == user.locker) {
+					console.log("解锁   "+account.locker)
+					if(rs.points.join('') == account.locker) {
 						record = [];
 						rs.sender.clear();
 						self.hide();
-					}else{
+					} else {
 						mui.toast("密码无效！")
 						record = [];
-						rs.sender.clear();  
+						rs.sender.clear();
 					}
-					
+
 				});
 			}(mui, document));
 			mui('body').on('tap', '.mui-popover-action li>a', function() {
