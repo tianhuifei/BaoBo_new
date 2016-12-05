@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <title></title>
-    <script src="js/mui.min.js"></script>
-    <link href="css/mui.min.css" rel="stylesheet"/>
-    <script type="text/javascript" charset="utf-8">
-      	mui.init({
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<script src="js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common.js" type="text/javascript" charset="utf-8"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script type="text/javascript" charset="utf-8">
+			var ws;
+			mui.init({
 				swipeBack: false,
 				statusBarBackground: '#f7f7f7',
 				gestureConfig: {
@@ -23,13 +27,98 @@
 					}
 				}]
 			});
-		mui.plusReady(function(){
-			//仅支持竖屏显示
+
+			var login, //登录webview
+				setWIFI, //设置WIFIwebview
+				locker; //手势webview
+			mui.plusReady(function() {
+				preload(); //预加载页面
+				initWebsocket();
+
+				//仅支持竖屏显示
 				plus.screen.lockOrientation("portrait-primary");
-		})
-    </script>
-</head>
-<body>
-	
-</body>
+
+			})
+
+			/**
+			 * 预加载
+			 */
+			function preload() {
+				login = mui.preload({
+					id: "login",
+					url: "html/login/login.html"
+				});
+				locker = mui.preload({
+					id: "locker",
+					url: "html/locker/locker.html"
+				})
+				setWIFI = mui.preload({
+					id: "setWIFI",
+					url: "html/setWIFI/setWIFI.html"
+				});
+
+			};
+
+			function initWebsocket() {
+				ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws"); //开启长连接
+				ws.onopen = function(e) {
+					console.log("main-----开启");
+					//读取本地存储，检查是否登录 true 登录过    false 没有登录过
+					var account = JSON.parse(localStorage.getItem("account"));
+					var isLogin = localStorage.getItem("isLogin");
+					if(isLogin) {
+						var message = '#{ "CMD":"login","USERNAME":"' + account.userName + '","PASSWORD":"' + account.passWord + '","TAG":"mainLogin","TYPE":"' + os + '"}*';
+						console.log("main-login " + message)
+						ws.send(message);
+					} else {
+						login.show();
+
+					}
+				};
+				ws.onmessage = function(e) {
+
+					var data = dataDispose(e.data, ws);
+					console.log("后台登录   " + JSON.stringify(data))
+					if(!data) return false;
+					/*if(data == CENTRT){
+						ws.send(CENTRT);
+						console.log("首页心跳数据" +  data); 
+						return;
+					}*/
+					console.log(data.TAG)
+					switch(data.TAG) {
+						case "mainLogin":
+							if(errorDispose(data)) {
+
+								/*mui.openWindow({
+									url: "html/locker/locker.html",
+									id: "locker"
+								});*/
+								setTimeout(function(){
+									locker.evalJS("initUser()");
+									locker.show();
+								},2000)
+								
+								
+							}
+
+							break;
+						default:
+							break;
+					}
+				};
+				ws.onerror = function(e) {
+
+				}
+				ws.onclose = function(e) {
+
+				}
+			}
+		</script>
+	</head>
+
+	<body>
+
+	</body>
+
 </html>

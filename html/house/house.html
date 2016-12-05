@@ -7,175 +7,186 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="css/house.css" />
 		<style type="text/css">
-			.mui-grid-view.mui-grid-9 {
-				background-color: transparent !important;
-				border: 0 !important;
-				padding: 0 5px;
-			}
-			
-			.mui-grid-view.mui-grid-9 .mui-table-view-cell {
-				border: 0 !important;
-				border-radius: 50% !important;
-			}
-			
-			.mui-media-body {
-				font-size: 12px !important;
-			}
+
 		</style>
 	</head>
 
 	<body>
+		<div id="app">
+			<header class="mui-bar mui-bar-nav">
+				<button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right" @tap ="cancelFn" v-show="deleteBtn">取消</button>
+				<h1 class="mui-title">欢迎使用宝泊智能家居系统</h1>
+			</header>
+			<div class="mui-content" id="house">
+				<ul class="mui-table-view mui-grid-view mui-grid-9 room-box">
+					<template v-for="(item,index) in houses">
+						<li class="mui-table-view-cell mui-media mui-col-xs-4" @longtap="showDeleteBtn" @tap.stop.prevent ="openRoom(item.DEVICE,item.ROOMNAME)" v-bind:data-houseId="item.ROOMNAME">
+							<a href="javascript:void(0);" class="room-img" :class="item.ROOMPIC">
+							</a>
+							<div class="mui-media-body">{{item.ROOMNAME}}</div>
+							<i class="delete-btn" v-show="deleteBtn" @tap.stop="showConfirm(item.ROOMNAME,index)">
+							<span class="mui-icon mui-icon-minus" ></span>
+						</i>
+						</li>
+					</template>
 
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">欢迎使用宝泊智能家居系统</h1>
-		</header>
-		<div class="mui-content" id="house"> 
-			<ul class="mui-table-view mui-grid-view mui-grid-9">
-				<template v-for="(item,index) in houses">
-					<li class="mui-table-view-cell mui-media mui-col-xs-4" v-bind:data-houseId="item.houseName">
-						<a href="#">
-							<span class="mui-icon baobo-icon "></span>
-							<div class="mui-media-body">{{item.houseName}}</div>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 ">
+						<a href="javascript:void(0);" class="room-img room-main">
+
 						</a>
+						<div class="mui-media-body">11</div>
+						<i class="delete-btn" v-show="deleteBtn">
+					<span class="mui-icon mui-icon-minus" ></span>
+					</i>
 					</li>
-				</template>
 
-				<li class="mui-table-view-cell mui-media mui-col-xs-4" @tap="addHouse">
-					<a href="#">
-						<span class="mui-icon baobo-icon icon-tianjia"></span>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4" @tap="addHouse">
+						<a href="javascript:void(0)" class="room-add room-img">
+
+						</a>
 						<div class="mui-media-body">添加房间</div>
-					</a>
-				</li>
-			</ul>
+					</li>
+				</ul>
+			</div>
 		</div>
+
 		<script src="../../js/mui.min.js"></script>
 		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			mui.init();
-			var vHouse, ws, account,self,
-				addHouse; //添加房间webview
+			mui.init({
+				gestureConfig: {
+					tap: true, //默认为true
+					longtap: true //默认为false
+				}
+			});
+
+			var vHouse, ws, account, self,
+				addHouse, //添加房间webview
+				deviceList; //设备
 			mui.plusReady(function() {
 				preloadHtml();
 				self = plus.webview.currentWebview();
-				self.addEventListener("show",function(){
-					account = JSON.parse(localStorage.getItem("account"));
-				},false)
+				self.addEventListener("show", function() {
+					//account = JSON.parse(localStorage.getItem("account"));
+					loadHouses();
+				}, false);
+
 			});
 
 			mui.ready(function() {
 				initVue();
 				initWebSocket();
+
 			});
 
 			function initVue() {
 				vHouse = new Vue({
-					el: "#house",
+					el: "#app",
 					data: {
-						/*houses: {
-							"宝宝卧室":[
-							{"type":"1","deviceid":"2144231","devicename":"灯1"},
-							{"type":"1","deviceid":"2144231","devicename":"灯1"},
-							{"type":"1","deviceid":"2144231","devicename":"灯1"}
-							],
-							"主卧室":[
-							{"type":"1","deviceid":"2144231","devicename":"灯1"},
-							{"type":"1","deviceid":"2144231","devicename":"灯1"},
-							{"type":"1","deviceid":"2144231","devicename":"灯1"}
-							],
-							"次卧室":[
-							{"type":"1","deviceid":"2144231","devicename":"灯1"},
-							{"type":"1","deviceid":"2144231","devicename":"灯1"},
-							{"type":"1","deviceid":"2144231","devicename":"灯1"}
-							]
-						}*/
-						houses:[
-							{
-								houseName:"宝宝卧室",
-								imgUrl:"",
-								device:[
-								{"type":"1","deviceid":"2144231","devicename":"灯1"},
-								{"type":"1","deviceid":"2144231","devicename":"灯1"},
-								{"type":"1","deviceid":"2144231","devicename":"灯1"}
-								]
-							},
-							{
-								houseName:"宝宝卧室",
-								device:[
-								{"type":"1","deviceid":"2144231","devicename":"灯1"},
-								]
-							},
-							{
-								houseName:"宝宝卧室",
-								device:[
-								{"type":"1","deviceid":"2144231","devicename":"灯1"},
-								]
-							}
-							
-						]
+						houses: [],
+						deleteBtn: false,
+						deleteItem:''
 					},
 					methods: {
 						addHouse: function() {
 							addHouse.show()
+						},
+						openRoom: function(dev,roomName) {
+							var dev = dev || []; 
+							mui.fire(deviceList, "showDevice", {
+								list: dev,
+								roomName:roomName
+							});
+							setTimeout(function() {
+								deviceList.show();
+							}, 300)
+						},
+						showDeleteBtn: function() {
+							if(this.deleteBtn) return false;
+							this.deleteBtn = true; //删除按钮显示
+							plus.device.vibrate(100)
+						},
+						cancelFn: function() {
+							this.deleteBtn = false; // 删除按钮隐藏
+						},
+						showConfirm: function(name,index) {
+							this.deleteItem = index;
+							var roomName = name;
+							plus.nativeUI.confirm("确定要删除此房间吗?", function(e) {
+								//console.log((e.index == 0) ? "Yes!" : "No!");
+								if(e.index != 0) return false;
+								
+								var message = '#{"CMD":"deleteroom","USERID":"'+account.currentID+'","TAG":"deleteroom","TYPE":"'+os+'","ROOMNAME":"'+roomName+'"}*'
+									ws.send(message);
+								
+								
+							}, "删除房间", ["确定", "取消"]);
 						}
 					}
 				})
 			}
 
 			function loadHouses() {
+				//alert("我被执行了")
 				account = JSON.parse(localStorage.getItem("account"));
-				if(ws.readyState == ws.OPEN){
-					ws.send('#{"CMD":"allDevice","UserID":"'+account.currentID+'","TAG":"queryHouse","Type":"'+os+'"}*')
-				}
-				
+				var message = '#{"CMD":"alldevice","USERID":"' + account.currentID + '","TAG":"queryHouse","TYPE":"' + os + '"}*';
+					console.log("house----msg " + message)
+					ws.send(message);
+
 			}
 
 			function preloadHtml() {
 				addHouse = mui.preload({
 					id: "addHouse",
 					url: "../house/addHouse/addHouse.html"
+				});
+				deviceList = mui.preload({
+					id: "deviceList",
+					url: "deviceList/deviceList.html"
 				})
 			}
 
 			function initWebSocket() {
-				ws = new WebSocket("ws://123.56.176.67:9010/ws");
+				ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws");
 				ws.onopen = function(e) {
 
-					if(ws.readyState == ws.OPEN) {
-						/*ws.send('#{"CMD":"allDevice","UserID":"'+account.currentID+'","TAG":"queryHouse","Type":"'+os+'"}*')*/
-					}
 				}
 				ws.onmessage = function(e) {
 					var data = dataDispose(e.data, ws);
 					if(!data) return false;
-					switch (data.TAG){
+					switch(data.TAG) {
 						case "queryHouse":
-							var houses;	
 							if(errorDispose(data)) {
-								for(item in data.list){
-									houses.push({"houseName":item,"device":data.list[item]});
-								}
-								vHouse.$data.houses =houses;
+								vHouse.$data.houses = data.ROOMS;
+								localStorage.setItem("houses", JSON.stringify(vHouse.$data.houses))
 							}
+
+							break;
+						case "deleteroom":
+							if(errorDispose(data)){
+								vHouse.$data.houses.splice(vHouse.$data.deleteItem,1);
+								mui.toast(data.ERRORMSG);
+							}
+							
 							break;
 						default:
 							break;
 					}
-					
+
 				}
 				ws.onerror = function(e) {
-
+					console.error("houseWS")
 				}
 				ws.onclose = function(e) {
-
+					console.info("关闭了")
 				}
 			}
+
 			
-			function getLocalHouse (){
-				vHouse.$data.houses = JSON.parse(localStorage.getItem("houses"))
-			}
 		</script>
 	</body>
 

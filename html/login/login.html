@@ -98,28 +98,29 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
-		<script src="https://cdn.wilddog.com/sdk/js/2.1.2/wilddog.js"></script>
+		<script src="../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			mui.init();
 			var vLogin, //登录页面vue实例
 				self, setWIFI, ws, //websocket
 				tag; //事件类别
 			mui.plusReady(function() {
+				
 				self = plus.webview.currentWebview();
 				setWIFI = plus.webview.getWebviewById("setWIFI");
 				self.addEventListener("show", function() {
 
 					//ws = new WebSocket("ws://123.56.176.67:9010/ws");
-					ws = new WebSocket("ws://123.56.176.67:9010/ws"); //开启长连接
+					//ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws"); //开启长连接
 					console.log("loginPage---show")
 				});
 				/*self.addEventListener("hide", function() {
 					ws.close();
 				})*/
 			});
-			initWebSocket();
+			
 			mui.ready(function() {
-				
+				initWebSocket();
 				initVue();
 				
 			});
@@ -134,16 +135,13 @@
 					},
 					methods: {
 						login: function() {
-							plus.nativeUI.showWaiting("正在登录中....")
-							console.log(ws.readyState)
 							var _self = this;
 							tag = "login";
 							//登录
-							var message = '#{ "CMD":"login","UserName":"' + _self.userName + '","PassWord":"' + _self.passWord + '","TAG":"' + tag + '","Type":"' + os + '"}*';
+							var message = '#{ "CMD":"login","USERNAME":"' + _self.userName + '","PASSWORD":"' + _self.passWord + '","TAG":"' + tag + '","TYPE":"' + os + '"}*';
 							console.log("登录消息   " + message)
-							if(ws.readyState == ws.OPEN) {
-								ws.send(message);
-							}
+							plus.nativeUI.showWaiting("正在登录中...")
+							ws.send(message);
 						}
 					}
 				});
@@ -152,17 +150,16 @@
 			function loginSuccess(data) {
 				
 				var users;
-				var userIDs = data.UserID.split(",");
+				var userIDs = data.USERID.split(",");
 				var account = {
 					userName:vLogin.$data.userName,
 					passWord:vLogin.$data.passWord,
 					currentID:userIDs[0],
 					userIds:userIDs,
-					locker: data.Gesture
+					locker: data.GESTURE
 				}
-				users =JSON.parse(data.limit);
+				users =JSON.parse(data.lIMIT);
 				
-				users.locker = data.locker;
 				localStorage.setItem("isLogin", "true");
 				localStorage.setItem("users", JSON.stringify(users));
 				localStorage.setItem("account", JSON.stringify(account));
@@ -174,7 +171,7 @@
 			}
 
 			function initWebSocket() {
-				ws = new WebSocket("ws://123.56.176.67:9010/ws");
+				ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws");
 				ws.onopen = function(event) {
 					console.log("长连接开启")
 				};

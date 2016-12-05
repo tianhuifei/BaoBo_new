@@ -1,41 +1,281 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 
 	<head>
-		<meta charset="UTF-8">
-		<title>选择要添加的设备</title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link href="../../../../css/mui.min.css" rel="stylesheet" />
+		<meta charset="utf-8">
+		<title>添加设备</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" type="text/css" href="../../../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/addDevice.css" />
+		<link rel="stylesheet" type="text/css" href="../../../../css/common.css" />
+		<style>
+			.mui-navigate-right {
+				padding-left: 18px !important;
+			}
+			
+			.mui-navigate-right.mui-active {
+				background-color: transparent !important;
+			}
+			
+			.mui-card {
+				box-shadow: none;
+				border: 1px solid #dedede;
+			}
+			
+			.mui-card-content-inner {
+				padding-left: 0;
+				padding-right: 0;
+			}
+			
+			.mui-input-row {
+				border-top: 1px solid #dedede;
+				padding-top: 15px;
+			}
+		</style>
+		<link rel="stylesheet" type="text/css" href="css/feedback.css" />
 	</head>
 
-	<body>
-		<header class="mui-bar mui-bar-nav">
-		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-		    <h1 class="mui-title">选择要添加的设备</h1>
-		</header>
-		<div class="mui-content">
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right">
-						单向开关
-					</a>
-				</li>
-				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right">
-						Item 2
-					</a>
-				</li>
-				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right">
-						Item 3
-					</a>
-				</li>
-			</ul>
+	<body class="mui-fullscreen">
+
+		<!--页面主结构开始-->
+		<div id="app" class="mui-views">
+			<div class="mui-view">
+				<div class="mui-navbar">
+				</div>
+				<div class="mui-pages">
+				</div>
+			</div>
 		</div>
-		<script src="../../../../js/mui.min.js"></script>
-		<script type="text/javascript">
-			mui.init()
-		</script>
+		<div id="addDevice">
+			<!--页面主结构结束-->
+			<!--单页面开始-->
+			<div id="setting" class="mui-page">
+				<!--页面标题栏开始-->
+				<div class="mui-navbar-inner mui-bar mui-bar-nav">
+					<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>
+				</button>
+					<h1 class="mui-center mui-title">添加设备</h1>
+				</div>
+				<!--页面标题栏结束-->
+				<!--页面主内容区开始-->
+				<div class="mui-page-content">
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+
+							<ul class="mui-table-view mui-table-view-chevron addDevice">
+								<li class="mui-table-view-cell mui-radio mui-left lamp-1" data-type='button' @tap="setType">
+									<a href="#account" class="mui-navigate-right">单向开关</a>
+								</li>
+								<li class="mui-table-view-cell mui-radio mui-left lamp-2">
+									<a href="#account" class="mui-navigate-right">双向开关</a>
+								</li>
+								<li class="mui-table-view-cell mui-radio mui-left socket-1">
+									<a href="#account" class="mui-navigate-right">单向插座</a>
+								</li>
+							</ul>
+
+						</div>
+					</div>
+				</div>
+				<!--页面主内容区结束-->
+			</div>
+			<!--单页面结束-->
+			<div id="account" class="mui-page">
+				<div class="mui-navbar-inner mui-bar mui-bar-nav">
+					<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>添加设备
+				</button>
+					<h1 class="mui-center mui-title">单向开关</h1>
+				</div>
+				<div class="mui-page-content" style="background-color: #FFF;">
+					<div class="page-main-name">
+						<div class="mui-card">
+							<div class="mui-card-content">
+								<div class="mui-card-content-inner">
+									<ul class="mui-table-view" style="margin-top:0;margin-bottom: 15px;">
+
+										<li class="mui-table-view-cell" @tap="selectedClass">
+											<a class="mui-navigate-right">
+												<i class="clannName " :class="className"></i> 选择图标
+											</a>
+										</li>
+									</ul>
+									<div class="mui-input-row">
+										<input type="text" v-model="devName" placeholder="请输入设备名" style="margin: 0;border:0;">
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<button type="button" @tap="submitDevice" class="mui-btn mui-btn-primary mui-btn-block">确定</button>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
 	</body>
+	<script src="../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/mui.view.js "></script>
+	<script>
+		mui.init();
+		//初始化单页view
+		var viewApi = mui('#app').view({
+			defaultPage: '#setting'
+		});
+		//初始化单页的区域滚动
+		mui('.mui-scroll-wrapper').scroll();
+		var account,self,opener;
+		mui.plusReady(function() {
+			account = JSON.parse(localStorage.getItem("account"));
+			self = plus.webview.currentWebview();
+			opener = self.opener();
+		});
+		mui.ready(function() {
+			initVue();
+
+		});
+
+		function initVue() {
+			addDevice = new Vue({
+				el: "#addDevice",
+				data: {
+					devName: "",
+					className: "droplight",
+					devSort: '',
+					roomName: "",
+					devType:""
+				},
+				methods: {
+					setType:function(e){
+						var domThis = e.target.currentTarget;
+						this.devType = domThis.getAttribute('data-type');
+					},
+					selectedClass: function() {
+						mui.openWindow({
+							url: "devIcon.html"
+						})
+					},
+					submitDevice: function() {
+						var _self = this,parameter={};
+						account = JSON.parse(localStorage.getItem("account"));
+						var timestamp = Date.parse(new Date());
+						var message = '#{"CMD":"add","USERID":"' + account.currentID + '","TAG":"'+timestamp+'","TYPE":"' + os + '","ROOMNAME":"' + _self.roomName + '","DEVICENAME":"' + _self.devName + '","NICKNAME":"","DEVICESORT":"' + _self.devSort + '","ROOMPIC":"' + _self.className + '"}*';
+						parameter.timestamp = timestamp;
+						parameter.type = _self.devType;
+						parameter.roomName = _self.roomName;
+						parameter.devName = _self.devName;
+						parameter.devSort = _self.devSort;
+						parameter.className = _self.className;
+						initWebsocket(timestamp,message,_self.devType,parameter);
+
+					}
+				}
+			})
+		}
+		//自定义事件  设置图标
+		document.addEventListener("className", function(e) {
+			addDevice.$data.className = e.detail.className;
+			console.log(addDevice.$data.className)
+		}, false);
+		//自定义事件  设置房间名
+		document.addEventListener("setRoomName", function(e) {
+			mui.toast(e.detail.roomName)
+			addDevice.$data.roomName = e.detail.roomName;
+			addDevice.$data.devSort = e.detail.devSort;
+		}, false);
+
+		/**
+		 * @param {Object} tag 事件来源
+		 * @param {Object} msg 发送的信息
+		 * @param {Object} type 设备类型
+		 * @param {Object} parameter 参数对象
+		 */
+		function initWebsocket(tag, msg,type,parameter) {
+			var ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws");
+
+			ws.onopen = function(e) {
+				console.log("添加设备房间开启" + msg)
+					console.log(msg)
+					plus.nativeUI.showWaiting("请稍后...");
+					ws.send(msg)
+			};
+			ws.onmessage = function(e) {
+				console.log(JSON.stringify(e.data))
+				var data = dataDispose(e.data, ws);
+				if(!data) return false;
+				var regExp = new RegExp(tag);
+				switch(true) {
+					case regExp.test(data.TAG):
+						plus.nativeUI.closeWaiting();
+						if(errorDispose(data)) {
+							
+							mui.toast("添加成功");
+							var devObj = {
+								"STATUS": "0",
+								"DEVICEID": data.DEVICEID,
+								"DEVICESORT": parameter.devSort,
+								"DEV": type,
+								"DEVICENAME": parameter.devName,
+								"ROOMNAME": parameter.roomName,
+								"DEVICEPIC": parameter.className,
+								"TYPE": ""
+							}
+						}
+						console.log(JSON.stringify(devObj))
+						mui.fire(opener,"addDeviceUpdata",{
+							dev:devObj
+						});
+						ws.close();
+						break;
+					default:
+						break;
+				}
+
+			};
+			ws.onerror = function(e) {
+
+			};
+			ws.onclose = function(e) {
+
+			}
+
+		}
+		
+		
+		
+		var view = viewApi.view;
+		(function($) {
+			//处理view的后退与webview后退
+			var oldBack = $.back;
+			$.back = function() {
+				if(viewApi.canBack()) { //如果view可以后退，则执行view的后退
+					viewApi.back();
+				} else { //执行webview后退
+					oldBack();
+				}
+			};
+			//监听页面切换事件方案1,通过view元素监听所有页面切换事件，目前提供pageBeforeShow|pageShow|pageBeforeBack|pageBack四种事件(before事件为动画开始前触发)
+			//第一个参数为事件名称，第二个参数为事件回调，其中e.detail.page为当前页面的html对象
+			view.addEventListener('pageBeforeShow', function(e) {
+				//				console.log(e.detail.page.id + ' beforeShow');
+			});
+			view.addEventListener('pageShow', function(e) {
+				//				console.log(e.detail.page.id + ' show');
+			});
+			view.addEventListener('pageBeforeBack', function(e) {
+				//				console.log(e.detail.page.id + ' beforeBack');
+			});
+			view.addEventListener('pageBack', function(e) {
+				//				console.log(e.detail.page.id + ' back');
+			});
+		})(mui);
+	</script>
 
 </html>

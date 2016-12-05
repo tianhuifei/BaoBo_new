@@ -1,0 +1,210 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../css/house.css" />
+		<style type="text/css">
+			.room-box.mui-grid-view.mui-grid-9 .mui-table-view-cell a.room-img.border-0{border:none;}
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right" @tap="hideDeleteBtn" v-show="deleteBtn">取消</button>
+				<h1 class="mui-title">设备列表</h1>
+			</header>
+			<div class="mui-content">
+				<ul class="mui-table-view mui-grid-view mui-grid-9 room-box">
+					<template v-for="(item,index) in deviceList">
+						<li class="mui-table-view-cell mui-media mui-col-xs-4" @tap="openDevice(item)" @longtap="showDeleteBtn">
+							<a href="javascript:void(0);" class="room-img border-0" :class="item.DEVICEPIC">
+							</a>
+							<div class="mui-media-body">{{item.DEVICENAME}}</div>
+							<i class="delete-btn" v-show="deleteBtn" @tap.stop="showConfirm(item,index)">
+							<span class="mui-icon mui-icon-minus"></span>
+							</i>
+						</li>
+					</template>
+
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 ">
+						<a href="javascript:void(0);" class="room-img room-main">
+
+						</a>
+						<div class="mui-media-body">11</div>
+						<!--<i class="delete-btn" v-show="deleteBtn">
+					<span class="mui-icon mui-icon-minus" ></span>
+					</i>-->
+					</li>
+
+					<li class="mui-table-view-cell mui-media mui-col-xs-4" @tap="addDev">
+						<a href="javascript:void(0)" class="room-add room-img">
+
+						</a>
+						<div class="mui-media-body">添加设备</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script src="../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init({
+				gestureConfig: {
+					tap: true, //默认为true
+					longtap: true //默认为false
+				}
+			});
+			var deviceVue, account, addDevice,self,opener,triggerPage;
+			mui.plusReady(function() {
+				account = JSON.parse(localStorage.getItem("account"));
+				preLoad();
+				self = plus.webview.currentWebview();
+				opener = self.opener();
+				self.addEventListener("hide",function(){
+					opener.evalJS("loadHouses()")
+					/*mui.fire(opener,"loadHouses",{})*/
+				},false);
+			});
+			mui.ready(function() {
+				initVue();
+			});
+
+			function initVue() {
+				deviceVue = new Vue({
+					el: "#app",
+					data: {
+						removeStart: '',
+						deleteBtn: false,
+						deviceList: "",
+						roomName:""
+					},
+					methods: {
+						addDev: function() {
+							var _self = this;
+							mui.fire(addDevice,"setRoomName",{
+								roomName:deviceVue.$data.roomName,
+								devSort:_self.deviceList.length
+							})
+							setTimeout(function(){
+								addDevice.show();
+							},500)
+						},
+						openDevice: function(item) { //打开设备
+							mui.fire(triggerPage,"triggerInfo",{item:item})
+							triggerPage.show();
+						},
+						showDeleteBtn: function() { //删除设备
+							if(this.deleteBtn) return false;
+							this.deleteBtn = true; //删除按钮显示
+							plus.device.vibrate(100)
+						},
+						hideDeleteBtn: function() {
+							this.deleteBtn = false; //删除按钮隐藏
+						},
+						showConfirm: function(item, index) { //删除设备对话框
+							this.removeStart = index;
+							account = JSON.parse(localStorage.getItem("account"));
+							plus.nativeUI.confirm("确定要删除此房间吗?", function(e) {
+								//console.log((e.index == 0) ? "Yes!" : "No!");
+								if(e.index != 0) return false;
+								var timestamp = Date.parse(new Date());
+								var message = '#{"CMD":"delete","USERID":"' + account.currentID + '","TAG":"' + timestamp + '","TYPE":"' + os + '","ROOMNAME":"' + item.ROOMNAME + '","DEVICENAME":"' + item.DEVICENAME + '","NICKNAME":"","DEVICESORT":"","ROOMPIC":""}*'
+								initWebSocket(deleteDev, timestamp, message);
+
+							}, "删除设备", ["确定", "取消"]);
+						}
+					}
+				})
+			}
+
+			document.addEventListener("showDevice", function(e) {
+				console.log("设备   " + JSON.stringify(e.detail.list))
+				
+				deviceVue.$data.deviceList = e.detail.list;
+				deviceVue.$data.roomName = e.detail.roomName;
+				console.log(deviceVue.$data.deviceList)
+			}, false);
+			
+			document.addEventListener("addDeviceUpdata",function(e){
+				deviceVue.$data.deviceList.push(e.detail.dev)
+			},false)
+
+			/**
+			 * 开启联接
+			 * @param {Object} fn 处理函数
+			 * @param {Object} tag 事件标识
+			 * @param {Object} message 发送信息
+			 */
+			function initWebSocket(fn, tag, message) {
+				var localWs = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws");
+
+				localWs.onopen = function(e) {
+					console.log(message)
+						plus.nativeUI.showWaiting("请稍后...");
+						localWs.send(message);
+				};
+				localWs.onmessage = function(e) {
+					fn(localWs, e, tag);
+				};
+				localWs.onerror = function(e) {
+
+				};
+				localWs.onclose = function(e) {
+
+				}
+
+			}
+
+			/**
+			 * 删除设备
+			 * @param {Object} ws webSocket
+			 * @param {Object} e webSocket 返回数据
+			 * @param {Object} tag 事件标识
+			 */
+			function deleteDev(ws, e, tag) {
+
+				var data = dataDispose(e.data, ws);
+				if(!data) return false;
+				console.log(JSON.stringify(data))
+				var regExp = new RegExp(tag);
+				switch(true) {
+					case regExp.test(data.TAG):
+						plus.nativeUI.closeWaiting();
+						console.log(parseInt(data.ERRNO) == -1)
+
+						/*if(parseInt(data.ERRNO)  == -1){
+							mui.toast(data.ERROR);
+							return false;
+						}*/
+						deviceVue.$data.deviceList.splice(deviceVue.$data.removeStart, 1);
+						ws.close()
+						break;
+					default:
+						break;
+				}
+
+			}
+
+			function preLoad() {
+				triggerPage = mui.preload({
+					url:"study_trigger.html",
+					id:"study_trigger"
+				})
+				addDevice = mui.preload({
+					url: "../addHouse/addDevice/addDevice.html",
+					id: "addDevice"
+				})
+			}
+		</script>
+	</body>
+
+</html>

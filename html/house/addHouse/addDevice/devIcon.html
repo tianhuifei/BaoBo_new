@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/devIcon.css" />
+		<link rel="stylesheet" type="text/css" href="../../../../css/common.css" />
+	</head>
+
+	<body>
+		<div id="app">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right" @tap="backIcon" >确定</button>
+				<h1 class="mui-title">选择图标</h1>
+			</header>
+			<div class="mui-content devIcon">
+				<ul class="mui-table-view mui-table-view-radio">
+					<li class="mui-table-view-cell droplight" data-img="droplight">
+						<a class="mui-navigate-right">
+							吊灯
+						</a>
+					</li>
+					<li class="mui-table-view-cell wall" data-img="wall">
+						<a class="mui-navigate-right">
+							壁灯
+						</a>
+					</li>
+					<li class="mui-table-view-cell tube" data-img="tube">
+						<a class="mui-navigate-right">
+							筒灯
+						</a>
+					</li>
+					<li class="mui-table-view-cell spotlight" data-img="spotlight">
+						<a class="mui-navigate-right">
+							射灯
+						</a>
+					</li>
+					<li class="mui-table-view-cell backlight" data-img="backlight">
+						<a class="mui-navigate-right">
+							背景灯
+						</a>
+					</li>
+					<li class="mui-table-view-cell bedside" data-img="bedside">
+						<a class="mui-navigate-right">
+							床头灯
+						</a>
+					</li>
+					<li class="mui-table-view-cell mirror" data-img="mirror">
+						<a class="mui-navigate-right">
+							镜前灯
+						</a>
+					</li>
+					<li class="mui-table-view-cell ceiling" data-img="ceiling">
+						<a class="mui-navigate-right">
+							吸顶灯
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<script src="../../../../js/mui.min.js"></script>
+		<script src="../../../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+			var devIcon,self,opener;
+
+			mui.plusReady(function() {
+				self = plus.webview.currentWebview();
+				opener = self.opener();
+			})
+
+			mui.ready(function() {
+				initVue();
+				document.querySelector('.mui-table-view.mui-table-view-radio').addEventListener('selected', function(e) {
+					var className = e.detail.el.getAttribute("data-img");
+					mui.fire(opener,"className",{className:className})
+				});
+			})
+
+			function initVue() {
+				devIcon = new Vue({
+					el: "#app",
+					data: {},
+					methods: {
+						backIcon:function(){
+							self.hide();
+						}
+					}
+				})
+			}
+		</script>
+	</body>
+
+</html>

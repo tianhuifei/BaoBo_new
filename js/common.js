@@ -11,8 +11,7 @@ function dataDispose (re,ws){
 		case "#$*":
 			//心跳，不做处理，直接返回
 			if(ws.readyState == ws.OPEN){
-				console.log(ws)
-				ws.send("#$*");
+				ws.send(CENTRT);
 			}
 			result = 0;
 			break;
@@ -31,8 +30,9 @@ function dataDispose (re,ws){
  */
 function errorDispose (data){
 	var result  = true;
-	if( parseInt(data.errno)  == -1){// error:0      成功     error:-1失败
-		mui.toast(data.errorMsg);
+	if( parseInt(data.ERRNO)  == -1){// error:0      成功     error:-1失败
+		if(data.ERRORMSG) mui.toast(data.ERRORMSG);
+		if(data.ERROR) mui.toast(data.ERROR);
 		result = false;
 	}
 	return result;

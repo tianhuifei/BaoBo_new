@@ -1,0 +1,59 @@
+.mui-grid-view.mui-grid-9 {
+	background-color: transparent !important;
+	border: 0 !important;
+	padding: 0 5px;
+}
+
+.mui-grid-view.mui-grid-9 .mui-table-view-cell {
+	border: 0 !important;
+}
+
+.mui-media-body {
+	font-size: 12px !important;
+}
+
+.room-box.mui-grid-view.mui-grid-9 .mui-table-view-cell {
+	padding: 5px 15px !important;
+}
+
+.room-box.mui-grid-view.mui-grid-9 .mui-table-view-cell a.room-img {
+	height: 60px;
+	width: 60px;
+	border: 1px solid #dedede;
+	border-radius: 50%;
+	padding: 0;
+	margin: 0 auto;
+}
+
+.room-box.mui-grid-view.mui-grid-9 .mui-table-view-cell:nth-child(4n+0) a.room-img {
+	border-color: #4991e6;
+}
+
+.room-box.mui-grid-view.mui-grid-9 .mui-table-view-cell:nth-child(4n+1) a.room-img {
+	border-color: #b584e0;
+}
+
+.room-box.mui-grid-view.mui-grid-9 .mui-table-view-cell:nth-child(4n+2) a.room-img {
+	border-color: #00bdf7;
+}
+
+.room-box.mui-grid-view.mui-grid-9 .mui-table-view-cell:nth-child(4n+3) a.room-img {
+	border-color: #fa6666;
+}
+
+.room-box.mui-grid-view.mui-grid-9 .mui-table-view-cell.mui-active {
+	background-color: #e5f8ff !important;
+}
+
+
+.delete-btn{position: absolute;top:0;right:0;display:block;width:40px;height:40px;/*border:#4991E6 1px solid;*/font-size:9px;}
+.delete-btn span{color:red;position: absolute;right: 0;}
+
+
+
+
+
+
+
+
+

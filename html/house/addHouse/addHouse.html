@@ -23,6 +23,8 @@
 				padding-top: 30px;
 			}
 			.house-name{width: 70%;margin:0 auto;margin-top:40px;}
+			.room-box.mui-grid-view.mui-grid-9 .mui-table-view-cell{padding:2rem 15px !important;}
+			.room-box.mui-grid-view.mui-grid-9 .mui-table-view-cell.mui-active{background-color:transparent !important;} 
 		</style>
 	</head>
 
@@ -32,64 +34,64 @@
 		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 		    <h1 class="mui-title">添加房间</h1>
 		    <button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right" @tap="addHouse">确定</button>
-		</header>
+		</header> 
 		<div class="mui-content">
 			<div class="class_type">
-				<ul class="mui-table-view mui-grid-view mui-grid-9">
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-chuang">
-						<a href="#">
-							<span class="mui-icon baobo-icon icon-chuang"></span>
+				<ul class="mui-table-view mui-grid-view mui-grid-9 room-box">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 room-main" @tap="houseActive" data-type="room-main">
+						<a href="#" class="">
+							<!--<span class="mui-icon baobo-icon icon-chuang"></span>-->
 							<!--<div class="mui-media-body">Home</div>-->
 						</a>
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-chuang">
-						<a href="#">
-							<span class="mui-icon baobo-icon icon-chuang"></span>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 room-ciwo" @tap="houseActive" data-type="room-ciwo">
+						<a href="#" class="">
+							<!--<span class="mui-icon baobo-icon icon-chuang"></span>-->
 							<!--<div class="mui-media-body">Email</div>-->
 						</a>
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-iconketing">
-						<a href="#">
-							<span class="mui-icon baobo-icon icon-iconketing"></span>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 room-keting" @tap="houseActive" data-type="room-keting">
+						<a href="#" class="">
+							<!--<span class="mui-icon baobo-icon icon-iconketing"></span>-->
 							<!--<div class="mui-media-body">Chat</div>-->
 						</a>
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-weiyu">
-						<a href="#">
-							<span class="mui-icon baobo-icon icon-weiyu"></span>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 room-gongyongyushi" @tap="houseActive" data-type="room-gongyongyushi">
+						<a href="#" class="">
+							<!--<span class="mui-icon baobo-icon icon-weiyu"></span>-->
 							<!--<div class="mui-media-body">Location</div>-->
 						</a>
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-ertongleyuan">
-						<a href="#">
-							<span class="mui-icon baobo-icon icon-ertongleyuan"></span>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 room-ertong" @tap="houseActive" data-type="room-ertong">
+						<a href="#" class="">
+							<!--<span class="mui-icon baobo-icon icon-ertongleyuan"></span>-->
 							<!--<div class="mui-media-body">Search</div>-->
 						</a>
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-icon8">
-						<a href="#">
-							<span class="mui-icon baobo-icon icon-icon8"></span>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 room-chufang" @tap="houseActive" data-type="room-chufang">
+						<a href="#" class="">
+							<!--<span class="mui-icon baobo-icon icon-icon8"></span>-->
 							<!--<div class="mui-media-body">Phone</div>-->
 						</a>
 
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-gonglu">
-						<a href="#">
-							<span class="mui-icon baobo-icon icon-gonglu"></span>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 room-zoulang" @tap="houseActive" data-type="room-zoulang">
+						<a href="#" class="">
+							<!--<span class="mui-icon baobo-icon icon-gonglu"></span>-->
 							<!--<div class="mui-media-body">Phone</div>-->
 						</a>
 
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-canting">
-						<a href="#">
-							<span class="mui-icon baobo-icon icon-canting"></span>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 room-canting" @tap="houseActive" data-type="room-canting">
+						<a href="#" class="">
+							<!--<span class="mui-icon baobo-icon icon-canting"></span>-->
 							<!--<div class="mui-media-body">Phone</div>-->
 						</a>
 
 					</li>
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 " @tap="houseActive" data-type="icon-keyongweiyu">
-						<a href="#">
-							<span class="mui-icon baobo-icon icon-keyongweiyu"></span>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 room-yushi" @tap="houseActive" data-type="room-yushi">
+						<a href="#" class="">
+							<!--<span class="mui-icon baobo-icon icon-keyongweiyu"></span>-->
 							<!--<div class="mui-media-body">Phone</div>-->
 						</a>
 
@@ -100,23 +102,30 @@
 				<input type="text" v-model="houseName" class="mui-input mui-input-clear" placeholder="请输入房间名">
 			</div>
 		</div>
-		</div>
+		</div> 
 		
 		<script src="../../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript">
+		<script src="../../../js/zepto-min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript"> 
 			mui.init();
-			var vAddHouse,self;
-			mui.plusReady(function(){
+			var vAddHouse,self,ws; 
+			mui.plusReady(function(){ 
 				self = plus.webview.currentWebview();
 				openerPage = self.opener();
+				account = JSON.parse(localStorage.getItem("account"));
+				self.addEventListener("hide",function(){
+					openerPage.evalJS("loadHouses()");
+				},false);
 			});
 			
 			mui.ready(function(){
 				initVue();
+				initWebSocket();
 			});
-			
+			 
 			
 			function initVue (){
 				vAddHouse = new Vue({
@@ -127,33 +136,67 @@
 					},
 					methods:{
 						houseActive:function(e){
-							var domThis = e.currentTarget
 							var _self = this;
-							_self.houseType = domThis.getAttribute("data-type");
+							
+							var domThis = $(e.currentTarget);
+							domThis.addClass("room-active").siblings().removeClass("room-active")
+							_self.houseType = domThis.attr("data-type");
 						},
-						addHouse:function(){
+						addHouse:function(e){
+							account = JSON.parse(localStorage.getItem("account"));
+							var houses = JSON.parse(localStorage.getItem("houses"));
+							houses ? houses:houses=[];
 							var _self = this;
-							if(!_self.houseName ){
+							if(!_self.houseType ){
 								mui.toast("请选择房间类型!")
 								return false;
 							}
-							if( !_self.houseType){
+							if( !_self.houseName){
 								mui.toast("请输入房间名称!")
 								return false;
 							}
-							var houses = JSON.parse(localStorage.getItem("houses")) | [];
-							console.log(houses)
-							var house = {};
-							house.houseName = _self.houseName;
-							house.houseClass = _self.houseType;
-							house.houseId = uuid(8,10);
-							houses.push(house)
-							localStorage.setItem("houses",JSON.stringify(houses));
-							openerPage.evalJS("loadHouses()");
-							self.hide();
+							var message ='#{"CMD":"addroom","USERID":"'+account.currentID+'","TAG":"addroom","TYPE":"'+os+'","ROOMNAME":"'+_self.houseName+'","ROOMPIC":"'+_self.houseType+'","ROOMSORT":"'+ houses.length+1 +'"}*'
+								plus.nativeUI.showWaiting("正在添加房间");
+								ws.send(message);
+							
+							//self.hide();
+							
 						}
 					}
 				})
+			}
+			
+			 
+			function initWebSocket() {
+				ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws");
+				ws.onopen = function(e) {
+
+				}
+				ws.onmessage = function(e) {
+					var data = dataDispose(e.data, ws);
+					if(!data) return false;
+					
+					switch(data.TAG) {
+						case "addroom":
+						plus.nativeUI.closeWaiting();
+						console.log(JSON.stringify(data))
+							if(errorDispose(data)){
+								mui.toast(data.ERRORMSG);
+							}
+							
+							//vHouse.$data.houses = data.ROOMS;;
+							break;
+						default:
+							break;
+					}
+
+				}
+				ws.onerror = function(e) {
+
+				}
+				ws.onclose = function(e) {
+
+				}
 			}
 		</script>
 	</body>

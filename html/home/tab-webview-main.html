@@ -21,7 +21,8 @@
 		<!--<header class="mui-bar mui-bar-nav">
 			<h1 id="title" class="mui-title">首页</h1>
 		</header>-->
-		<nav class="mui-bar mui-bar-tab"><!--home-furnishing.html -->
+		<nav class="mui-bar mui-bar-tab">
+			<!--home-furnishing.html -->
 			<a id="defaultTab" class="mui-tab-item mui-active" href="../house/house.html">
 				<span class="mui-icon mui-icon-home"></span>
 				<span class="mui-tab-label">家居</span>
@@ -43,7 +44,7 @@
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 			var mloginTag;
-			var ws = new WebSocket("ws://123.56.176.67:9010/ws"); //开启长连接
+			
 			//mui初始化
 			mui.init();
 			var subpages = ['../house/house.html', 'monitoring.html', 'circumstance.html', 'tool.html'];
@@ -51,17 +52,11 @@
 				top: '0',
 				bottom: '51px'
 			};
-
-			var aniShow = {},
-				login, //登录webview
-				setWIFI, //设置WIFIwebview
-				locker; //手势webview
-
+			var aniShow = {};
 			//创建子页面，首个选项卡页面显示，其它均隐藏；
 			mui.plusReady(function() {
-				preload(); //预加载页面
+				
 				var self = plus.webview.currentWebview();
-
 				for(var i = 0; i < 4; i++) {
 					var temp = {};
 					var sub = plus.webview.create(subpages[i], subpages[i], subpage_style);
@@ -73,25 +68,7 @@
 					}
 					self.append(sub);
 				}
-				
-				//读取本地存储，检查是否登录 true 登录过    false 没有登录过
-				setTimeout(function() {
-					var isLogin = localStorage.getItem("isLogin");
-					if(isLogin) {
-						
-						var mloginTag = "mainLogin";
-						var account =JSON.parse(localStorage.getItem("account")) 
-						var message = '#{ "CMD":"login","UserName":"' + account.userName + '","PassWord":"' + account.passWord + '","TAG":"' + mloginTag + '","Type":"' + os + '"}*';
-						if(ws.readyState == ws.OPEN) {
-								ws.send(message);
-						}
-					} else {
-						login.show();
-						/*mui.openWindow({
-							url:"../login/login.html"
-						})*/
-					}
-				}, 500);
+
 			});
 			//当前激活选项
 			var activeTab = subpages[0];
@@ -103,7 +80,7 @@
 					return;
 				}
 				//更换标题
-				title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
+				//title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
 				//显示目标选项卡
 				//若为iOS平台或非首次显示，则直接显示
 				if(mui.os.ios || aniShow[targetTab]) {
@@ -132,60 +109,8 @@
 					defaultTab.classList.add('mui-active');
 				}
 			});
-			/**
-			 * 预加载
-			 */
-			function preload() {
-				login = mui.preload({
-					id: "login",
-					url: "../login/login.html"
-				});
-				/*locker = mui.preload({
-					id: "locker",
-					url: "../locker/locker.html"
-				})*/
-				setWIFI = mui.preload({
-					id: "setWIFI",
-					url: "../setWIFI/setWIFI.html"
-				});
-				
-				
-			};
 			
-			ws.onopen = function(e){
-				console.log("main-----开启")
-			};
-			ws.onmessage = function(e){
-				
-				var data = dataDispose(e.data,ws);
-				if(!data) return false;
-				/*if(data == CENTRT){
-					ws.send(CENTRT);
-					console.log("首页心跳数据" +  data); 
-					return;
-				}*/
-				
-				switch (data.TAG){
-					case "mainLogin":
-						if(errorDispose(data)){
-							mui.openWindow({
-								url:"../locker/locker.html",
-								id:"locker"
-							});
-						}
-						
-						break;
-					default:
-						break;
-				}
-			};
-			ws.onerror = function(e){
-				
-			}
-			ws.onclose = function(e){
-				
-			}
-			
+
 			
 		</script>
 	</body>

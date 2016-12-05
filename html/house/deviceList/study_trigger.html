@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../../css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="../../../css/common.css" />
+		<style type="text/css">
+			.botton-trigger {
+				color: #FFF;
+				background-color: #be5500;
+				padding-top: 35px;
+				padding-bottom: 35px;
+				font-size: 30px;
+			}
+			
+			.botton-trigger:active {
+				background: #9e6232 !important;
+			}
+			
+			.bor-left-0 {
+				border-left: none !important;
+			}
+			
+			.bor-right-0 {
+				border-right: none !important;
+			}
+			
+			.bottom-line::after {
+				position: absolute;
+				right: 0;
+				top: 50%;
+				height: 60%;
+				content: ".";
+				width: 1px;
+				background-color: #d89662;
+				transform: translateY(-50%);
+			}
+			
+			.type-trigger.mui-table-view:before {
+				top: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+			<header class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title">设备操作</h1>
+			</header>
+
+			<div class="mui-content">
+				<!--v-if="triggerInfo.DEV == 'button'" -->
+
+				<ul class="mui-table-view type-trigger">
+					<li class="mui-table-view-divider">{{triggerInfo.DEVICENAME}}</li>
+				</ul>
+				<type-button v-bind:trigger="triggerInfo" v-if="triggerInfo.DEV == 'button'"></type-button>
+			</div>
+
+		</div>
+		<script type="text/x-template" id="button_type">
+			<div class="mui-content-padded">
+				<div class="mui-row">
+					<div class="mui-col-sm-6 mui-col-xs-6">
+						<a href="javascript:void(0);" @tap="open_close('1')" class="mui-btn bor-right-0 mui-btn-block botton-trigger bottom-line">开</a>
+					</div>
+					<div class="mui-col-sm-6 mui-col-xs-6">
+						<a href="javascript:void(0);" @tap="open_close('0')" class="mui-btn bor-left-0 mui-btn-block botton-trigger">关</a>
+					</div>
+				</div>
+			</div>
+		</script>
+		<script src="../../../js/mui.min.js"></script>
+		<script src="../../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+			var trigger,ws;
+			mui.plusReady(function(){
+				
+			})
+
+			mui.ready(function() {
+				initVue();
+				initWebsocket();
+			})
+
+			function initVue() {
+				trigger = new Vue({
+					el: "#app",
+					data: {
+						triggerInfo: ''
+					},
+					components: {
+						"type-button": {
+							template: "#button_type",
+							props: ['trigger'],
+							data:function(){
+								return {
+									info:this.trigger
+								}
+							},
+							methods: {
+								open_close: function(num) {
+									account = JSON.parse(localStorage.getItem("account"));
+									var message = '#{"CMD": "trig","DEV": "button","DEVID": "'+(this.info.DEVICEID+num)+'","TAG":"trigger_button","USERID":"'+account.currentID+'","NICKNAME":"","TYPE":"'+os+'"}*'
+										console.log(message)
+										ws.send(message)
+								}
+							}
+						}
+					}
+				})
+			}
+
+			document.addEventListener("triggerInfo", function(e) {
+
+				trigger.$data.triggerInfo = e.detail.item;
+				console.log(JSON.stringify(trigger.$data.triggerInfo))
+			}, false);
+			
+			
+			function initWebsocket() {
+				ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws"); //开启长连接
+				ws.onopen = function(e) {
+					
+				};
+				ws.onmessage = function(e) {
+
+					var data = dataDispose(e.data, ws);
+					if(!data) return false;
+					switch(data.TAG) {
+						case "trigger_button":
+							plus.nativeUI.closeWaiting();
+							if(errorDispose(data)) {
+								mui.toast("成功")
+								
+							}
+
+							break;
+						default:
+							break;
+					}
+				};
+				ws.onerror = function(e) {
+
+				}
+				ws.onclose = function(e) {
+
+				}
+			}
+		</script>
+	</body>
+
+</html>

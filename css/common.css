@@ -57,3 +57,65 @@
 
 .mui-content, body{background: #FFF !important;}
 .mui-grid-view.mui-grid-9 .mui-table-view-cell.mui-active{background-color: #F3F3F3 !important;}
+#app{width:100%;height:100%;}
+
+
+
+
+
+
+.room-img{background-position: center !important;}
+/*房间图标*/
+.room-main{background: url(../images/rooms_main.png) no-repeat center center !important;}
+.room-ciwo{background: url(../images/rooms_ciwo.png) no-repeat center center !important;}
+.room-keting{background: url(../images/rooms_keting.png) no-repeat center center !important;}
+.room-gongyongyushi{background: url(../images/rooms_ekyongyushi.png) no-repeat center center !important;}
+.room-ertong{background: url(../images/rooms_ertong.png) no-repeat center center !important;}
+.room-chufang{background: url(../images/rooms_chufang.png) no-repeat center center !important;}
+.room-zoulang{background: url(../images/rooms_zoulang.png) no-repeat center center !important;}
+.room-canting{background: url(../images/rooms_canting.png) no-repeat center center !important;}
+.room-yushi{background: url(../images/rooms_xiyu.png) no-repeat center center !important;}
+.room-active{background-color:#e5f8ff !important;}
+.room-add:{position: relative;}
+.room-add::after,.room-add::before{
+	content: " ";
+	position: absolute;
+	background: #b8c8d8;
+}
+.room-add::after{
+	
+	width:80%;
+	height: 2px; 
+	
+	top:50%;
+	transform: translateX(-50%);
+	
+}
+.room-add::before{
+	width:2px;
+	height:80%;
+	top:50%;
+	transform: translateY(-50%);
+}
+.room-box.mui-grid-view.mui-grid-9 .mui-table-view-cell{padding:2rem 15px !important;}
+.room-box.mui-grid-view.mui-grid-9 .mui-table-view-cell.mui-active{background-color:transparent !important;} 
+
+
+.droplight{background:url(../images/droplight.png) no-repeat 10px center;}
+.wall{background:url(../images/wall.png) no-repeat 10px center;}
+.tube{background:url(../images/tube.png) no-repeat 10px center;}
+.spotlight{background:url(../images/spotlight.png) no-repeat 10px center;}
+.backlight{background: url(../images/backlight.png) no-repeat 10px center;}
+.bedside{background: url(../images/bedside.png) no-repeat 10px center;}
+.mirror{background: url(../images/mirror.png) no-repeat 10px center;}
+.ceiling{background: url(../images/ceiling.png) no-repeat 10px center;}
+
+
+
+
+
+
+
+
+
+

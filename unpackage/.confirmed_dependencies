@@ -8,7 +8,8 @@
 			"html/login/images/logo.png",
 			"js/vue.min.js",
 			"js/vue.js",
-			"js/common.js"
+			"js/common.js",
+			"js/reconnecting-websocket.js"
 		],
 		"refer": []
 	},
@@ -21,7 +22,8 @@
 			"css/mui.min.css",
 			"js/mui.locker.js",
 			"js/vue.js",
-			"js/common.js"
+			"js/common.js",
+			"js/reconnecting-websocket.js"
 		],
 		"refer": [
 			"html/login/login.html"
@@ -35,7 +37,8 @@
 			"css/mui.min.css",
 			"html/home/home-furnishing.html",
 			"js/common.js",
-			"html/house/house.html"
+			"html/house/house.html",
+			"html/home/monitoring.html"
 		],
 		"refer": [
 			"html/home/tab-webview-subpage-about.html",
@@ -57,10 +60,15 @@
 		"resources": [
 			"html/home/tab-webview-main.html",
 			"js/mui.min.js",
-			"css/mui.min.css"
+			"css/mui.min.css",
+			"js/common.js",
+			"js/reconnecting-websocket.js"
 		],
 		"refer": [
-			"html/home/tab-webview-main.html"
+			"html/home/tab-webview-main.html",
+			"html/setWIFI/setWIFI.html",
+			"html/login/login.html",
+			"html/locker/locker.html"
 		]
 	},
 	"html/setWIFI/setWIFI.html": {
@@ -71,7 +79,8 @@
 			"fonts/mui.ttf",
 			"css/mui.min.css",
 			"js/vue.js",
-			"js/common.js"
+			"js/common.js",
+			"js/zepto-min.js"
 		],
 		"refer": [
 			"html/locker/locker.html"
@@ -85,10 +94,15 @@
 			"js/vue.js",
 			"js/mui.min.js",
 			"css/common.css",
-			"css/mui.min.css"
+			"css/mui.min.css",
+			"images/rooms_main.png",
+			"html/house/css/house.css",
+			"js/reconnecting-websocket.js",
+			"images/rooms_ertong.png"
 		],
 		"refer": [
-			"html/house/addHouse/addHouse.html"
+			"html/house/addHouse/addHouse.html",
+			"html/house/deviceList/deviceList.html"
 		]
 	},
 	"html/house/addHouse/addHouse.html": {
@@ -98,7 +112,86 @@
 			"css/mui.min.css",
 			"css/common.css",
 			"fonts/iconfont.ttf",
-			"js/vue.js"
+			"js/vue.js",
+			"js/common.js",
+			"images/rooms_ciwo.png",
+			"images/rooms_main.png",
+			"images/rooms_chufang.png",
+			"images/rooms_ertong.png",
+			"images/rooms_xiyu.png",
+			"images/rooms_zoulang.png",
+			"images/rooms_canting.png",
+			"images/rooms_ekyongyushi.png",
+			"images/rooms_keting.png",
+			"js/zepto-min.js"
+		]
+	},
+	"html/house/deviceList/deviceList.html": {
+		"resources": [
+			"js/common.js",
+			"js/vue.js",
+			"js/mui.min.js",
+			"css/common.css",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"images/rooms_main.png",
+			"html/house/css/house.css",
+			"js/mui.js",
+			"images/droplight.png",
+			"js/reconnecting-websocket.js"
+		],
+		"refer": [
+			"html/house/addHouse/addDevice/addDevice.html",
+			"html/house/deviceList/study_trigger.html"
+		]
+	},
+	"html/house/addHouse/addDevice/addDevice.html": {
+		"resources": [
+			"images/socket_1.png",
+			"html/house/addHouse/addDevice/js/mui.view.js",
+			"images/lamp_1.png",
+			"html/house/addHouse/addDevice/css/addDevice.css",
+			"html/house/addHouse/addDevice/css/feedback.css",
+			"images/lamp_2.png",
+			"images/droplight.png",
+			"js/common.js",
+			"js/vue.js",
+			"css/common.css",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"js/mui.js"
+		],
+		"refer": [
+			"html/house/addHouse/addDevice/devIcon.html"
+		]
+	},
+	"html/house/addHouse/addDevice/devIcon.html": {
+		"resources": [
+			"images/backlight.png",
+			"images/spotlight.png",
+			"images/ceiling.png",
+			"images/bedside.png",
+			"html/house/addHouse/addDevice/css/devIcon.css",
+			"images/mirror.png",
+			"images/tube.png",
+			"images/wall.png",
+			"fonts/mui.ttf",
+			"images/droplight.png",
+			"js/vue.js",
+			"css/common.css",
+			"js/mui.min.js",
+			"css/mui.min.css"
+		]
+	},
+	"html/house/deviceList/study_trigger.html": {
+		"resources": [
+			"css/mui.css",
+			"js/common.js",
+			"js/vue.js",
+			"js/mui.min.js",
+			"css/common.css",
+			"fonts/mui.ttf",
+			"js/reconnecting-websocket.js"
 		]
 	}
 }

@@ -29,6 +29,7 @@
 		</div>
 		<script src="../../js/mui.min.js"></script>
 		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/zepto-min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			mui.init();
@@ -54,63 +55,51 @@
 					},
 					methods: {
 						setWIFI: function() {
-							/*initWebSocket();
-							var message = '[NSString stringWithFormat:@"1234,13811928431,13811928431,Tenda_3A9548,27143726"]';
-							if(ws.readyState == ws.OPEN){
-								ws.send(message)
-							}else{
-								mui.alert("请连接硬件WIFI！");
-								return false;
-							}*/
+							var account = JSON.parse(localStorage.getItem("account"));
+							var _self = this;
+							var btnArray = ['否', '是'];
+							mui.confirm('请确认是否已经连接硬件WIFI？', '温馨提示', btnArray, function(e) {
+								plus.nativeUI.showWaiting("正在设置wifi...");
+								if(!(e.index == 1)) return false;
+								var url = "http://192.168.4.1:8080/?SSID=" + _self.wifiName + "&PSW=" + _self.wifiPwd + "&USERID=" + account.currentID;
+								$.ajax({
+									type: "get",
+									url:url ,
+									async: true,
+									dataType: "xml",
+									success: function(data) {
+										plus.nativeUI.closeWaiting();
+										var text = $(data).find("p").text();
+										if(text == 'success') {
+											mui.toast("设置成功");
+											locker.evalJS("initUser()");
+											//locker.show();
+											setTimeout(function(){
+												self.hide();
+											},1000);
+										}
+										if(text == 'error') {
+											mui.toast("用户名或密码错误");
+										}
+									},
+									error: function() {
+										plus.nativeUI.closeWaiting();
+										mui.toast("是否已连接硬件")
+									}
+								});
 
-							mui.openWindow({
-								url: "../locker/locker.html",
-								id: "locker"
-							});
+							})
+
+							/*locker.evalJS("initUser()");
 							setTimeout(function() {
 								self.hide();
-							}, 1000)
+							}, 1000)*/
 
 						}
 					}
 				})
 			};
 
-			/**
-			 * 连接硬件WIFI
-			 */
-			function initWebSocket() {
-
-				ws = new WebSocket("ws://192.168.4.1:8080/");
-				ws.onopen = function(e) {
-
-				};
-				ws.onmessage = function(e) {
-					var re = dataDispose(e.data);
-					if(re == CENTRT) {
-						ws.send(CENTRT);
-						return;
-					}
-
-					switch(re) {
-						case "":
-							ws.send(CENTRT)
-							break;
-						default:
-							locker.show();
-							setTimeout(function() {
-								self.hide();
-							}, 300)
-							break;
-					}
-				};
-				ws.onerror = function(e) {
-
-				};
-				ws.onclose = function(e) {
-
-				}
-			}
 			var _back = mui.back;
 			mui.back = function() {};
 		</script>

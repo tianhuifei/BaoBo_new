@@ -100,32 +100,35 @@
 		<script src="../../js/mui.locker.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
 		<script>
 			var vLocker,
-				login, self, setWIFI, account, ws,editLocker,house;
+				login, self, setWIFI, account, ws, editLocker, house;
 			mui.plusReady(function() {
-				
+
 				login = plus.webview.getWebviewById("login");
 				setWIFI = plus.webview.getWebviewById("setWIFI");
 				self = plus.webview.currentWebview();
+
+				//mui.fire(,"loadHouses",{})	
+
+			});
+
+			mui.ready(function() {
+				initVue();
+				initWebSocket();
+			})
+
+			function initUser() {
 				account = JSON.parse(localStorage.getItem("account"));
 				console.log(JSON.stringify(account))
 				if(account && account.locker) {
 					showDeblocking();
 				};
-				
-				self.addEventListener("show",function(){
-					house = plus.webview.getWebviewById("../house/house.html");
-					house.evalJS("loadHouses()");
-				},false)
+				house = plus.webview.getWebviewById("../house/house.html");
+				house.evalJS("loadHouses()");
+			}
 
-			});
-
-			mui.ready(function() {
-				console.log("locker ready  执行几次")
-				initVue();
-			})
-			initWebSocket();
 			function initVue() {
 				vLocker = new Vue({
 					el: "#picture",
@@ -144,10 +147,8 @@
 							}, 300)
 						},
 						editLocker: function() {
-							
-							
+
 							showSettingLocker();
-							
 
 						}
 					}
@@ -155,17 +156,17 @@
 			}
 
 			function initWebSocket() {
-				ws = new WebSocket("ws://123.56.176.67:9010/ws");
+				ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws");
 				ws.onopen = function(event) {
 					console.log("locker-----长连接开启")
 				};
 				ws.onmessage = function(event) {
-					var data = dataDispose(event.data,ws)
-					/*if(data == CENTRT) {
-						console.log("locker------心跳")
-						ws.send(data);
-						return;
-					}*/
+					var data = dataDispose(event.data, ws)
+						/*if(data == CENTRT) {
+							console.log("locker------心跳")
+							ws.send(data);
+							return;
+						}*/
 					if(!data) return false;
 					switch(data.TAG) {
 						case "lockerEdit":
@@ -190,6 +191,7 @@
 				}
 				ws.onerror = function(event) {
 					console.log('websocked error');
+					mui.alert("是否已连接网络...")
 				}
 			}
 			//设置密码
@@ -211,15 +213,12 @@
 					if(record.length >= 2) {
 						if(record[0] == record[1]) {
 
-							
 							var tag = "lockerEdit";
 							editLocker = rs.points.join('');
-							var editMsg = '#{"CMD":"resetpassword","UserName":"'+account.userName+'","PassWord":"'+account.passWord+'","TAG":"'+tag+'","Gesture":"'+editLocker+'","Type":"'+os+'"}*'
+							var editMsg = '#{"CMD":"resetpassword","USERNAME":"' + account.userName + '","PASSWORD":"' + account.passWord + '","TAG":"' + tag + '","GESTURE":"' + editLocker + '","TYPE":"' + os + '"}*'
 							console.log(editMsg)
-							if(ws.readyState == ws.OPEN) {
 								ws.send(editMsg);
 								plus.nativeUI.showWaiting("请稍后......");
-							}
 
 						} else {
 							mui.toast('两次手势设定不一致');
@@ -248,7 +247,7 @@
 					}
 					console.log(rs.points.join('')); //结果
 					record.push(rs.points.join(''));
-					console.log("解锁   "+account.locker)
+					console.log("解锁   " + account.locker)
 					if(rs.points.join('') == account.locker) {
 						record = [];
 						rs.sender.clear();

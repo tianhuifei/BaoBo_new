@@ -1,0 +1,5 @@
+
+.devIcon li{padding-left: 65px;padding-top:15px;padding-bottom: 15px;background-size: 10%;}
+.devIcon li a{padding-left:15px !important;}
+.devIcon li a.mui-active{background: transparent !important;}
+
