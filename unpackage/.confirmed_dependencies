@@ -138,7 +138,9 @@
 			"html/house/css/house.css",
 			"js/mui.js",
 			"images/droplight.png",
-			"js/reconnecting-websocket.js"
+			"js/reconnecting-websocket.js",
+			"images/spotlight.png",
+			"images/tube.png"
 		],
 		"refer": [
 			"html/house/addHouse/addDevice/addDevice.html",
@@ -159,7 +161,9 @@
 			"css/common.css",
 			"fonts/mui.ttf",
 			"css/mui.min.css",
-			"js/mui.js"
+			"js/mui.js",
+			"js/reconnecting-websocket.js",
+			"js/zepto-min.js"
 		],
 		"refer": [
 			"html/house/addHouse/addDevice/devIcon.html"

@@ -32,7 +32,7 @@
 						</li>
 					</template>
 
-					<li class="mui-table-view-cell mui-media mui-col-xs-4 ">
+					<!--<li class="mui-table-view-cell mui-media mui-col-xs-4 ">
 						<a href="javascript:void(0);" class="room-img room-main">
 
 						</a>
@@ -40,7 +40,7 @@
 						<i class="delete-btn" v-show="deleteBtn">
 					<span class="mui-icon mui-icon-minus" ></span>
 					</i>
-					</li>
+					</li>-->
 
 					<li class="mui-table-view-cell mui-media mui-col-xs-4" @tap="addHouse">
 						<a href="javascript:void(0)" class="room-add room-img">
@@ -153,7 +153,7 @@
 			function initWebSocket() {
 				ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws");
 				ws.onopen = function(e) {
-
+					console.log("哈哈哈哈")
 				}
 				ws.onmessage = function(e) {
 					var data = dataDispose(e.data, ws);
@@ -182,7 +182,8 @@
 					console.error("houseWS")
 				}
 				ws.onclose = function(e) {
-					console.info("关闭了")
+					console.info("关闭了");
+					
 				}
 			}
 

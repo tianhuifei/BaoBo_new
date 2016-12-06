@@ -65,14 +65,14 @@
 					<div class="mui-scroll-wrapper">
 						<div class="mui-scroll">
 
-							<ul class="mui-table-view mui-table-view-chevron addDevice">
-								<li class="mui-table-view-cell mui-radio mui-left lamp-1" data-type='button' @tap="setType">
-									<a href="#account" class="mui-navigate-right">单向开关</a>
+							<ul class="mui-table-view mui-table-view-chevron addDevice" id="addType">
+								<li class="mui-table-view-cell mui-radio mui-left lamp-1" data-type='button' @tap="setTypeVal('button')">
+									<a href="#account" class="mui-navigate-right" >单向开关</a>
 								</li>
-								<li class="mui-table-view-cell mui-radio mui-left lamp-2">
-									<a href="#account" class="mui-navigate-right">双向开关</a>
+								<li class="mui-table-view-cell mui-radio mui-left lamp-2" data-type='button' @tap="setTypeVal('button')">
+									<a href="#account" class="mui-navigate-right" >双向开关</a>
 								</li>
-								<li class="mui-table-view-cell mui-radio mui-left socket-1">
+								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='button' @tap="setTypeVal('button')">
 									<a href="#account" class="mui-navigate-right">单向插座</a>
 								</li>
 							</ul>
@@ -122,6 +122,7 @@
 	<script src="../../../../js/vue.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../../../../js/common.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../../../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../../js/zepto-min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/mui.view.js "></script>
 	<script>
 		mui.init();
@@ -139,7 +140,10 @@
 		});
 		mui.ready(function() {
 			initVue();
-
+			mui("#addType").on('tap','li',function(){
+				addDevice.$data.devType = $(this).attr("data-type");
+				alert(addDevice.$data.devType )
+			})
 		});
 
 		function initVue() {
@@ -153,9 +157,11 @@
 					devType:""
 				},
 				methods: {
-					setType:function(e){
-						var domThis = e.target.currentTarget;
-						this.devType = domThis.getAttribute('data-type');
+					setTypeVal:function(devType){
+						/*var domThis = e.currentTarget;
+						this.devType = domThis.getAttribute('data-type');*/
+						alert(devType)
+						this.devType =devType
 					},
 					selectedClass: function() {
 						mui.openWindow({
@@ -164,9 +170,13 @@
 					},
 					submitDevice: function() {
 						var _self = this,parameter={};
+						if(!_self.devName){
+							mui.toast("请输入设备名称");
+							return false;
+						}
 						account = JSON.parse(localStorage.getItem("account"));
 						var timestamp = Date.parse(new Date());
-						var message = '#{"CMD":"add","USERID":"' + account.currentID + '","TAG":"'+timestamp+'","TYPE":"' + os + '","ROOMNAME":"' + _self.roomName + '","DEVICENAME":"' + _self.devName + '","NICKNAME":"","DEVICESORT":"' + _self.devSort + '","ROOMPIC":"' + _self.className + '"}*';
+						var message = '#{"CMD":"add",DEV:"'+_self.devType+'","USERID":"' + account.currentID + '","TAG":"'+timestamp+'","TYPE":"' + os + '","ROOMNAME":"' + _self.roomName + '","DEVICENAME":"' + _self.devName + '","NICKNAME":"","DEVICESORT":"' + _self.devSort + '","ROOMPIC":"' + _self.className + '"}*';
 						parameter.timestamp = timestamp;
 						parameter.type = _self.devType;
 						parameter.roomName = _self.roomName;
@@ -227,11 +237,12 @@
 								"DEVICEPIC": parameter.className,
 								"TYPE": ""
 							}
+							mui.fire(opener,"addDeviceUpdata",{
+								dev:devObj
+							});
 						}
 						console.log(JSON.stringify(devObj))
-						mui.fire(opener,"addDeviceUpdata",{
-							dev:devObj
-						});
+						
 						ws.close();
 						break;
 					default:
