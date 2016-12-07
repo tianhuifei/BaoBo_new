@@ -15,7 +15,7 @@
 				padding-left: 18px !important;
 			}
 			
-			.mui-navigate-right.mui-active {
+			.deviceType.mui-active {
 				background-color: transparent !important;
 			}
 			
@@ -32,6 +32,10 @@
 			.mui-input-row {
 				border-top: 1px solid #dedede;
 				padding-top: 15px;
+			}
+			
+			.title {
+				margin: 20px 15px 7px;
 			}
 		</style>
 		<link rel="stylesheet" type="text/css" href="css/feedback.css" />
@@ -66,14 +70,32 @@
 						<div class="mui-scroll">
 
 							<ul class="mui-table-view mui-table-view-chevron addDevice" id="addType">
-								<li class="mui-table-view-cell mui-radio mui-left lamp-1" data-type='button' @tap="setTypeVal('button')">
-									<a href="#account" class="mui-navigate-right" >单向开关</a>
+								<li class="mui-table-view-cell mui-radio mui-left lamp-1" data-type='button'>
+									<a href="#account" class="mui-navigate-right deviceType">单向开关</a>
 								</li>
-								<li class="mui-table-view-cell mui-radio mui-left lamp-2" data-type='button' @tap="setTypeVal('button')">
-									<a href="#account" class="mui-navigate-right" >双向开关</a>
+								<li class="mui-table-view-cell mui-radio mui-left lamp-2" data-type='button'>
+									<a href="#account" class="mui-navigate-right deviceType">双向开关</a>
 								</li>
-								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='button' @tap="setTypeVal('button')">
-									<a href="#account" class="mui-navigate-right">单向插座</a>
+								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='button'>
+									<a href="#account" class="mui-navigate-right deviceType">单向插座</a>
+								</li>
+								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='button'>
+									<a href="#account" class="mui-navigate-right deviceType">双向插座</a>
+								</li>
+								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='button'>
+									<a href="#account" class="mui-navigate-right deviceType">监控摄像头</a>
+								</li>
+								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='trigger'>
+									<a href="#account" class="mui-navigate-right deviceType">红外线传感器</a>
+								</li>
+								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='switch'>
+									<a href="#air-condition" class="mui-navigate-right deviceType">智能窗帘</a>
+								</li>
+								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='button'>
+									<a href="#account" class="mui-navigate-right deviceType">智能空调</a>
+								</li>
+								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='button'>
+									<a href="#account" class="mui-navigate-right deviceType">电视</a>
 								</li>
 							</ul>
 
@@ -115,14 +137,45 @@
 
 				</div>
 			</div>
+			<div id="air-condition" class="mui-page">
+				<div class="mui-navbar-inner mui-bar mui-bar-nav">
+					<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>窗帘设置
+				</button>
+					<h1 class="mui-center mui-title">智能窗帘</h1>
+				</div>
+				<div class="mui-page-content" style="background-color: #FFF;">
+					<div class="settingInfo">
+						<p class="title">窗帘开关基本信息设置</p>
+						<div class="mui-card" style="margin-bottom: 35px;">
+							<ul class="mui-table-view m0">
+								<li class="mui-table-view-cell">
+									<a class="mui-navigate-right" @tap="airConditionType">
+										选择窗帘开关
+									</a>
+								</li>
+
+							</ul>
+						</div>
+						<p class="title">窗帘开关基本信息设置</p>
+						<div class="mui-content-padded" style="margin-bottom: 35px;">
+						<div class="mui-input-row" style="border-top:0;padding-top:0;">
+							<input type="text" v-model="devName" placeholder="请输入设备名">
+						</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
 		</div>
 
 	</body>
 	<script src="../../../../js/mui.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../../../../js/vue.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../../../../js/common.js" type="text/javascript" charset="utf-8"></script>
-	<script src="../../../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
+	<!--<script src="../../../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>-->
 	<script src="../../../../js/zepto-min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/addDevice.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/mui.view.js "></script>
 	<script>
 		mui.init();
@@ -132,7 +185,7 @@
 		});
 		//初始化单页的区域滚动
 		mui('.mui-scroll-wrapper').scroll();
-		var account,self,opener;
+		var account, self, opener;
 		mui.plusReady(function() {
 			account = JSON.parse(localStorage.getItem("account"));
 			self = plus.webview.currentWebview();
@@ -140,9 +193,8 @@
 		});
 		mui.ready(function() {
 			initVue();
-			mui("#addType").on('tap','li',function(){
+			mui("#addType").on('tap', 'li', function() {
 				addDevice.$data.devType = $(this).attr("data-type");
-				alert(addDevice.$data.devType )
 			})
 		});
 
@@ -154,14 +206,14 @@
 					className: "droplight",
 					devSort: '',
 					roomName: "",
-					devType:""
+					devType: ""
 				},
 				methods: {
-					setTypeVal:function(devType){
+					setTypeVal: function(devType) {
 						/*var domThis = e.currentTarget;
 						this.devType = domThis.getAttribute('data-type');*/
 						alert(devType)
-						this.devType =devType
+						this.devType = devType
 					},
 					selectedClass: function() {
 						mui.openWindow({
@@ -169,25 +221,84 @@
 						})
 					},
 					submitDevice: function() {
-						var _self = this,parameter={};
-						if(!_self.devName){
+						var _self = this,
+							parameter = {};
+						if(!_self.devName) {
 							mui.toast("请输入设备名称");
 							return false;
 						}
 						account = JSON.parse(localStorage.getItem("account"));
 						var timestamp = Date.parse(new Date());
-						var message = '#{"CMD":"add",DEV:"'+_self.devType+'","USERID":"' + account.currentID + '","TAG":"'+timestamp+'","TYPE":"' + os + '","ROOMNAME":"' + _self.roomName + '","DEVICENAME":"' + _self.devName + '","NICKNAME":"","DEVICESORT":"' + _self.devSort + '","ROOMPIC":"' + _self.className + '"}*';
-						parameter.timestamp = timestamp;
+						var message = createMessage(_self, account, timestamp);
+						//var message = '#{"CMD":"add",DEV:"'+_self.devType+'","USERID":"' + account.currentID + '","TAG":"'+timestamp+'","TYPE":"' + os + '","ROOMNAME":"' + _self.roomName + '","DEVICENAME":"' + _self.devName + '","NICKNAME":"","DEVICESORT":"' + _self.devSort + '","ROOMPIC":"' + _self.className + '"}*';
+						/*parameter.timestamp = timestamp;
 						parameter.type = _self.devType;
 						parameter.roomName = _self.roomName;
 						parameter.devName = _self.devName;
 						parameter.devSort = _self.devSort;
-						parameter.className = _self.className;
-						initWebsocket(timestamp,message,_self.devType,parameter);
+						parameter.className = _self.className;*/
+						initWebsocket(timestamp, message, _self.devType);
 
+					},
+					airConditionType: function() { //设置空调类型
+						plus.nativeUI.actionSheet({
+							title: "空调轨道选择",
+							cancel: "取消",
+							buttons: [{
+								title: "单轨窗帘开关"
+							}, {
+								title: "双轨窗帘开关"
+							}]
+						}, function(e) {
+							if(!e.index) return false;
+
+						});
 					}
+
 				}
 			})
+		}
+		/**
+		 * @param {Object} vobj
+		 * @param {Object} account 用户信息
+		 * @param {Object} timestamp TAG 时间戳
+		 */
+		function createMessage(vobj, account, timestamp) {
+			var message = devMessage[vobj.devType];
+			switch(vobj.devType) {
+				case "button":
+					message.CMD = "add";
+					message.DEV = "button";
+					message.DEVICENAME = vobj.devName;
+					message.TAG = timestamp.toString();
+					message.ROOMNAME = vobj.roomName;
+					message.USERID = account.currentID;
+					message.DEVICESORT = vobj.devSort.toString();
+					message.ROOMPIC = vobj.className;
+					message.TYPE = os;
+					break;
+				case "switch":
+					message.CMD = "add";
+					message.DEV = "switch";
+					message.DEVICENAME = vobj.devName;
+					message.ROOMNAME = vobj.roomName;
+					message.USERID = account.currentID;
+					message.TYPE = os;
+					message.TAG = timestamp;
+					break;
+				case "trigger":
+					message.CMD = "add";
+					message.DEV = "trigger";
+					message.DEVICENAME = vobj.devName;
+					message.ROOMNAME = vobj.roomName;
+					message.TAG = timestamp;
+					message.USERID = account.currentID;
+					message.TYPE = os;
+					break;
+				default:
+					break;
+			}
+			return "#" + JSON.stringify(message) + "*"
 		}
 		//自定义事件  设置图标
 		document.addEventListener("className", function(e) {
@@ -205,16 +316,14 @@
 		 * @param {Object} tag 事件来源
 		 * @param {Object} msg 发送的信息
 		 * @param {Object} type 设备类型
-		 * @param {Object} parameter 参数对象
 		 */
-		function initWebsocket(tag, msg,type,parameter) {
-			var ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws");
+		function initWebsocket(tag, msg, type) {
+			var ws = new WebSocket("ws://123.56.176.67:9010/ws");
 
 			ws.onopen = function(e) {
 				console.log("添加设备房间开启" + msg)
-					console.log(msg)
-					plus.nativeUI.showWaiting("请稍后...");
-					ws.send(msg)
+				plus.nativeUI.showWaiting("请稍后...");
+				ws.send(msg)
 			};
 			ws.onmessage = function(e) {
 				console.log(JSON.stringify(e.data))
@@ -225,24 +334,13 @@
 					case regExp.test(data.TAG):
 						plus.nativeUI.closeWaiting();
 						if(errorDispose(data)) {
-							
+
 							mui.toast("添加成功");
-							var devObj = {
-								"STATUS": "0",
-								"DEVICEID": data.DEVICEID,
-								"DEVICESORT": parameter.devSort,
-								"DEV": type,
-								"DEVICENAME": parameter.devName,
-								"ROOMNAME": parameter.roomName,
-								"DEVICEPIC": parameter.className,
-								"TYPE": ""
-							}
-							mui.fire(opener,"addDeviceUpdata",{
-								dev:devObj
-							});
+							/*mui.fire(opener,"addDeviceUpdata",{
+								//dev:devObj
+							});*/
 						}
-						console.log(JSON.stringify(devObj))
-						
+
 						ws.close();
 						break;
 					default:
@@ -258,9 +356,7 @@
 			}
 
 		}
-		
-		
-		
+
 		var view = viewApi.view;
 		(function($) {
 			//处理view的后退与webview后退

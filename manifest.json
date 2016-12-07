@@ -292,7 +292,9 @@
 					"images/rooms_main.png",
 					"html/house/css/house.css",
 					"js/reconnecting-websocket.js",
-					"images/rooms_ertong.png"
+					"images/rooms_ertong.png",
+					"images/rooms_chufang.png",
+					"images/rooms_zoulang.png"
 				],
 				"refer": [
 					"html/house/addHouse/addHouse.html",
@@ -361,7 +363,8 @@
 					"css/mui.min.css",
 					"js/mui.js",
 					"js/reconnecting-websocket.js",
-					"js/zepto-min.js"
+					"js/zepto-min.js",
+					"html/house/addHouse/addDevice/js/addDevice.js"
 				],
 				"refer": [
 					"html/house/addHouse/addDevice/devIcon.html"

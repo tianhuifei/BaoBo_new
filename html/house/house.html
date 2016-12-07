@@ -163,6 +163,7 @@
 							if(errorDispose(data)) {
 								vHouse.$data.houses = data.ROOMS;
 								localStorage.setItem("houses", JSON.stringify(vHouse.$data.houses))
+								console.log(JSON.stringify(vHouse.$data.houses))
 							}
 
 							break;

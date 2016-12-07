@@ -102,7 +102,7 @@
 							mui.fire(triggerPage,"triggerInfo",{item:item})
 							triggerPage.show();
 						},
-						showDeleteBtn: function() { //删除设备
+						showDeleteBtn: function() { //删除按钮显示
 							if(this.deleteBtn) return false;
 							this.deleteBtn = true; //删除按钮显示
 							plus.device.vibrate(100)
@@ -117,7 +117,7 @@
 								//console.log((e.index == 0) ? "Yes!" : "No!");
 								if(e.index != 0) return false;
 								var timestamp = Date.parse(new Date());
-								var message = '#{"CMD":"delete","USERID":"' + account.currentID + '","TAG":"' + timestamp + '","TYPE":"' + os + '","ROOMNAME":"' + item.ROOMNAME + '","DEVICENAME":"' + item.DEVICENAME + '","NICKNAME":"","DEVICESORT":"","ROOMPIC":""}*'
+								var message = '#{"CMD":"delete","USERID":"' + account.currentID + '","TAG":"' + timestamp.toString() + '","TYPE":"' + os + '","ROOMNAME":"' + item.ROOMNAME + '","DEVICENAME":"' + item.DEVICENAME + '","NICKNAME":"","DEVICESORT":"","ROOMPIC":""}*'
 								initWebSocket(deleteDev, timestamp, message);
 
 							}, "删除设备", ["确定", "取消"]);
@@ -134,8 +134,9 @@
 				console.log(deviceVue.$data.deviceList)
 			}, false);
 			
+			//刷新
 			document.addEventListener("addDeviceUpdata",function(e){
-				deviceVue.$data.deviceList.push(e.detail.dev)
+				//deviceVue.$data.deviceList.push(e.detail.dev)
 			},false)
 
 			/**
@@ -178,13 +179,14 @@
 				var regExp = new RegExp(tag);
 				switch(true) {
 					case regExp.test(data.TAG):
+						console.log(JSON.stringify(data))
 						plus.nativeUI.closeWaiting();
 						console.log(parseInt(data.ERRNO) == -1)
 
-						/*if(parseInt(data.ERRNO)  == -1){
-							mui.toast(data.ERROR);
+						if(parseInt(data.ERRNO)  == -1){
+							mui.toast('删除失败');
 							return false;
-						}*/
+						}
 						deviceVue.$data.deviceList.splice(deviceVue.$data.removeStart, 1);
 						ws.close()
 						break;
