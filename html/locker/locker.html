@@ -103,13 +103,17 @@
 		<script src="../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
 		<script>
 			var vLocker,
-				login, self, setWIFI, account, ws, editLocker, house;
+				login, self, setWIFI, account, ws, editLocker, house,isEdit = false;
 			mui.plusReady(function() {
 
 				login = plus.webview.getWebviewById("login");
 				setWIFI = plus.webview.getWebviewById("setWIFI");
 				self = plus.webview.currentWebview();
-
+				self.addEventListener("show",function(){
+					setTimeout(function(){//延迟执行,等进行后台登录
+						initUser();
+					},2000)
+				},false);
 				//mui.fire(,"loadHouses",{})	
 
 			});
@@ -136,15 +140,15 @@
 					methods: {
 						otherLogin: function() { //其他用户
 							login.show();
-							setTimeout(function() {
+							/*setTimeout(function() {
 								self.hide();
-							}, 300);
+							}, 300);*/
 						},
 						setWIFI: function() {
 							setWIFI.show();
-							setTimeout(function() {
+							/*setTimeout(function() {
 								self.hide();
-							}, 300)
+							}, 300)*/
 						},
 						editLocker: function() {
 
@@ -161,13 +165,13 @@
 					console.log("locker-----长连接开启")
 				};
 				ws.onmessage = function(event) {
-					var data = dataDispose(event.data, ws)
-						/*if(data == CENTRT) {
-							console.log("locker------心跳")
-							ws.send(data);
-							return;
-						}*/
-					if(!data) return false;
+					var data = dataDispose(event.data)
+						if(data == CENTRT) {
+						console.log("心跳") 
+						ws.send(data);
+						return;
+					}
+					
 					switch(data.TAG) {
 						case "lockerEdit":
 							plus.nativeUI.closeWaiting();
@@ -200,6 +204,7 @@
 					record = [];
 				//处理事件
 				holder.addEventListener('done', function(event) {
+					account = JSON.parse(localStorage.getItem("account"));
 					var rs = event.detail;
 					if(rs.points.length < 4) {
 						mui.toast('设定的手势太简单了');
@@ -230,7 +235,7 @@
 					}
 				});
 			}(mui, document));
-
+			
 			(function($, doc) {
 				$.init();
 				var holder = doc.querySelector('#deblocking'),
@@ -239,7 +244,7 @@
 				holder.addEventListener('done', function(event) {
 					var rs = event.detail;
 					if(rs.points.length < 4) {
-						mui.toast('至少连接4个节点');
+						//mui.toast('至少连接4个节点');
 						record = [];
 						rs.sender.clear();
 
@@ -250,7 +255,15 @@
 					if(rs.points.join('') == account.locker) {
 						record = [];
 						rs.sender.clear();
-						self.hide();
+						if(isEdit){
+							isEdit = false;
+							showSettingLocker();
+						}else{
+							self.hide();
+							setWIFI.hide();
+							login.hide();
+						}
+						
 					} else {
 						mui.toast("密码无效！")
 						record = [];
@@ -268,9 +281,7 @@
 						break;
 					}
 				}
-				//关闭actionsheet
 				mui('#' + parent.id).popover('toggle');
-				//info.innerHTML = "你刚点击了\"" + a.innerHTML + "\"按钮";
 			});
 			mui('body').on('shown', '.mui-popover', function(e) {
 				console.log('shown', e.detail.id); //detail为当前popover元素
@@ -293,13 +304,21 @@
 				document.getElementById("holder").style.display = "none";
 				document.getElementById("deblocking").style.display = "block";
 			}
+			
+			function editPwd (){
+				
+				isEdit = true;
+				showDeblocking()
+			};
 
 			//首页返回键处理
 			//处理逻辑：1秒内，连续两次按返回键，则退出应用
+			var oldback = mui.back;
 			if(mui.os.android) {
 				var first = null;
 				mui.back = function() {
-					//首次按键，提示‘再按一次退出应用’
+					if(!isEdit){
+						//首次按键，提示‘再按一次退出应用’
 					if(!first) {
 						first = new Date().getTime();
 						mui.toast('再按一次退出应用');
@@ -310,6 +329,9 @@
 						if(new Date().getTime() - first < 1000) {
 							plus.runtime.quit();
 						}
+					}
+					}else{
+						oldback();
 					}
 				};
 			}

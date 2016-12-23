@@ -10,6 +10,9 @@
 		<link rel="stylesheet" type="text/css" href="../../../../css/mui.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/addDevice.css" />
 		<link rel="stylesheet" type="text/css" href="../../../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../../../css/app.css" />
+		<link rel="stylesheet" type="text/css" href="../../../../css/mui.picker.css" />
+		<link rel="stylesheet" type="text/css" href="../../../../css/mui.poppicker.css" />
 		<style>
 			.mui-navigate-right {
 				padding-left: 18px !important;
@@ -70,33 +73,29 @@
 						<div class="mui-scroll">
 
 							<ul class="mui-table-view mui-table-view-chevron addDevice" id="addType">
-								<li class="mui-table-view-cell mui-radio mui-left lamp-1" data-type='button'>
+								<li class="mui-table-view-cell mui-radio mui-left lamp-1" data-addDevType="light" data-type='button'>
 									<a href="#account" class="mui-navigate-right deviceType">单向开关</a>
 								</li>
-								<li class="mui-table-view-cell mui-radio mui-left lamp-2" data-type='button'>
-									<a href="#account" class="mui-navigate-right deviceType">双向开关</a>
-								</li>
-								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='button'>
+
+								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-addDevType="socket" data-type='button'>
 									<a href="#account" class="mui-navigate-right deviceType">单向插座</a>
 								</li>
-								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='button'>
-									<a href="#account" class="mui-navigate-right deviceType">双向插座</a>
-								</li>
-								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='button'>
+
+								<!--<li class="mui-table-view-cell mui-radio mui-left camera" data-addDevType="camera" data-type='button'>
 									<a href="#account" class="mui-navigate-right deviceType">监控摄像头</a>
+								</li>-->
+								<li class="mui-table-view-cell mui-radio mui-left sensor" data-addDevType="sensor" data-type='sensor'>
+									<a href="#sensor" class="mui-navigate-right deviceType">传感器</a>
 								</li>
-								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='trigger'>
-									<a href="#account" class="mui-navigate-right deviceType">红外线传感器</a>
-								</li>
-								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='switch'>
+								<li class="mui-table-view-cell mui-radio mui-left curtain" data-addDevType="curtain" data-type='button'>
 									<a href="#air-condition" class="mui-navigate-right deviceType">智能窗帘</a>
 								</li>
-								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='button'>
+								<!--<li class="mui-table-view-cell mui-radio mui-left air-condition" data-addDevType="air-condition" data-type='button'>
 									<a href="#account" class="mui-navigate-right deviceType">智能空调</a>
 								</li>
-								<li class="mui-table-view-cell mui-radio mui-left socket-1" data-type='button'>
+								<li class="mui-table-view-cell mui-radio mui-left TV" data-addDevType="TV" data-type='button'>
 									<a href="#account" class="mui-navigate-right deviceType">电视</a>
-								</li>
+								</li>-->
 							</ul>
 
 						</div>
@@ -150,8 +149,8 @@
 						<div class="mui-card" style="margin-bottom: 35px;">
 							<ul class="mui-table-view m0">
 								<li class="mui-table-view-cell">
-									<a class="mui-navigate-right" @tap="airConditionType">
-										选择窗帘开关
+									<a class="mui-navigate-right" v-text="pathwayName" @tap="airConditionType">
+
 									</a>
 								</li>
 
@@ -159,12 +158,36 @@
 						</div>
 						<p class="title">窗帘开关基本信息设置</p>
 						<div class="mui-content-padded" style="margin-bottom: 35px;">
+							<div class="mui-input-row" style="border-top:0;padding-top:0;">
+								<input type="text" v-model="devName" placeholder="请输入设备名">
+							</div>
+							<button type="button" @tap="submitDevice" class="mui-btn mui-btn-primary mui-btn-block">确定</button>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+			<div id="sensor" class="mui-page">
+				<div class="mui-navbar-inner mui-bar mui-bar-nav">
+					<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>传感器设置
+				</button>
+					<h1 class="mui-center mui-title">传感器</h1>
+				</div>
+				<div class="mui-page-content" style="background-color: #FFF;">
+					<div class="mui-content-padded">
+
+						<button @tap="showPicketShow" style="font-size: 14px;color:#787878;" v-text="sensorName" class="mui-btn mui-btn-block" type='button'></button>
+
+					</div>
+					<p class="title">窗帘开关基本信息设置</p>
+					<div class="mui-content-padded" style="margin-bottom: 35px;">
 						<div class="mui-input-row" style="border-top:0;padding-top:0;">
 							<input type="text" v-model="devName" placeholder="请输入设备名">
 						</div>
-						</div>
+						<button type="button" @tap="submitDevice" class="mui-btn mui-btn-primary mui-btn-block">确定</button>
 					</div>
-
 				</div>
 			</div>
 		</div>
@@ -177,7 +200,10 @@
 	<script src="../../../../js/zepto-min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/addDevice.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/mui.view.js "></script>
+	<script src="../../../../js/mui.picker.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../../../js/mui.poppicker.js" type="text/javascript" charset="utf-8"></script>
 	<script>
+		var userPicker;
 		mui.init();
 		//初始化单页view
 		var viewApi = mui('#app').view({
@@ -190,11 +216,16 @@
 			account = JSON.parse(localStorage.getItem("account"));
 			self = plus.webview.currentWebview();
 			opener = self.opener();
+			self.addEventListener("hide", function() {
+				self.reload(true);
+			}, false);
 		});
 		mui.ready(function() {
 			initVue();
+			initPicket();
 			mui("#addType").on('tap', 'li', function() {
 				addDevice.$data.devType = $(this).attr("data-type");
+				addDevice.$data.addDevType = $(this).attr("data-addDevType")
 			})
 		});
 
@@ -203,10 +234,15 @@
 				el: "#addDevice",
 				data: {
 					devName: "",
-					className: "droplight",
+					className: "lightTP-droplight",
 					devSort: '',
 					roomName: "",
-					devType: ""
+					devType: "",
+					addDevType: "", //添加的设备,比如灯,窗帘    用于做判断
+					pathway: 0, //   窗帘轨道  1  单轨,2双轨
+					pathwayName: "选择窗帘开关",
+					sensorName: "请选择要添加的设备", //传感器名字
+					sensorType: "" //传感器的类别
 				},
 				methods: {
 					setTypeVal: function(devType) {
@@ -221,8 +257,7 @@
 						})
 					},
 					submitDevice: function() {
-						var _self = this,
-							parameter = {};
+						var _self = this;
 						if(!_self.devName) {
 							mui.toast("请输入设备名称");
 							return false;
@@ -241,6 +276,7 @@
 
 					},
 					airConditionType: function() { //设置空调类型
+						var _self = this;
 						plus.nativeUI.actionSheet({
 							title: "空调轨道选择",
 							cancel: "取消",
@@ -250,9 +286,24 @@
 								title: "双轨窗帘开关"
 							}]
 						}, function(e) {
-							if(!e.index) return false;
 
+							_self.pathway = e.index;
+							if(_self.pathway == 1) {
+								_self.pathwayName = "单轨窗帘开关";
+								return false;
+							}
+							_self.pathwayName = "双轨窗帘开关";
 						});
+					},
+					showPicketShow: function() {
+						var _self = this;
+						userPicker.show(function(items) {
+							_self.$data.sensorType = items[0].value;
+							_self.$data.sensorName = items[0].text;
+							//返回 false 可以阻止选择框的关闭
+							//return false;
+
+						})
 					}
 
 				}
@@ -267,6 +318,7 @@
 			var message = devMessage[vobj.devType];
 			switch(vobj.devType) {
 				case "button":
+
 					message.CMD = "add";
 					message.DEV = "button";
 					message.DEVICENAME = vobj.devName;
@@ -276,6 +328,7 @@
 					message.DEVICESORT = vobj.devSort.toString();
 					message.ROOMPIC = vobj.className;
 					message.TYPE = os;
+
 					break;
 				case "switch":
 					message.CMD = "add";
@@ -284,21 +337,115 @@
 					message.ROOMNAME = vobj.roomName;
 					message.USERID = account.currentID;
 					message.TYPE = os;
-					message.TAG = timestamp;
+					message.TAG = timestamp.toString();
 					break;
 				case "trigger":
 					message.CMD = "add";
 					message.DEV = "trigger";
 					message.DEVICENAME = vobj.devName;
 					message.ROOMNAME = vobj.roomName;
-					message.TAG = timestamp;
+					message.TAG = timestamp.toString();
 					message.USERID = account.currentID;
 					message.TYPE = os;
+					message.IF = [];
+					break;
+				case "sensor":
+					message.CMD = "add";
+					message.DEV = vobj.sensorType;
+					message.DEVICENAME = vobj.devName;
+					message.ROOMNAME = vobj.roomName;
+					message.USERID = account.currentID;
+					message.TYPE = os;
+					message.DEVICESORT = vobj.devSort.toString();
+					message.TAG = timestamp.toString();
+
+					break;
+				default: 
+					break;
+			}
+			//根据类型修改  头像 及要生成的按钮个数
+			switch(vobj.addDevType) {
+				case "light": //灯
+					message.BUTTONNUM = '2';
+					break;
+				case "socket": //插座
+					break;
+				case "camera": //摄向头
+					break;
+				case "sensor": //红外线
+					message = getSensorType(message, vobj.sensorType)
+					break;
+				case "curtain": //窗帘
+					if(vobj.pathway == 1) {
+						message.ROOMPIC = "curtain-" + vobj.pathway
+						message.BUTTONNUM = '3'
+					} else if(vobj.pathway == 2) {
+						message.ROOMPIC = "curtain-" + vobj.pathway
+						message.BUTTONNUM = '6'
+					}
+					break;
+				case "air-condition": //空调 
+					break;
+				case "TV": //电视
 					break;
 				default:
 					break;
 			}
+
 			return "#" + JSON.stringify(message) + "*"
+		}
+
+		/**
+		 * 根据传感器的类型 设置头像,及按钮数
+		 * @param {Object} msg
+		 * @param {Object} type
+		 */
+		function getSensorType(msg, type) {
+			switch (type){
+				case "switch":
+					msg.ROOMPIC = "sensor-switch"//开关
+					msg.BUTTONNUM = "2"
+					break;
+				case "human":
+					msg.ROOMPIC = 'sensor-human' //人体红外传感器
+					msg.BUTTONNUM = "2"
+					break;
+				case "door":
+					msg.ROOMPIC = 'sensor-door' //门磁传感器
+					msg.BUTTONNUM = "2"
+					break;
+				case "smoke":
+					msg.ROOMPIC = 'sensor-smoke' //烟雾传感器 
+					msg.BUTTONNUM = "2"
+					break;
+				case "gas":
+					msg.ROOMPIC = 'sensor-gas' //气体传感器
+					msg.BUTTONNUM = "2"
+					break;
+				case "temp":
+					msg.ROOMPIC = 'sensor-temp' //温度传感器
+					msg.BUTTONNUM = "2"
+					break;
+				case "humidity":
+					msg.ROOMPIC = 'sensor-humidity' //湿度传感器
+					msg.BUTTONNUM = "2"
+					break;
+				case "lamp":
+					msg.ROOMPIC = 'sensor-lamp' //灯泡（可调光） 
+					msg.BUTTONNUM = "2"
+					break;
+				case "light":
+					msg.ROOMPIC = 'sensor-light' //光强度传感器
+					msg.BUTTONNUM = "2"
+					break;
+				case "infrared":
+					msg.ROOMPIC = 'sensor-infrared' //红外转发
+					msg.BUTTONNUM = "2"
+					break;
+				default:
+					break;
+			}
+			return msg
 		}
 		//自定义事件  设置图标
 		document.addEventListener("className", function(e) {
@@ -327,18 +474,24 @@
 			};
 			ws.onmessage = function(e) {
 				console.log(JSON.stringify(e.data))
-				var data = dataDispose(e.data, ws);
-				if(!data) return false;
+				var data = dataDispose(e.data);
+				if(data == CENTRT) {
+					console.log("心跳")
+					ws.send(data);
+					return;
+				}
 				var regExp = new RegExp(tag);
 				switch(true) {
 					case regExp.test(data.TAG):
 						plus.nativeUI.closeWaiting();
+						console.log("添加设备后台返回数据: " + JSON.stringify(data))
 						if(errorDispose(data)) {
 
 							mui.toast("添加成功");
-							/*mui.fire(opener,"addDeviceUpdata",{
-								//dev:devObj
-							});*/
+							mui.fire(opener, "addDeviceUpdata", {});
+							setTimeout(function() {
+								self.hide();
+							}, 500)
 						}
 
 						ws.close();
@@ -383,6 +536,42 @@
 				//				console.log(e.detail.page.id + ' back');
 			});
 		})(mui);
+
+		function initPicket() {
+			//普通示例
+			userPicker = new mui.PopPicker();
+			userPicker.setData([{
+				value: 'switch',
+				text: '开关'
+			}, {
+				value: 'human',
+				text: '人体红外传感器'
+			}, {
+				value: 'door',
+				text: '门磁传感器'
+			}, {
+				value: 'smoke',
+				text: '烟雾传感器'
+			}, {
+				value: 'gas',
+				text: '气体传感器 '
+			}/*, {
+				value: 'temp',
+				text: '温度传感器'
+			}, {
+				value: 'humidity',
+				text: '湿度传感器'
+			}, {
+				value: 'lamp',
+				text: '灯泡（可调光）'
+			}, {
+				value: 'light',
+				text: '光强度传感器'
+			}, {
+				value: 'infrared',
+				text: '红外转发  '
+			}*/]);
+		}
 	</script>
 
 </html>

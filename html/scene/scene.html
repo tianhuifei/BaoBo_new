@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/scene.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <h1 class="mui-title">情景</h1>
+		</header>
+		<div class="mui-content" id="sceneApp">
+		    <div class="scene-null mui-center">
+		    	<p>场景为空</p>
+		    	<button type="button" @tap="openSetScene" class="mui-btn mui-btn-outlined" style="font-size: 12px;margin-top:15px;">添加场景</button>
+		    </div>
+		</div> 
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+			var sceneObj,
+				setScenePage;//添加场景页面
+			mui.plusReady(function(){
+				preLoadHtml();
+			});
+			
+			mui.ready(function(){
+				initVue();
+			})
+			
+			
+			function initVue (){
+				sceneObj =new Vue({
+					el:"#sceneApp",
+					data:{
+						
+					},
+					methods:{
+						openSetScene:function(){
+							setScenePage.show();
+						}
+					}
+				})
+			}
+			
+			/**
+			 * 预加载
+			 */
+			function preLoadHtml (){
+				setScenePage = mui.preload({
+					url:"setScene.html",
+					id:"setScene"
+				})
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,56 +1,93 @@
 
-@font-face {font-family: "baobo";
-  src:  url('../fonts/iconfont.ttf?t=1478613816375') format('truetype');/* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+@font-face {font-family: "sensors";
+  src:  url('../fonts/iconfont.ttf?t=1481638470692') format('truetype');
 }
 
 .baobo-icon {
-  font-family:"baobo" !important; 
+  font-family:"sensors" !important;
   font-size:16px;
   font-style:normal;
   -webkit-font-smoothing: antialiased;
   -webkit-text-stroke-width: 0.2px;
 }
 
+.sensor-hongwai:before { content: "\e60e"; }
 
-.icon-hongwai:before { content: "\e60e"; }
+.sensor-center:before { content: "\e617"; }
 
-.icon-gonglu:before { content: "\e600"; }
+.sensor-gonglu:before { content: "\e600"; }
 
-.icon-iconketing:before { content: "\e601"; }
+.sensor-switch:before { content: "\e61e"; }
 
-.icon-chuanglian:before { content: "\e60f"; }
+.sensor-set:before { content: "\e69f"; }
 
-.icon-tianjia:before { content: "\e60d"; }
+.sensor-iconketing:before { content: "\e601"; }
 
-.icon-jiankong:before { content: "\e610"; }
+.sensor-chuanglian:before { content: "\e60f"; }
 
-.icon-chuang:before { content: "\e602"; }
+.sensor-tianjia:before { content: "\e60d"; }
 
-.icon-ertongleyuan:before { content: "\e603"; }
+.sensor-bofang:before { content: "\e618"; }
 
-.icon-icon8:before { content: "\e604"; }
+.sensor-jiankong:before { content: "\e610"; }
 
-.icon-chufang:before { content: "\e605"; }
+.sensor-yunzhuji:before { content: "\e61c"; }
 
-.icon-keyongweiyu:before { content: "\e606"; }
+.sensor-chuang:before { content: "\e602"; }
 
-.icon-dianshi:before { content: "\e611"; }
+.sensor-ertongleyuan:before { content: "\e603"; }
 
-.icon-deng:before { content: "\e612"; }
+.sensor-icon8:before { content: "\e604"; }
 
-.icon-vidicon:before { content: "\e60c"; }
+.sensor-dingshi:before { content: "\e674"; }
 
-.icon-weiyu:before { content: "\e608"; }
+.sensor-xiangce:before { content: "\e67a"; }
 
-.icon-kongtiao:before { content: "\e613"; }
+.sensor-chufang:before { content: "\e605"; }
 
-.icon-canting:before { content: "\e609"; }
+.sensor-keyongweiyu:before { content: "\e606"; }
 
-.icon-Socket:before { content: "\e614"; }
+.sensor-infrared:before { content: "\e607"; }
 
-.icon-balcony:before { content: "\e60b"; }
+.sensor-shengji:before { content: "\e63d"; }
 
-.icon-ertong:before { content: "\e60a"; }
+.sensor-dianshi:before { content: "\e611"; }
+
+.sensor-deng:before { content: "\e612"; }
+
+.sensor-vidicon:before { content: "\e60c"; }
+
+.sensor-weiyu:before { content: "\e608"; }
+
+.sensor-kongtiao:before { content: "\e613"; }
+
+.sensor-canting:before { content: "\e609"; }
+
+.sensor-Socket:before { content: "\e614"; }
+
+.sensor-balcony:before { content: "\e60b"; }
+
+.sensor-ertong:before { content: "\e60a"; }
+
+.sensor-lamp:before { content: "\e62e"; }
+
+.sensor-humidity:before { content: "\e689"; }
+
+.sensor-smoke:before { content: "\e68b"; }
+
+.sensor-light:before { content: "\e690"; }
+
+.sensor-human:before { content: "\e925"; }
+
+.sensor-door:before { content: "\e927"; }
+
+.sensor-gas:before { content: "\e615"; }
+
+.sensor-yunpan:before { content: "\e666"; }
+
+.sensor-temp:before { content: "\e616"; }
+
+.sensor-chongqi:before { content: "\e66d"; }
 
 
 
@@ -62,7 +99,8 @@
 
 
 .m0{margin: 0 !important;}
-
+.m-t10{margin-top:10px !important;}
+.c-fff{background: #FFF !important;}
 
 .room-img{background-position: center !important;}
 /*房间图标*/
@@ -101,21 +139,23 @@
 .room-box.mui-grid-view.mui-grid-9 .mui-table-view-cell.mui-active{background-color:transparent !important;} 
 
 
-.droplight{background:url(../images/droplight.png) no-repeat 10px center;}
-.wall{background:url(../images/wall.png) no-repeat 10px center;}
-.tube{background:url(../images/tube.png) no-repeat 10px center;}
-.spotlight{background:url(../images/spotlight.png) no-repeat 10px center;}
-.backlight{background: url(../images/backlight.png) no-repeat 10px center;}
-.bedside{background: url(../images/bedside.png) no-repeat 10px center;}
-.mirror{background: url(../images/mirror.png) no-repeat 10px center;}
-.ceiling{background: url(../images/ceiling.png) no-repeat 10px center;}
+.lightTP-droplight{background:url(../images/droplight.png) no-repeat 10px center;}
+.lightTP-wall{background:url(../images/wall.png) no-repeat 10px center;}
+.lightTP-tube{background:url(../images/tube.png) no-repeat 10px center;}
+.lightTP-spotlight{background:url(../images/spotlight.png) no-repeat 10px center;}
+.lightTP-backlight{background: url(../images/backlight.png) no-repeat 10px center;}
+.lightTP-bedside{background: url(../images/bedside.png) no-repeat 10px center;}
+.lightTP-mirror{background: url(../images/mirror.png) no-repeat 10px center;}
+.lightTP-ceiling{background: url(../images/ceiling.png) no-repeat 10px center;}
 
+ 
 
+.curtain-btn{display: block;width:45px;height: 45px;margin:0 auto;}
+.curtain-open{background: url(../images/air-condition-open.png) no-repeat center center / 78% #fdc941 ; }
+.curtain-pause{background: url(../images/air-condition-pause.png) no-repeat center center / 49% #fdc941 ;}
+.curtain-close{background: url(../images/air-condition-close.png) no-repeat center center / 78% #fdc941 ;}
 
-
-
-
-
-
+.curtain-1:before { content: "\e60f"; }
+.curtain-2:before { content: "\e60f"; }
 
 

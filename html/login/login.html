@@ -87,7 +87,11 @@
 					<input type="text" v-model="userName" class="mui-input login-input mui-input-clear" placeholder="请输入用户名"></span>
 				</div>
 				<div class="mui-input-row mui-password">
-					<input type="password" v-model="passWord" class="mui-input-password login-input" placeholder="请输入密码"></span>
+					<input type="password" v-model="passWord" style="margin-bottom: 0;" class="mui-input-password login-input" placeholder="请输入密码"></span>
+				</div>
+				<div class="mui-input-row" style="margin:5px  0 10px 0;">
+					<a href="javascript:void(0);" @tap="openRegister" style="float:left;font-size: 14px;" class="mui-block ">注册</a>
+					<!--<a href="javascript:void(0);" style="float:right;font-size: 14px;" class="mui-block ">忘记密码</a>-->
 				</div>
 
 				<button type="button" @tap="login" class="mui-btn mui-btn-block mui-btn-outlined login-btn">登录系统</button>
@@ -103,9 +107,11 @@
 			mui.init();
 			var vLogin, //登录页面vue实例
 				self, setWIFI, ws, //websocket
-				tag; //事件类别
+				tag, //事件类别
+				locker,
+				register;
 			mui.plusReady(function() {
-				
+				locker = plus.webview.getWebviewById("locker");
 				self = plus.webview.currentWebview();
 				setWIFI = plus.webview.getWebviewById("setWIFI");
 				self.addEventListener("show", function() {
@@ -117,6 +123,7 @@
 				/*self.addEventListener("hide", function() {
 					ws.close();
 				})*/
+				preLoad();
 			});
 			
 			mui.ready(function() {
@@ -138,17 +145,20 @@
 							var _self = this;
 							tag = "login";
 							//登录
-							var message = '#{ "CMD":"login","USERNAME":"' + _self.userName + '","PASSWORD":"' + _self.passWord + '","TAG":"' + tag + '","TYPE":"' + os + '"}*';
+							var message = '#{ "CMD":"login","USERNAME":"' + _self.userName + '","PASSWORD":"' + _self.passWord + '","TAG":"login","TYPE":"' + os + '"}*';
 							console.log("登录消息   " + message)
 							plus.nativeUI.showWaiting("正在登录中...")
 							ws.send(message);
+						},
+						openRegister:function(){
+							register.show();
 						}
 					}
 				});
 			}
 
 			function loginSuccess(data) {
-				
+				var isWIFI =JSON.parse(JSON.stringify(localStorage.getItem("isWIFI"))) ;
 				var users;
 				var userIDs = data.USERID.split(",");
 				var account = {
@@ -156,17 +166,25 @@
 					passWord:vLogin.$data.passWord,
 					currentID:userIDs[0],
 					userIds:userIDs,
-					locker: data.GESTURE
+					locker: data.GESTURE,
+					nickName:data.NICKNAME
 				}
 				users =JSON.parse(data.lIMIT);
 				
 				localStorage.setItem("isLogin", "true");
 				localStorage.setItem("users", JSON.stringify(users));
 				localStorage.setItem("account", JSON.stringify(account));
-				setWIFI.show();
-				setTimeout(function() {
+				if(isWIFI){
+					//locker.show();
+				}else{
+					alert(setWIFI.id)
+					setWIFI.show();
+				}
+				//setWIFI.show();
+				
+				/*setTimeout(function() {
 					self.hide();
-				}, 300)
+				}, 300)*/
 				
 			}
 
@@ -176,16 +194,15 @@
 					console.log("长连接开启")
 				};
 				ws.onmessage = function(event) {
-					var data = dataDispose(event.data,ws)
-					/*if(data == CENTRT) {
+					var data = dataDispose(event.data)
+					if(data == CENTRT) {
 						console.log("心跳") 
 						ws.send(data);
 						return;
-					}*/
-					if(!data) return false;
+					}
 					
 					switch(data.TAG) {
-						case tag:
+						case "login":
 							plus.nativeUI.closeWaiting();
 							if(errorDispose(data)){
 								loginSuccess(data);
@@ -206,6 +223,12 @@
 				ws.onerror = function(event) {
 					console.log('websocked error');
 				}
+			}
+			function preLoad (){
+				register = mui.preload({
+					url:"../register/register.html",
+					id:"register"
+				})
 			}
 
 			//首页返回键处理

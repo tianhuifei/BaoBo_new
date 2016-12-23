@@ -225,7 +225,7 @@ body {
 	background: url(../../../../../images/camera.png) no-repeat 10px center;
 }
 
-.infrared {
+.sensor {
 	background: url(../../../../../images/infrared.png) no-repeat 10px center;
 }
 
@@ -236,6 +236,8 @@ body {
 .air-condition {
 	background: url(../../../../../images/air-condition.png) no-repeat 10px center;
 }
+
+
 
 .TV {
 	background: url(../../../../../images/TV.png) no-repeat 10px center;
@@ -252,3 +254,9 @@ body {
 	background-size: 100% !important;
 	background-position: center !important;
 }
+
+
+
+.add-infrared-list{}
+.add-infrared-list li{display: block;float:left;width:119px;height:24px;}
+.add-infrared-list li a{display: block;text-align: center;}

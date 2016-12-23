@@ -10,14 +10,19 @@
 		<style type="text/css">
 			.botton-trigger {
 				color: #FFF;
-				background-color: #be5500;
+				background-color: #9e6232;
+				/*9e6232 */
 				padding-top: 35px;
 				padding-bottom: 35px;
 				font-size: 30px;
 			}
 			
 			.botton-trigger:active {
-				background: #9e6232 !important;
+				background: #be5500 !important;
+			}
+			
+			.botton-trigger.light-active {
+				background: #be5500 !important;
 			}
 			
 			.bor-left-0 {
@@ -53,39 +58,132 @@
 			</header>
 
 			<div class="mui-content">
-				<!--v-if="triggerInfo.DEV == 'button'" -->
-
-				<ul class="mui-table-view type-trigger">
-					<li class="mui-table-view-divider">{{triggerInfo.DEVICENAME}}</li>
-				</ul>
-				<type-button v-bind:trigger="triggerInfo" v-if="triggerInfo.DEV == 'button'"></type-button>
+				<!--v-if="triggerInfo.DEV == 'button'"getTemplateType --> 
+				<type-button v-bind:trigger="triggerInfo" v-bind:buttons="buttonSort" v-if="templateType == 'lightTP'|| templateType == 'sensor'"></type-button>
+				<air-condition v-bind:trigger="triggerInfo" v-bind:buttons="buttonSort" v-if="templateType == 'airCondition'"></air-condition>
+				<curtain-type-1 v-bind:trigger="triggerInfo" v-bind:buttons="buttonSort" v-if="templateType == 'curtain' && getTemplateType('1') == '1'"></curtain-type-1>
+				<curtain-type-2 v-bind:trigger="triggerInfo" v-bind:buttons="buttonSort" v-if="templateType == 'curtain' && getTemplateType('1') == '2'"></curtain-type-2>
 			</div>
 
-		</div>
+		</div> 
 		<script type="text/x-template" id="button_type">
-			<div class="mui-content-padded">
-				<div class="mui-row">
-					<div class="mui-col-sm-6 mui-col-xs-6">
-						<a href="javascript:void(0);" @tap="open_close('1')" class="mui-btn bor-right-0 mui-btn-block botton-trigger bottom-line">开</a>
-					</div>
-					<div class="mui-col-sm-6 mui-col-xs-6">
-						<a href="javascript:void(0);" @tap="open_close('0')" class="mui-btn bor-left-0 mui-btn-block botton-trigger">关</a>
+			<div>
+				<ul style="margin-top: 10px;" class="mui-table-view type-trigger">
+					<li class="mui-table-view-divider">{{trigger.DEVICENAME}}</li>
+				</ul>
+				<div class="mui-content-padded">
+
+					<div class="mui-row">
+						<div class="mui-col-sm-6 mui-col-xs-6">
+							<a href="javascript:void(0);" @tap="open_close('1')" :class="{'light-active':lightClass.classOpen}" class="mui-btn bor-right-0 mui-btn-block botton-trigger bottom-line ">开</a>
+						</div>
+						<div class="mui-col-sm-6 mui-col-xs-6">
+							<a href="javascript:void(0);" @tap="open_close('0')" :class="{'light-active':lightClass.classClose}" class="mui-btn bor-left-0 mui-btn-block botton-trigger">关</a>
+						</div>
 					</div>
 				</div>
 			</div>
+
 		</script>
+		<template id="airCondition">
+			<div class="mui-content-padded">
+				<div class="mui-col-sm-3 mui-col-xs-3">
+					<a href="javascript:void(0);" @tap="open_close('1')" class="mui-btn bor-right-0 mui-btn-block botton-trigger bottom-line ">开</a>
+				</div>
+				<div class="mui-col-sm-3 mui-col-xs-3">
+					<a href="javascript:void(0);" @tap="open_close('0')" class="mui-btn bor-left-0 mui-btn-block botton-trigger">关</a>
+				</div>
+				<div class="mui-col-sm-3 mui-col-xs-3">
+					<a href="javascript:void(0);" @tap="open_close('0')" class="mui-btn bor-left-0 mui-btn-block botton-trigger">关</a>
+				</div>
+			</div>
+		</template>
+		<template id="curtain-1">
+			<div>
+				<ul style="margin-top: 10px;" class="mui-table-view type-trigger">
+					<li class="mui-table-view-divider">{{trigger.DEVICENAME}}</li>
+				</ul>
+
+				<div class="mui-content-padded">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4">
+							<a class="curtain-btn curtain-open" @tap="curtainOpen('1')"></a>
+							<p class="mui-text-center m-t10">打开</p>
+						</div>
+						<div class="mui-col-sm-4 mui-col-xs-4">
+							<a class="curtain-btn curtain-pause" @tap="curtainPause('2')"></a>
+							<p class="mui-text-center m-t10">暂停</p>
+						</div>
+						<div class="mui-col-sm-4 mui-col-xs-4">
+							<a class="curtain-btn curtain-close" @tap="curtainClose('0')"></a>
+							<p class="mui-text-center m-t10">关闭</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</template>
+		<template id="curtain-2">
+			<div>
+				<ul style="margin-top: 10px;" class="mui-table-view type-trigger">
+					<li class="mui-table-view-divider">第一轨道设置</li>
+				</ul>
+
+				<div class="mui-content-padded">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4">
+							<a class="curtain-btn curtain-open" @tap="curtainOpen('0')"></a>
+							<p class="mui-text-center m-t10">打开</p>
+						</div>
+						<div class="mui-col-sm-4 mui-col-xs-4">
+							<a class="curtain-btn curtain-pause" @tap="curtainPause('1')"></a>
+							<p class="mui-text-center m-t10">暂停</p>
+						</div>
+						<div class="mui-col-sm-4 mui-col-xs-4">
+							<a class="curtain-btn curtain-close" @tap="curtainClose('2')"></a>
+							<p class="mui-text-center m-t10">关闭</p>
+						</div>
+					</div>
+				</div>
+				<ul style="margin-top: 10px;" class="mui-table-view type-trigger">
+					<li class="mui-table-view-divider">第二轨道设置</li>
+				</ul>
+
+				<div class="mui-content-padded">
+					<div class="mui-row">
+						<div class="mui-col-sm-4 mui-col-xs-4">
+							<a class="curtain-btn curtain-open" @tap="curtainOpen('3')"></a>
+							<p class="mui-text-center m-t10">打开</p>
+						</div>
+						<div class="mui-col-sm-4 mui-col-xs-4">
+							<a class="curtain-btn curtain-pause" @tap="curtainPause('4')"></a>
+							<p class="mui-text-center m-t10">暂停</p>
+						</div>
+						<div class="mui-col-sm-4 mui-col-xs-4">
+							<a class="curtain-btn curtain-close" @tap="curtainClose('5')"></a>
+							<p class="mui-text-center m-t10">关闭</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</template>
 		<script src="../../../js/mui.min.js"></script>
 		<script src="../../../js/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			mui.init();
-			var trigger,ws;
-			mui.plusReady(function(){
-				
+			var trigger, ws,self;
+			mui.plusReady(function() {
+				self = plus.webview.currentWebview();
+				self.addEventListener("hide",function(){
+					self.reload(true);
+				},false);
 			})
 
 			mui.ready(function() {
+				vueComponents();
 				initVue();
 				initWebsocket();
 			})
@@ -94,23 +192,78 @@
 				trigger = new Vue({
 					el: "#app",
 					data: {
-						triggerInfo: ''
+						triggerInfo: '',
+						typeName: "",
+						buttonSort:{}
+					},
+					computed: {
+						templateType: function() {
+							if(!this.triggerInfo) return false;
+							/*return this.triggerInfo.roomPic.split("-")[0]*/
+							var buttonSort = {};
+							var temArr = this.triggerInfo.BUTTON;
+							for(var i =0,len = temArr.length;i<len;i++){
+								if(temArr[i].BUTTONINDEX == i){
+									buttonSort[temArr[i].BUTTONINDEX.toString()] = temArr[i].BUTTONID
+								}
+							}
+							this.buttonSort = buttonSort;
+							return this.triggerInfo.DEVICEPIC.split("-")[0];
+
+						},
+						buttonIndex:function(){
+							if(!this.triggerInfo) return false;
+							var buttonSort = {};
+							var temArr = this.triggerInfo.BUTTON;
+							for(var i =0,len = temArr.length;i<len;i++){
+								if(temArr[i].BUTTONINDEX == i){
+									buttonSort[temArr[i].BUTTONINDEX.toString()] = temArr[i].BUTTONID
+								}
+							}
+							return buttonSort;
+							
+						}
+					},
+					methods: {
+						getTemplateType: function(num) {
+							parseInt(num);
+							if(!this.triggerInfo) return false;
+							var type = this.triggerInfo.DEVICEPIC.split("-");
+							if(num > type.length) {
+								return false;
+							}
+
+							return type[num];
+						}
 					},
 					components: {
 						"type-button": {
 							template: "#button_type",
-							props: ['trigger'],
-							data:function(){
+							props: ['trigger','buttons'],
+							data: function() {
 								return {
-									info:this.trigger
+									info: this.trigger,
+									lightClass: {
+										classOpen: false,
+										classClose: false
+									},
+									buttonInfo:this.buttons
 								}
 							},
 							methods: {
 								open_close: function(num) {
+									if(parseInt(num)) {
+										this.lightClass.classOpen = true;
+										this.lightClass.classClose = false;
+									} else {
+										this.lightClass.classOpen = false;
+										this.lightClass.classClose = true;
+									}
 									account = JSON.parse(localStorage.getItem("account"));
-									var message = '#{"CMD": "trig","DEV": "button","DEVID": "'+(this.info.DEVICEID+num)+'","TAG":"trigger_button","USERID":"'+account.currentID+'","NICKNAME":"","TYPE":"'+os+'"}*'
-										console.log(message)
-										ws.send(message)
+								/*	var message = '#{"CMD": "trig","DEV": "' + this.info.type.split("_")[1] + '","DEVID": "' + (this.info.deviceID + num) + '","TAG":"trigger_button","USERID":"' + account.currentID + '","NICKNAME":"","TYPE":"' + os + '"}*'*/
+									var message = '#{"CMD": "trig","DEV":"' + this.info.DEV + '","DEVID":"' + this.buttonInfo[num.toString()]  + '","TAG":"trigger_button","USERID":"' + account.currentID + '","NICKNAME":"","TYPE":"' + os + '"}*'
+									console.log(message)
+									ws.send(message)
 								}
 							}
 						}
@@ -123,23 +276,49 @@
 				trigger.$data.triggerInfo = e.detail.item;
 				console.log(JSON.stringify(trigger.$data.triggerInfo))
 			}, false);
-			
-			
+
 			function initWebsocket() {
 				ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws"); //开启长连接
 				ws.onopen = function(e) {
-					
+
 				};
 				ws.onmessage = function(e) {
-
-					var data = dataDispose(e.data, ws);
-					if(!data) return false;
+					
+					var data = dataDispose(e.data);
+					console.log("学习  "+ JSON.stringify(data))
+					if(data == CENTRT) {
+						console.log("心跳") 
+						ws.send(data);
+						return;
+					}
+					
 					switch(data.TAG) {
 						case "trigger_button":
 							plus.nativeUI.closeWaiting();
 							if(errorDispose(data)) {
 								mui.toast("成功")
-								
+
+							}
+
+							break;
+						case "trigger_button_curtain2_open":
+							if(errorDispose(data)) {
+								mui.toast("成功")
+
+							}
+
+							break;
+						case "trigger_button_curtain2_pause":
+							if(errorDispose(data)) {
+								mui.toast("成功")
+
+							}
+
+							break;
+						case "trigger_button_curtain2_close":
+							if(errorDispose(data)) {
+								mui.toast("成功")
+
 							}
 
 							break;
@@ -153,6 +332,76 @@
 				ws.onclose = function(e) {
 
 				}
+			}
+
+			function vueComponents() {
+				//空调
+				Vue.component("air-condition", {
+					template: "#airCondition",
+					props: ['trigger','buttons'],
+					data: function() {
+						return {
+							info: this.trigger,
+							buttonInfo:this.buttons
+						}
+					},
+					methods: {
+						curtainOpen: function() { // 打开窗帘
+
+						},
+						curtainPause: function() { //暂停打开
+
+						},
+						curtainClose: function() { //关闭窗帘
+
+						}
+					}
+				});
+				//窗帘 单
+				Vue.component("curtain-type-1", {
+					template: "#curtain-1",
+					props: ['trigger','buttons'],
+					data: function() {
+						return {
+							info: this.trigger,
+							buttonInfo:this.buttons
+						}
+					},
+					methods: {
+
+					}
+				});
+				//窗帘 双
+				Vue.component("curtain-type-2", {
+					template: "#curtain-2",
+					props: ['trigger','buttons'],
+					data: function() {
+						return {
+							info: this.trigger,
+							buttonInfo:this.buttons
+						}
+					},
+					methods: {
+						curtainOpen: function(num) { // 打开窗帘
+							account = JSON.parse(localStorage.getItem("account"));
+							var message = '#{"CMD": "trig","DEV": "' + this.info.DEV + '","DEVID": "' + this.buttonInfo[num.toString()]  + '","TAG":"trigger_button_curtain2_open","USERID":"' + account.currentID + '","NICKNAME":"","TYPE":"' + os + '"}*'
+							console.log(message)
+							ws.send(message)
+						},
+						curtainPause: function(num) { //暂停打开
+							account = JSON.parse(localStorage.getItem("account"));
+							var message = '#{"CMD": "trig","DEV": "' + this.info.DEV + '","DEVID": "' + this.buttonInfo[num.toString()]  + '","TAG":"trigger_button_curtain2_pause","USERID":"' + account.currentID + '","NICKNAME":"","TYPE":"' + os + '"}*'
+							console.log(message)
+							ws.send(message)
+						},
+						curtainClose: function(num) { //关闭窗帘
+							account = JSON.parse(localStorage.getItem("account"));
+							var message = '#{"CMD": "trig","DEV": "' + this.info.DEV + '","DEVID": "' + this.buttonInfo[num.toString()]  + '","TAG":"trigger_button_curtain2_close","USERID":"' + account.currentID + '","NICKNAME":"","TYPE":"' + os + '"}*'
+							console.log(message)
+							ws.send(message)
+						}
+					}
+				})
 			}
 		</script>
 	</body>

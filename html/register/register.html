@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>注册</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+	</head>
+
+	<body>
+		
+		
+		
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">注册</h1>
+		</header>
+		<div class="mui-content">
+			<div id="register">
+				<form class="mui-input-group password-edit" style="margin-top:15px;">
+					<div class="mui-input-row">
+						<input type="text" v-model="userName" class="mui-input-clear" placeholder="请输入用户名">
+					</div>
+					<div class="mui-input-row">
+						<input type="text" v-model="nickName" class="mui-input-clear" placeholder="请输入昵称"></span>
+					</div>
+					<div class="mui-input-row">
+						<input type="password" v-model="newPwd" class="mui-input-clear" placeholder="请输入密码"></span>
+					</div>
+
+					<div class="mui-input-row">
+						<input type="password" v-model="affPwd" class="mui-input-clear" placeholder="再次输入密码"></span>
+					</div>
+					<div class="mui-button-row">
+						<button type="button" @tap="register" class="mui-btn mui-btn-primary" >确认</button>&nbsp;&nbsp;
+					</div>
+				</form>
+			</div>
+		    
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+			var reVue,ws,self;
+			mui.plusReady(function(){
+				self = plus.webview.currentWebview();
+			});
+			mui.ready(function(){
+				initWebsocket();
+				initVue();
+			})
+			
+			
+			function initVue (){
+				reVue = new Vue({
+					el:"#register",
+					data:{
+						userName:"",
+						newPwd:"",
+						affPwd:"",
+						nickName:""
+					},
+					methods:{
+						register:function(){
+							if(!this.userName){
+								mui.toast("请填写用户名");
+								return false;
+							}
+							if(!this.newPwd || !this.affPwd){
+								mui.toast("请输入密码");
+								return false;
+							}
+							//plus.nativeUI.showWaiting("请稍后...");
+							var message = '#{"CMD":"register","USERNAME":"'+this.userName+'","PASSWORD":"'+this.affPwd+'","TAG":"register","TYPE":"'+os+'","NICKNAME":"'+this.nickName+'"}*'
+							ws.send(message);
+							console.log(message)
+						}
+					}
+				});
+				
+			}
+			
+			function initWebsocket (){
+				ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws");
+				ws.onopen = function(data){
+					
+				};
+				ws.onmessage = function(data){
+					var data = dataDispose(event.data)
+					if(data == CENTRT) {
+						console.log("心跳") 
+						ws.send(data);
+						return;
+					}
+					switch (data.TAG){
+						case "register":
+							plus.nativeUI.closeWaiting();
+							if(errorDispose(data)){
+								mui.toast(data.ERRORMSG);
+								//console.log(JSON.stringify(data))
+								setTimeout(function(){
+									self.hide();
+								},1000)
+							}
+							break;
+						default:
+							break;
+					}
+				};
+				ws.onclose = function(data){
+					
+				};
+				ws.onerror = function(data){
+					
+				}
+			}
+		</script>
+	</body>
+
+</html>

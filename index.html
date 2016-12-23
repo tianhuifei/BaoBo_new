@@ -77,14 +77,13 @@
 				};
 				ws.onmessage = function(e) {
 
-					var data = dataDispose(e.data, ws);
+					var data = dataDispose(e.data);
 					console.log("后台登录   " + JSON.stringify(data))
-					if(!data) return false;
-					/*if(data == CENTRT){
+					if(data == CENTRT){
 						ws.send(CENTRT);
 						console.log("首页心跳数据" +  data); 
 						return;
-					}*/
+					}
 					console.log(data.TAG)
 					switch(data.TAG) {
 						case "mainLogin":

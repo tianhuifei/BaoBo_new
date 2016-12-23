@@ -1,0 +1,8 @@
+.scene-null {
+	position: absolute;
+	width:100%;
+	text-align: center;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate(-50%,-50%);
+}

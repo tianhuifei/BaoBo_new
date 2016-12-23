@@ -68,19 +68,21 @@
 				addHouse, //添加房间webview
 				deviceList; //设备
 			mui.plusReady(function() {
+				initWebSocket();
 				preloadHtml();
 				self = plus.webview.currentWebview();
 				self.addEventListener("show", function() {
 					//account = JSON.parse(localStorage.getItem("account"));
-					loadHouses();
+					
+					setTimeout(function(){
+						loadHouses();
+					},1000)
 				}, false);
 
 			});
 
 			mui.ready(function() {
 				initVue();
-				initWebSocket();
-
 			});
 
 			function initVue() {
@@ -156,8 +158,13 @@
 					console.log("哈哈哈哈")
 				}
 				ws.onmessage = function(e) {
-					var data = dataDispose(e.data, ws);
-					if(!data) return false;
+					var data = dataDispose(e.data);
+					
+					if(data == CENTRT){
+						ws.send(CENTRT);
+						console.log("房间页面心跳" +  data); 
+						return false;
+					}
 					switch(data.TAG) {
 						case "queryHouse":
 							if(errorDispose(data)) {
@@ -183,8 +190,7 @@
 					console.error("houseWS")
 				}
 				ws.onclose = function(e) {
-					console.info("关闭了");
-					
+					console.error("关闭了");
 				}
 			}
 

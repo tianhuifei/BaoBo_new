@@ -155,7 +155,7 @@
 								mui.toast("请输入房间名称!")
 								return false;
 							}
-							var message ='#{"CMD":"addroom","USERID":"'+account.currentID+'","TAG":"addroom","TYPE":"'+os+'","ROOMNAME":"'+_self.houseName+'","ROOMPIC":"'+_self.houseType+'","ROOMSORT":"'+ houses.length+1 +'"}*'
+							var message ='#{"CMD":"addroom","USERID":"'+account.currentID+'","TAG":"addroom","TYPE":"'+os+'","ROOMNAME":"'+_self.houseName+'","ROOMPIC":"'+_self.houseType+'","ROOMSORT":"'+ (houses.length+1).toString() +'"}*'
 								plus.nativeUI.showWaiting("正在添加房间");
 								ws.send(message);
 							
@@ -173,8 +173,12 @@
 
 				}
 				ws.onmessage = function(e) {
-					var data = dataDispose(e.data, ws);
-					if(!data) return false;
+					var data = dataDispose(e.data);
+					if(data == CENTRT) {
+						console.log("心跳") 
+						ws.send(data);
+						return;
+					}
 					
 					switch(data.TAG) {
 						case "addroom":

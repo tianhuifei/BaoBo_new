@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>工具</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<style type="text/css">
+			.mui-grid-view.mui-grid-9 .mui-media .baobo-icon {
+				font-size: 2.4em;
+				position: relative;
+			}
+			
+			.set a {
+				padding-top: 20px !important;
+			}
+			
+			.set .mui-media-body {
+				font-size: 12px !important;
+			}
+			
+			.set li.mui-table-view-cell.mui-media.mui-col-xs-4.mui-col-sm-3.mui-active {
+				background-color: #e5f8ff !important;
+			}
+			
+			.set li:nth-child(4n+1) span.baobo-icon {
+				color: #f35d02;
+			}
+			
+			.set li:nth-child(4n+2) span.baobo-icon {
+				color: #8acb00;
+			}
+			
+			.set li:nth-child(4n+3) span.baobo-icon {
+				color: #ffbb38;
+			}
+			
+			.set li:nth-child(4n+4) span.baobo-icon {
+				color: #1b9af7;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="tools">
+			<header class="mui-bar mui-bar-nav">
+				<h1 class="mui-title">工具</h1>
+			</header>
+			<div class="mui-content c-fff">
+				<ul class="mui-table-view mui-grid-view mui-grid-9 c-fff set">
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#" @tap="openPageFn('personal')">
+							<span class="baobo-icon sensor-center"></span>
+							<div class="mui-media-body">个人中心</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#">
+							<span class="baobo-icon sensor-shengji"></span>
+							<div class="mui-media-body">系统升级</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#">
+							<span class="baobo-icon sensor-yunzhuji"></span>
+							<div class="mui-media-body">云主机</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#" @tap="openPageFn('systemSetting')">
+							<span class="baobo-icon sensor-set"></span>
+							<div class="mui-media-body">系统设置</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#">
+							<span class="baobo-icon sensor-xiangce"></span>
+							<div class="mui-media-body">云相册</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#">
+							<span class="baobo-icon sensor-bofang"></span>
+							<div class="mui-media-body">电影播放</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#">
+							<span class="baobo-icon sensor-chongqi"></span>
+							<div class="mui-media-body">重启计划</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#">
+							<span class="baobo-icon sensor-dingshi"></span>
+							<div class="mui-media-body">定时开关</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+						<a href="#">
+							<span class="baobo-icon sensor-yunpan"></span>
+							<div class="mui-media-body">云盘</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<script src="../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+			var vTools,
+				systemSetting, //系统设置页面
+				personal,account;//个人中心
+			mui.plusReady(function() {
+				loadHtml();
+				
+			});
+			mui.ready(function() {
+				
+				initVue();
+			})
+
+			function initVue() {
+				vTools = new Vue({
+					el: "#tools",
+					data: {},
+					methods: {
+						openPageFn: function(page) {
+							console.log(page == 'personal')
+							var openPage = plus.webview.getWebviewById(page);
+							if(page == 'personal'){
+								account = JSON.parse(localStorage.getItem("account"));
+								mui.fire(openPage,"userInfo",{
+									accountInfo:account
+								});
+							}
+							setTimeout(function(){
+								openPage.show();
+							},500);
+						},
+						openPersonal:function(){
+							personal.show()
+						}
+					}
+					
+				})
+			}
+
+			function loadHtml() {
+				systemSetting = mui.preload({
+					url: "systemSetting/setting.html",
+					id: "systemSetting"
+				});
+				personal = mui.preload({
+					url:"../tools/personal/personal.html",
+					id:"personal"
+				})
+			}
+		</script>
+	</body>
+
+</html>

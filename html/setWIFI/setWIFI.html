@@ -55,7 +55,7 @@
 					},
 					methods: {
 						setWIFI: function() {
-							/*var account = JSON.parse(localStorage.getItem("account"));
+							var account = JSON.parse(localStorage.getItem("account"));
 							var _self = this;
 							var btnArray = ['否', '是'];
 							mui.confirm('请确认是否已经连接硬件WIFI？', '温馨提示', btnArray, function(e) {
@@ -72,11 +72,12 @@
 										var text = $(data).find("p").text();
 										if(text == 'success') {
 											mui.toast("设置成功");
+											localStorage.setItem("isWIFI",true);
 											locker.evalJS("initUser()");
-											//locker.show();
-											setTimeout(function(){
+											locker.show();
+											/*setTimeout(function(){
 												self.hide();
-											},1000);
+											},1000);*/
 										}
 										if(text == 'error') {
 											mui.toast("用户名或密码错误");
@@ -88,20 +89,20 @@
 									}
 								});
 
-							})*/
+							})
 
-							locker.evalJS("initUser()");
+							/*locker.evalJS("initUser()");
 							setTimeout(function() {
 								self.hide();
-							}, 1000)
+							}, 1000)*/
 
 						}
 					}
 				})
 			};
 
-			var _back = mui.back;
-			mui.back = function() {};
+			/*var _back = mui.back;
+			mui.back = function() {};*/
 		</script>
 	</body>
 

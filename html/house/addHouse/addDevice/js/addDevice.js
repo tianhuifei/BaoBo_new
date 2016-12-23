@@ -47,5 +47,17 @@ var devMessage={
 		USERID:"",
 		NICKNAME:"",
 		TYPE:""
-	}
+	},
+	sensor:{
+		CMD:"add",
+		DEV:"",
+		DEVICENAME:"",
+		TAG:"",
+		ROOMNAME:"",
+		USERID:"",
+		NICKNAME:"",
+		DEVICESORT:"",
+		ROOMPIC:"",
+		TYPE:""
+	},
 }
