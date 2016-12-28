@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		<div id="app">
+			<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">自定义</h1>
+		    <a @tap="backPage" class="mui-action-menu mui-icon mui-icon-checkmarkempty mui-pull-right" href="#"></a>
+		</header>
+		<div class="mui-content">
+		    <ul class="mui-table-view">
+				
+				<li class="mui-table-view-cell">
+					<span>周一</span>
+					<div class="mui-switch mui-switch-mini">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>周二</span>
+					<div class="mui-switch mui-switch-mini">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>周三</span>
+					<div class="mui-switch mui-switch-mini">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>周四</span>
+					<div class="mui-switch mui-switch-mini">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>周五</span>
+					<div class="mui-switch mui-switch-mini">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>周六</span>
+					<div class="mui-switch mui-switch-mini">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>周日</span>
+					<div class="mui-switch mui-switch-mini ">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				
+				
+			</ul>
+		</div>
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script src="../tools/personal/js/vue1.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init();
+			var setScenePage,self;
+			mui.plusReady(function(){
+				self = plus.webview.currentWebview();
+				setScenePage = plus.webview.getWebviewById("setScene");
+			});
+			
+			mui.ready(function(){
+				initVue();
+			})
+			
+			
+			
+			function initVue (){
+				customObj = new Vue({
+					el:"#app",
+					data:{},
+					methods:{
+						backPage:function(){
+							
+							self.hide();
+						}
+					}
+				})
+			}
+		</script>
+	</body>
+
+</html>
