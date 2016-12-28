@@ -158,13 +158,14 @@
 			}
 
 			function loginSuccess(data) {
-				var isWIFI =JSON.parse(JSON.stringify(localStorage.getItem("isWIFI"))) ;
+				var isWIFI =JSON.parse(localStorage.getItem("isWIFI")) ;
 				var users;
 				var userIDs = data.USERID.split(",");
 				var account = {
 					userName:vLogin.$data.userName,
 					passWord:vLogin.$data.passWord,
 					currentID:userIDs[0],
+					/*currentID:'607467',*/
 					userIds:userIDs,
 					locker: data.GESTURE,
 					nickName:data.NICKNAME
@@ -175,8 +176,10 @@
 				localStorage.setItem("users", JSON.stringify(users));
 				localStorage.setItem("account", JSON.stringify(account));
 				if(isWIFI){
-					//locker.show();
+					
+					locker.show();
 				}else{
+					
 					alert(setWIFI.id)
 					setWIFI.show();
 				}

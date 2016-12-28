@@ -158,7 +158,8 @@
 			"fonts/iconfont.ttf",
 			"images/bedside.png",
 			"images/wall.png",
-			"images/backlight.png"
+			"images/backlight.png",
+			"images/mirror.png"
 		],
 		"refer": [
 			"html/house/addHouse/addDevice/addDevice.html",
@@ -295,6 +296,19 @@
 			"js/mui.min.js",
 			"fonts/mui.ttf",
 			"css/mui.min.css"
+		],
+		"refer": [
+			"html/scene/custom.html"
+		]
+	},
+	"html/scene/custom.html": {
+		"resources": [
+			"js/common.js",
+			"js/vue.js",
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"html/tools/personal/js/vue1.js"
 		]
 	}
 }

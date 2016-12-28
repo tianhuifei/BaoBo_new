@@ -14,6 +14,19 @@
 		    <h1 class="mui-title">添加场景</h1>
 		</header>
 		<div id="setScene" class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" @tap="setCondition">
+						步骤一: 设置启动条件
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" @tap="setTasks">
+						步骤二: 添加执行任务
+					</a>
+				</li>
+				
+			</ul>
 		    
 		</div>
 		<script src="../../js/mui.min.js"></script>
@@ -21,9 +34,9 @@
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			mui.init();
-			var setSceneObj
+			var setSceneObj,customPage,tasksPage;
 			mui.plusReady(function(){
-				
+				preLoadHtml();
 			});
 			mui.ready(function(){
 				initVue();
@@ -34,10 +47,89 @@
 					el:"#setScene",
 					data:{},
 					methods:{
-						
+						setCondition:function(){
+							var btnArray = [{title:"只执行一次"},{title:"每天"},{title:"自定义"}];
+							//plus.nativeUI.actionSheet
+							plus.nativeUI.actionSheet({
+								title:"设置启动条件",
+								cancel:"取消",
+								buttons:btnArray
+							},function(e){
+								var index = e.index;
+								switch (index){
+									case 0:
+										console.log('取消')
+										break;
+									case 1:
+										console.log(index)
+										onlyDay();
+										break;
+									case 2:
+										console.log(index)
+										everyday();
+										break;
+									case 3:
+										console.log(index)
+										custom()
+										break;
+									default:
+										break;
+								}
+							})
+						},
+						setTasks:function(){
+							tasksPage.show();
+						}
 					}
 				})
 			}
+			//只执行一次
+			function onlyDay (){
+				
+				var dTime = new Date();
+				dTime.setHours(6, 0);
+				plus.nativeUI.pickTime(function(e) {
+					var d = e.date;
+					console.log("您选择的时间是：" + d.getHours() + ":" + d.getMinutes())
+				}, function(e) {
+					console.log("您没有选择时间") 
+				}, {
+					title: "请选择时间",
+					is24Hour: true,
+					time: dTime
+				});
+			
+			};
+			//每天执行
+			function everyday (){
+				var dTime = new Date();
+				dTime.setHours(6, 0);
+				plus.nativeUI.pickTime(function(e) {
+					var d = e.date;
+					console.log("您选择的时间是：" + d.getHours() + ":" + d.getMinutes())
+				}, function(e) {
+					console.log("您没有选择时间") 
+				}, {
+					title: "请选择时间",
+					is24Hour: true,
+					time: dTime
+				});
+			};
+			//自定义
+			function custom (){
+				customPage.show();
+				}
+			function preLoadHtml (){
+				customPage = mui.preload({
+					url:"custom.html",
+					id:"custom"
+				})
+				tasksPage = mui.preload({
+					url:"setTasks.html",
+					id:"tasks"
+				})
+			}
+			
 		</script>
 	</body>
 

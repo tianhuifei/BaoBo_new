@@ -5,18 +5,18 @@ function initVue() {
 			oldPwd: "",
 			newPwd: "",
 			affPwd: "",
-			userName:"",
-			retrieveText:""
+			userName: "",
+			retrieveText: ""
 		},
 		methods: {
 			//找回密码
 			retrievePwd: function() {
-				if(!this.userName){
+				if(!this.userName) {
 					mui.toast("请输入当前用户名");
 					return false;
 				}
 				plus.nativeUI.showWaiting("请稍后...")
-				var message = '#{CMD:"repassword",USERNAME:"'+this.userName+'",TAG:"repassword",TYPE:"'+ os +'"}*';
+				var message = '#{CMD:"repassword",USERNAME:"' + this.userName + '",TAG:"repassword",TYPE:"' + os + '"}*';
 				ws.send(message);
 			},
 			//修改手势密码
@@ -53,16 +53,16 @@ function initWebsocket() {
 			ws.send(data);
 			return;
 		}
-		switch (data.TAG){
+		switch(data.TAG) {
 			case "editUserPwd":
 				plus.nativeUI.closeWaiting();
-				if(errorDispose(data)){
+				if(errorDispose(data)) {
 					mui.toast("密码修改成功")
 				}
 				break;
 			case "repassword":
 				plus.nativeUI.closeWaiting();
-				if(errorDispose(data)){
+				if(errorDispose(data)) {
 					settingVue.$data.retrieveText = data.PASSWORD;
 					mui.toast("密码成功找回");
 				}
