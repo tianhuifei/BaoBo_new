@@ -158,6 +158,7 @@
 							var message ='#{"CMD":"addroom","USERID":"'+account.currentID+'","TAG":"addroom","TYPE":"'+os+'","ROOMNAME":"'+_self.houseName+'","ROOMPIC":"'+_self.houseType+'","ROOMSORT":"'+ (houses.length+1).toString() +'"}*'
 								plus.nativeUI.showWaiting("正在添加房间");
 								ws.send(message);
+								console.log(message)
 							
 							//self.hide();
 							

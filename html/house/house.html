@@ -21,8 +21,8 @@
 			</header>
 			<div class="mui-content" id="house">
 				<ul class="mui-table-view mui-grid-view mui-grid-9 room-box">
-					<template v-for="(item,index) in houses">
-						<li class="mui-table-view-cell mui-media mui-col-xs-4" @longtap="showDeleteBtn" @tap.stop.prevent ="openRoom(item.DEVICE,item.ROOMNAME)" v-bind:data-houseId="item.ROOMNAME">
+					<template v-for="(item,index) in houses"> 
+						<li v-show="!(item.ROOMNAME=='contextual-model')" class="mui-table-view-cell mui-media mui-col-xs-4" @longtap="showDeleteBtn" @tap.stop.prevent ="openRoom(item.DEVICE,item.ROOMNAME)" v-bind:data-houseId="item.ROOMNAME">
 							<a href="javascript:void(0);" class="room-img" :class="item.ROOMPIC">
 							</a>
 							<div class="mui-media-body">{{item.ROOMNAME}}</div>
@@ -82,7 +82,7 @@
 			});
 
 			mui.ready(function() {
-				initVue();
+				initVue(); 
 			});
 
 			function initVue() {

@@ -5,8 +5,8 @@
 		<meta charset="UTF-8">
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<link rel="stylesheet" type="text/css" href="../../../css/mui.css" />
-		<link rel="stylesheet" type="text/css" href="../../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
 		<style type="text/css">
 			.botton-trigger {
 				color: #FFF;
@@ -169,24 +169,23 @@
 			</div>
 
 		</template>
-		<script src="../../../js/mui.min.js"></script>
-		<script src="../../../js/vue.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../../js/common.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue-1.0.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			mui.init();
-			var trigger, ws, self;
+			var trigger, ws, self, openr;
 			mui.plusReady(function() {
 				self = plus.webview.currentWebview();
 				self.addEventListener("hide", function() {
 					self.reload(true);
 				}, false);
+				openr = plus.webview.getWebviewById("setScene");
 			})
 
 			mui.ready(function() {
 				vueComponents();
 				initVue();
-				initWebsocket();
 			})
 
 			function initVue() {
@@ -260,10 +259,19 @@
 										this.lightClass.classOpen = false;
 										this.lightClass.classClose = true;
 									}
-									account = JSON.parse(localStorage.getItem("account"));
-									var message = '#{"CMD": "trig","DEV":"' + this.info.DEV + '","DEVID":"' + this.buttonInfo[num.toString()] + '","TAG":"trigger_button","USERID":"' + account.currentID + '","NICKNAME":"","TYPE":"' + os + '"}*'
-									console.log(message)
-									ws.send(message)
+									var addTasks = JSON.parse(localStorage.getItem("addTasks")) || {};
+									var detailTasks = JSON.parse(localStorage.getItem("detailTasks")) || {};
+									var msg = setTemplate(this.info, this, num);
+									addTasks[this.buttonInfo[num.toString()]] = msg;
+									detailTasks[this.buttonInfo[num.toString()]] = this.info;
+									localStorage.setItem("addTasks", JSON.stringify(addTasks));
+									var newObj = [];
+									for(item in addTasks) {
+										newObj.push(addTasks[item]);
+									}
+									mui.fire(openr, "setEvent", {
+										item: newObj
+									})
 								}
 							}
 						}
@@ -276,63 +284,6 @@
 				trigger.$data.triggerInfo = e.detail.item;
 				console.log(JSON.stringify(trigger.$data.triggerInfo))
 			}, false);
-
-			function initWebsocket() {
-				ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws"); //开启长连接
-				ws.onopen = function(e) {
-
-				};
-				ws.onmessage = function(e) {
-
-					var data = dataDispose(e.data);
-					console.log("学习  " + JSON.stringify(data))
-					if(data == CENTRT) {
-						console.log("心跳")
-						ws.send(data);
-						return;
-					}
-
-					switch(data.TAG) {
-						case "trigger_button":
-							plus.nativeUI.closeWaiting();
-							if(errorDispose(data)) {
-								mui.toast("成功")
-
-							}
-
-							break;
-						case "trigger_button_curtain2_open":
-							if(errorDispose(data)) {
-								mui.toast("成功")
-
-							}
-
-							break;
-						case "trigger_button_curtain2_pause":
-							if(errorDispose(data)) {
-								mui.toast("成功")
-
-							}
-
-							break;
-						case "trigger_button_curtain2_close":
-							if(errorDispose(data)) {
-								mui.toast("成功")
-
-							}
-
-							break;
-						default:
-							break;
-					}
-				};
-				ws.onerror = function(e) {
-
-				}
-				ws.onclose = function(e) {
-
-				}
-			}
 
 			function vueComponents() {
 				//空调
@@ -370,21 +321,49 @@
 					methods: {
 						curtainOpen: function(num) { // 打开窗帘
 							account = JSON.parse(localStorage.getItem("account"));
-							var message = '#{"CMD": "trig","DEV": "' + this.info.DEV + '","DEVID": "' + this.buttonInfo[num.toString()] + '","TAG":"trigger_button_curtain1_open","USERID":"' + account.currentID + '","NICKNAME":"","TYPE":"' + os + '"}*'
-							console.log(message)
-							ws.send(message)
+							var addTasks = JSON.parse(localStorage.getItem("addTasks")) || {};
+							var msg = setTemplate(this.info, this, num);
+							addTasks[this.buttonInfo[num.toString()]] = msg;
+							detailTasks[this.buttonInfo[num.toString()]] = this.info;
+							localStorage.setItem("addTasks", JSON.stringify(addTasks));
+							var newObj = [];
+							for(item in addTasks) {
+								newObj.push(addTasks[item]);
+							}
+							mui.fire(openr, "setEvent", {
+								item: newObj
+							})
+
 						},
 						curtainPause: function(num) { //暂停打开
 							account = JSON.parse(localStorage.getItem("account"));
-							var message = '#{"CMD": "trig","DEV": "' + this.info.DEV + '","DEVID": "' + this.buttonInfo[num.toString()] + '","TAG":"trigger_button_curtain1_pause","USERID":"' + account.currentID + '","NICKNAME":"","TYPE":"' + os + '"}*'
-							console.log(message)
-							ws.send(message)
+							var addTasks = JSON.parse(localStorage.getItem("addTasks")) || {};
+							var msg = setTemplate(this.info, this, num);
+							addTasks[this.buttonInfo[num.toString()]] = msg;
+							detailTasks[this.buttonInfo[num.toString()]] = this.info;
+							localStorage.setItem("addTasks", JSON.stringify(addTasks));
+							var newObj = [];
+							for(item in addTasks) {
+								newObj.push(addTasks[item]);
+							}
+							mui.fire(openr, "setEvent", {
+								item: newObj
+							})
 						},
 						curtainClose: function(num) { //关闭窗帘
 							account = JSON.parse(localStorage.getItem("account"));
-							var message = '#{"CMD": "trig","DEV": "' + this.info.DEV + '","DEVID": "' + this.buttonInfo[num.toString()] + '","TAG":"trigger_button_curtain1_close","USERID":"' + account.currentID + '","NICKNAME":"","TYPE":"' + os + '"}*'
-							console.log(message)
-							ws.send(message)
+							var addTasks = JSON.parse(localStorage.getItem("addTasks")) || {};
+							var msg = setTemplate(this.info, this, num);
+							addTasks[this.buttonInfo[num.toString()]] = msg;
+							detailTasks[this.buttonInfo[num.toString()]] = this.info;
+							localStorage.setItem("addTasks", JSON.stringify(addTasks));
+							var newObj = [];
+							for(item in addTasks) {
+								newObj.push(addTasks[item]);
+							}
+							mui.fire(openr, "setEvent", {
+								item: newObj
+							})
 						}
 					}
 				});
@@ -401,24 +380,90 @@
 					methods: {
 						curtainOpen: function(num) { // 打开窗帘
 							account = JSON.parse(localStorage.getItem("account"));
-							var message = '#{"CMD": "trig","DEV": "' + this.info.DEV + '","DEVID": "' + this.buttonInfo[num.toString()] + '","TAG":"trigger_button_curtain2_open","USERID":"' + account.currentID + '","NICKNAME":"","TYPE":"' + os + '"}*'
-							console.log(message)
-							ws.send(message)
+							var addTasks = JSON.parse(localStorage.getItem("addTasks")) || {};
+							var msg = setTemplate(this.info, this, num);
+							addTasks[this.buttonInfo[num.toString()]] = msg;
+							detailTasks[this.buttonInfo[num.toString()]] = this.info;
+							localStorage.setItem("addTasks", JSON.stringify(addTasks));
+							var newObj = [];
+							for(item in addTasks) {
+								newObj.push(addTasks[item]);
+							}
+							mui.fire(openr, "setEvent", {
+								item: newObj
+							})
+
 						},
 						curtainPause: function(num) { //暂停打开
 							account = JSON.parse(localStorage.getItem("account"));
-							var message = '#{"CMD": "trig","DEV": "' + this.info.DEV + '","DEVID": "' + this.buttonInfo[num.toString()] + '","TAG":"trigger_button_curtain2_pause","USERID":"' + account.currentID + '","NICKNAME":"","TYPE":"' + os + '"}*'
-							console.log(message)
-							ws.send(message)
+							var addTasks = JSON.parse(localStorage.getItem("addTasks")) || {};
+							var msg = setTemplate(this.info, this, num);
+							addTasks[this.buttonInfo[num.toString()]] = msg;
+							detailTasks[this.buttonInfo[num.toString()]] = this.info;
+							localStorage.setItem("addTasks", JSON.stringify(addTasks));
+							var newObj = [];
+							for(item in addTasks) {
+								newObj.push(addTasks[item]);
+							}
+							mui.fire(openr, "setEvent", {
+								item: newObj
+							})
 						},
 						curtainClose: function(num) { //关闭窗帘
 							account = JSON.parse(localStorage.getItem("account"));
-							var message = '#{"CMD": "trig","DEV": "' + this.info.DEV + '","DEVID": "' + this.buttonInfo[num.toString()] + '","TAG":"trigger_button_curtain2_close","USERID":"' + account.currentID + '","NICKNAME":"","TYPE":"' + os + '"}*'
-							console.log(message)
-							ws.send(message)
+							var addTasks = JSON.parse(localStorage.getItem("addTasks")) || {};
+							var msg = setTemplate(this.info, this, num);
+							addTasks[this.buttonInfo[num.toString()]] = msg;
+							detailTasks[this.buttonInfo[num.toString()]] = this.info;
+							localStorage.setItem("addTasks", JSON.stringify(addTasks));
+							var newObj = [];
+							for(item in addTasks) {
+								newObj.push(addTasks[item]);
+							}
+							mui.fire(openr, "setEvent", {
+								item: newObj
+							})
 						}
 					}
 				})
+			}
+
+			function setTemplate(item, vobj, num) {
+				var msg = {};
+				switch(item.DEV) {
+					case "switch":
+						msg.DEV = 'switch';
+						msg.DEVID = vobj.buttonInfo[num.toString()];
+						msg.VALUE = "";
+						break;
+					case "human":
+						msg.DEV = 'human';
+						msg.DEVID = vobj.buttonInfo[num.toString()];
+						msg.VALUE = "";
+						break;
+					case "door":
+						msg.DEV = 'door';
+						msg.DEVID = vobj.buttonInfo[num.toString()];
+						msg.VALUE = "";
+						break;
+					case "smoke":
+						msg.DEV = 'smoke';
+						msg.DEVID = vobj.buttonInfo[num.toString()];
+						msg.VALUE = "";
+						break;
+					case "gas":
+						msg.DEV = 'gas';
+						msg.DEVID = vobj.buttonInfo[num.toString()];
+						msg.VALUE = "";
+						break;
+					case "button":
+						msg.DEV = 'button';
+						msg.DEVID = vobj.buttonInfo[num.toString()];
+						break;
+					default:
+						break;
+				}
+				return msg;
 			}
 		</script>
 	</body>

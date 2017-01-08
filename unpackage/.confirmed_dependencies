@@ -1,314 +1,362 @@
 {
-	"html/login/login.html": {
-		"resources": [
-			"html/login/images/login.png",
-			"js/mui.min.js",
-			"fonts/mui.ttf",
-			"css/mui.min.css",
-			"html/login/images/logo.png",
-			"js/vue.min.js",
-			"js/vue.js",
-			"js/common.js",
-			"js/reconnecting-websocket.js"
-		],
-		"refer": [
-			"html/register/register.html"
-		]
-	},
-	"html/locker/locker.html": {
-		"resources": [
-			"images/user.png",
-			"js/mui.min.js",
-			"css/common.css",
-			"css/app.css",
-			"css/mui.min.css",
-			"js/mui.locker.js",
-			"js/vue.js",
-			"js/common.js",
-			"js/reconnecting-websocket.js"
-		],
-		"refer": [
-			"html/login/login.html",
-			"html/setWIFI/setWIFI.html"
-		]
-	},
-	"html/home/tab-webview-main.html": {
-		"resources": [
-			"html/home/tab-webview-subpage-about.html",
-			"fonts/mui.ttf",
-			"js/mui.min.js",
-			"css/mui.min.css",
-			"html/home/home-furnishing.html",
-			"js/common.js",
-			"html/house/house.html",
-			"html/home/monitoring.html"
-		],
-		"refer": [
-			"html/home/tab-webview-subpage-about.html",
-			"html/home/tab-webview-subpage-chat.html",
-			"html/home/tab-webview-subpage-contact.html",
-			"html/home/tab-webview-subpage-setting.html",
-			"html/home/home-furnishing.html",
-			"html/home/monitoring.html",
-			"html/home/circumstance.html",
-			"html/home/tool.html",
-			"html/login/login.html",
-			"html/locker/locker.html",
-			"html/setWIFI/setWIFI.html",
-			"html/house/house.html",
-			"html/house/addHouse/addHouse.html",
-			"html/tools/tools.html",
-			"html/tools/systemSetting/setting.html",
-			"html/scene/scene.html"
-		]
-	},
-	"index.html": {
-		"resources": [
-			"html/home/tab-webview-main.html",
-			"js/mui.min.js",
-			"css/mui.min.css",
-			"js/common.js",
-			"js/reconnecting-websocket.js"
-		],
-		"refer": [
-			"html/home/tab-webview-main.html",
-			"html/setWIFI/setWIFI.html",
-			"html/login/login.html",
-			"html/locker/locker.html"
-		]
-	},
-	"html/setWIFI/setWIFI.html": {
-		"resources": [
-			"html/css/child_common.css",
-			"html/setWIFI/images/logo.png",
-			"js/mui.min.js",
-			"fonts/mui.ttf",
-			"css/mui.min.css",
-			"js/vue.js",
-			"js/common.js",
-			"js/zepto-min.js"
-		],
-		"refer": [
-			"html/locker/locker.html"
-		]
-	},
-	"html/house/house.html": {
-		"resources": [
-			"fonts/mui.ttf",
-			"fonts/iconfont.ttf",
-			"js/common.js",
-			"js/vue.js",
-			"js/mui.min.js",
-			"css/common.css",
-			"css/mui.min.css",
-			"images/rooms_main.png",
-			"html/house/css/house.css",
-			"js/reconnecting-websocket.js",
-			"images/rooms_ertong.png",
-			"images/rooms_chufang.png",
-			"images/rooms_zoulang.png",
-			"images/rooms_keting.png",
-			"images/rooms_ciwo.png"
-		],
-		"refer": [
-			"html/house/addHouse/addHouse.html",
-			"html/house/deviceList/deviceList.html"
-		]
-	},
-	"html/house/addHouse/addHouse.html": {
-		"resources": [
-			"js/mui.min.js",
-			"fonts/mui.ttf",
-			"css/mui.min.css",
-			"css/common.css",
-			"fonts/iconfont.ttf",
-			"js/vue.js",
-			"js/common.js",
-			"images/rooms_ciwo.png",
-			"images/rooms_main.png",
-			"images/rooms_chufang.png",
-			"images/rooms_ertong.png",
-			"images/rooms_xiyu.png",
-			"images/rooms_zoulang.png",
-			"images/rooms_canting.png",
-			"images/rooms_ekyongyushi.png",
-			"images/rooms_keting.png",
-			"js/zepto-min.js",
-			"js/reconnecting-websocket.js"
-		]
-	},
-	"html/house/deviceList/deviceList.html": {
-		"resources": [
-			"js/common.js",
-			"js/vue.js",
-			"js/mui.min.js",
-			"css/common.css",
-			"fonts/mui.ttf",
-			"css/mui.min.css",
-			"images/rooms_main.png",
-			"html/house/css/house.css",
-			"js/mui.js",
-			"images/droplight.png",
-			"js/reconnecting-websocket.js",
-			"images/spotlight.png",
-			"images/tube.png",
-			"css/mui.css",
-			"images/ceiling.png",
-			"images/curtain-dev.png",
-			"fonts/iconfont.ttf",
-			"images/bedside.png",
-			"images/wall.png",
-			"images/backlight.png",
-			"images/mirror.png"
-		],
-		"refer": [
-			"html/house/addHouse/addDevice/addDevice.html",
-			"html/house/deviceList/study_trigger.html"
-		]
-	},
-	"html/house/addHouse/addDevice/addDevice.html": {
-		"resources": [
-			"images/socket_1.png",
-			"html/house/addHouse/addDevice/js/mui.view.js",
-			"images/lamp_1.png",
-			"html/house/addHouse/addDevice/css/addDevice.css",
-			"html/house/addHouse/addDevice/css/feedback.css",
-			"images/lamp_2.png",
-			"images/droplight.png",
-			"js/common.js",
-			"js/vue.js",
-			"css/common.css",
-			"fonts/mui.ttf",
-			"css/mui.min.css",
-			"js/mui.js",
-			"js/reconnecting-websocket.js",
-			"js/zepto-min.js",
-			"html/house/addHouse/addDevice/js/addDevice.js",
-			"images/curtain.png",
-			"images/socket_2.png",
-			"images/camera.png",
-			"images/infrared.png",
-			"images/air-condition.png",
-			"images/TV.png",
-			"js/mui.picker.js",
-			"css/mui.picker.css",
-			"css/app.css",
-			"js/mui.poppicker.js",
-			"css/mui.poppicker.css"
-		],
-		"refer": [
-			"html/house/addHouse/addDevice/devIcon.html"
-		]
-	},
-	"html/house/addHouse/addDevice/devIcon.html": {
-		"resources": [
-			"images/backlight.png",
-			"images/spotlight.png",
-			"images/ceiling.png",
-			"images/bedside.png",
-			"html/house/addHouse/addDevice/css/devIcon.css",
-			"images/mirror.png",
-			"images/tube.png",
-			"images/wall.png",
-			"fonts/mui.ttf",
-			"images/droplight.png",
-			"js/vue.js",
-			"css/common.css",
-			"js/mui.min.js",
-			"css/mui.min.css"
-		]
-	},
-	"html/house/deviceList/study_trigger.html": {
-		"resources": [
-			"css/mui.css",
-			"js/common.js",
-			"js/vue.js",
-			"js/mui.min.js",
-			"css/common.css",
-			"fonts/mui.ttf",
-			"js/reconnecting-websocket.js",
-			"images/air-condition-close.png",
-			"images/air-condition-open.png",
-			"images/air-condition-pause.png"
-		]
-	},
-	"html/tools/tools.html": {
-		"resources": [
-			"css/mui.min.css",
-			"js/mui.js",
-			"js/vue.js",
-			"js/reconnecting-websocket.js",
-			"js/common.js",
-			"fonts/mui.ttf",
-			"css/common.css",
-			"fonts/iconfont.ttf"
-		],
-		"refer": [
-			"html/tools/systemSetting/setting.html",
-			"html/tools/personal/personal.html"
-		]
-	},
-	"html/tools/systemSetting/setting.html": {
-		"resources": [
-			"html/tools/systemSetting/css/feedback.css",
-			"fonts/mui.ttf",
-			"html/tools/systemSetting/js/mui.view.js",
-			"html/tools/systemSetting/img/logo.png",
-			"html/tools/systemSetting/js/feedback.js",
-			"js/mui.js",
-			"css/mui.css",
-			"html/tools/systemSetting/css/setting.css",
-			"js/common.js",
-			"js/vue.js",
-			"html/tools/systemSetting/js/setting.js",
-			"js/reconnecting-websocket.js"
-		]
-	},
-	"html/tools/personal/personal.html": {
-		"resources": [
-			"html/tools/personal/js/mui.view.js",
-			"html/tools/personal/img/head.png",
-			"fonts/mui.ttf",
-			"js/mui.js",
-			"css/mui.css",
-			"js/vue.js",
-			"js/common.js",
-			"html/tools/personal/js/vue1.js"
-		]
-	},
-	"html/scene/scene.html": {
-		"resources": [
-			"html/scene/css/scene.css",
-			"js/common.js",
-			"js/vue.js",
-			"js/mui.min.js",
-			"fonts/mui.ttf",
-			"css/mui.min.css"
-		],
-		"refer": [
-			"html/scene/setScene.html"
-		]
-	},
-	"html/scene/setScene.html": {
-		"resources": [
-			"js/common.js",
-			"js/vue.js",
-			"js/mui.min.js",
-			"fonts/mui.ttf",
-			"css/mui.min.css"
-		],
-		"refer": [
-			"html/scene/custom.html"
-		]
-	},
-	"html/scene/custom.html": {
-		"resources": [
-			"js/common.js",
-			"js/vue.js",
-			"js/mui.min.js",
-			"fonts/mui.ttf",
-			"css/mui.min.css",
-			"html/tools/personal/js/vue1.js"
-		]
-	}
+  "html/login/login.html": {
+    "resources": [
+      "html/login/images/login.png",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "html/login/images/logo.png",
+      "js/vue.min.js",
+      "js/vue.js",
+      "js/common.js",
+      "js/reconnecting-websocket.js"
+    ],
+    "refer": [
+      "html/register/register.html"
+    ]
+  },
+  "html/locker/locker.html": {
+    "resources": [
+      "images/user.png",
+      "js/mui.min.js",
+      "css/common.css",
+      "css/app.css",
+      "css/mui.min.css",
+      "js/mui.locker.js",
+      "js/vue.js",
+      "js/common.js",
+      "js/reconnecting-websocket.js"
+    ],
+    "refer": [
+      "html/login/login.html",
+      "html/setWIFI/setWIFI.html"
+    ]
+  },
+  "html/home/tab-webview-main.html": {
+    "resources": [
+      "html/home/tab-webview-subpage-about.html",
+      "fonts/mui.ttf",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "html/home/home-furnishing.html",
+      "js/common.js",
+      "html/house/house.html",
+      "html/home/monitoring.html"
+    ],
+    "refer": [
+      "html/home/tab-webview-subpage-about.html",
+      "html/home/tab-webview-subpage-chat.html",
+      "html/home/tab-webview-subpage-contact.html",
+      "html/home/tab-webview-subpage-setting.html",
+      "html/home/home-furnishing.html",
+      "html/home/monitoring.html",
+      "html/home/circumstance.html",
+      "html/home/tool.html",
+      "html/login/login.html",
+      "html/locker/locker.html",
+      "html/setWIFI/setWIFI.html",
+      "html/house/house.html",
+      "html/house/addHouse/addHouse.html",
+      "html/tools/tools.html",
+      "html/tools/systemSetting/setting.html",
+      "html/scene/scene.html"
+    ]
+  },
+  "index.html": {
+    "resources": [
+      "html/home/tab-webview-main.html",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/common.js",
+      "js/reconnecting-websocket.js"
+    ],
+    "refer": [
+      "html/home/tab-webview-main.html",
+      "html/setWIFI/setWIFI.html",
+      "html/login/login.html",
+      "html/locker/locker.html"
+    ]
+  },
+  "html/setWIFI/setWIFI.html": {
+    "resources": [
+      "html/css/child_common.css",
+      "html/setWIFI/images/logo.png",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/vue.js",
+      "js/common.js",
+      "js/zepto-min.js"
+    ],
+    "refer": [
+      "html/locker/locker.html"
+    ]
+  },
+  "html/house/house.html": {
+    "resources": [
+      "fonts/mui.ttf",
+      "fonts/iconfont.ttf",
+      "js/common.js",
+      "js/vue.js",
+      "js/mui.min.js",
+      "css/common.css",
+      "css/mui.min.css",
+      "images/rooms_main.png",
+      "html/house/css/house.css",
+      "js/reconnecting-websocket.js",
+      "images/rooms_ertong.png",
+      "images/rooms_chufang.png",
+      "images/rooms_zoulang.png",
+      "images/rooms_keting.png",
+      "images/rooms_ciwo.png"
+    ],
+    "refer": [
+      "html/house/addHouse/addHouse.html",
+      "html/house/deviceList/deviceList.html"
+    ]
+  },
+  "html/house/addHouse/addHouse.html": {
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "css/common.css",
+      "fonts/iconfont.ttf",
+      "js/vue.js",
+      "js/common.js",
+      "images/rooms_ciwo.png",
+      "images/rooms_main.png",
+      "images/rooms_chufang.png",
+      "images/rooms_ertong.png",
+      "images/rooms_xiyu.png",
+      "images/rooms_zoulang.png",
+      "images/rooms_canting.png",
+      "images/rooms_ekyongyushi.png",
+      "images/rooms_keting.png",
+      "js/zepto-min.js",
+      "js/reconnecting-websocket.js"
+    ],
+    "refer": []
+  },
+  "html/house/deviceList/deviceList.html": {
+    "resources": [
+      "js/common.js",
+      "js/vue.js",
+      "js/mui.min.js",
+      "css/common.css",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "images/rooms_main.png",
+      "html/house/css/house.css",
+      "js/mui.js",
+      "images/droplight.png",
+      "js/reconnecting-websocket.js",
+      "images/spotlight.png",
+      "images/tube.png",
+      "css/mui.css",
+      "images/ceiling.png",
+      "images/curtain-dev.png",
+      "fonts/iconfont.ttf",
+      "images/bedside.png",
+      "images/wall.png",
+      "images/backlight.png",
+      "images/mirror.png"
+    ],
+    "refer": [
+      "html/house/addHouse/addDevice/addDevice.html",
+      "html/house/deviceList/study_trigger.html"
+    ]
+  },
+  "html/house/addHouse/addDevice/addDevice.html": {
+    "resources": [
+      "images/socket_1.png",
+      "html/house/addHouse/addDevice/js/mui.view.js",
+      "images/lamp_1.png",
+      "html/house/addHouse/addDevice/css/addDevice.css",
+      "html/house/addHouse/addDevice/css/feedback.css",
+      "images/lamp_2.png",
+      "images/droplight.png",
+      "js/common.js",
+      "js/vue.js",
+      "css/common.css",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/mui.js",
+      "js/reconnecting-websocket.js",
+      "js/zepto-min.js",
+      "html/house/addHouse/addDevice/js/addDevice.js",
+      "images/curtain.png",
+      "images/socket_2.png",
+      "images/camera.png",
+      "images/infrared.png",
+      "images/air-condition.png",
+      "images/TV.png",
+      "js/mui.picker.js",
+      "css/mui.picker.css",
+      "css/app.css",
+      "js/mui.poppicker.js",
+      "css/mui.poppicker.css"
+    ],
+    "refer": [
+      "html/house/addHouse/addDevice/devIcon.html"
+    ]
+  },
+  "html/house/addHouse/addDevice/devIcon.html": {
+    "resources": [
+      "images/backlight.png",
+      "images/spotlight.png",
+      "images/ceiling.png",
+      "images/bedside.png",
+      "html/house/addHouse/addDevice/css/devIcon.css",
+      "images/mirror.png",
+      "images/tube.png",
+      "images/wall.png",
+      "fonts/mui.ttf",
+      "images/droplight.png",
+      "js/vue.js",
+      "css/common.css",
+      "js/mui.min.js",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "html/house/deviceList/study_trigger.html": {
+    "resources": [
+      "css/mui.css",
+      "js/common.js",
+      "js/vue.js",
+      "js/mui.min.js",
+      "css/common.css",
+      "fonts/mui.ttf",
+      "js/reconnecting-websocket.js",
+      "images/air-condition-close.png",
+      "images/air-condition-open.png",
+      "images/air-condition-pause.png"
+    ],
+    "refer": []
+  },
+  "html/tools/tools.html": {
+    "resources": [
+      "css/mui.min.css",
+      "js/mui.js",
+      "js/vue.js",
+      "js/reconnecting-websocket.js",
+      "js/common.js",
+      "fonts/mui.ttf",
+      "css/common.css",
+      "fonts/iconfont.ttf"
+    ],
+    "refer": [
+      "html/tools/systemSetting/setting.html",
+      "html/tools/personal/personal.html"
+    ]
+  },
+  "html/tools/systemSetting/setting.html": {
+    "resources": [
+      "html/tools/systemSetting/css/feedback.css",
+      "fonts/mui.ttf",
+      "html/tools/systemSetting/js/mui.view.js",
+      "html/tools/systemSetting/img/logo.png",
+      "html/tools/systemSetting/js/feedback.js",
+      "js/mui.js",
+      "css/mui.css",
+      "html/tools/systemSetting/css/setting.css",
+      "js/common.js",
+      "js/vue.js",
+      "html/tools/systemSetting/js/setting.js",
+      "js/reconnecting-websocket.js"
+    ],
+    "refer": []
+  },
+  "html/tools/personal/personal.html": {
+    "resources": [
+      "html/tools/personal/js/mui.view.js",
+      "html/tools/personal/img/head.png",
+      "fonts/mui.ttf",
+      "js/mui.js",
+      "css/mui.css",
+      "js/vue.js",
+      "js/common.js",
+      "html/tools/personal/js/vue1.js"
+    ],
+    "refer": []
+  },
+  "html/scene/scene.html": {
+    "resources": [
+      "html/scene/css/scene.css",
+      "js/common.js",
+      "js/vue.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/vue-1.0.js",
+      "js/zepto-min.js",
+      "js/reconnecting-websocket.js"
+    ],
+    "refer": [
+      "html/scene/setScene.html"
+    ]
+  },
+  "html/scene/setScene.html": {
+    "resources": [
+      "js/common.js",
+      "js/vue.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/reconnecting-websocket.js"
+    ],
+    "refer": [
+      "html/scene/custom.html",
+      "html/scene/setTasks.html"
+    ]
+  },
+  "html/scene/custom.html": {
+    "resources": [
+      "js/common.js",
+      "js/vue.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "html/tools/personal/js/vue1.js",
+      "css/mui.css",
+      "js/zepto-min.js",
+      "js/mui.picker.js",
+      "css/mui.picker.css",
+      "js/mui.dtpicker.js",
+      "css/mui.dtpicker.css"
+    ],
+    "refer": []
+  },
+  "html/scene/setTasks.html": {
+    "resources": [
+      "html/scene/js/feedback.js",
+      "html/scene/css/feedback.css",
+      "html/scene/js/mui.view.js",
+      "html/scene/img/logo.png",
+      "fonts/mui.ttf",
+      "js/mui.js",
+      "css/mui.css",
+      "js/vue.js",
+      "js/vue-1.0.js",
+      "js/common.js"
+    ],
+    "refer": [
+      "html/scene/study_trigger_tasks.html"
+    ]
+  },
+  "html/scene/study_trigger_tasks.html": {
+    "resources": [
+      "js/common.js",
+      "js/mui.js",
+      "js/vue-1.0.js",
+      "css/common.css",
+      "fonts/mui.ttf",
+      "css/mui.css",
+      "images/air-condition-close.png",
+      "images/air-condition-open.png",
+      "images/air-condition-pause.png"
+    ],
+    "refer": []
+  }
 }

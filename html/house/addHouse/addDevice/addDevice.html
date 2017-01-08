@@ -149,7 +149,7 @@
 						<div class="mui-card" style="margin-bottom: 35px;">
 							<ul class="mui-table-view m0">
 								<li class="mui-table-view-cell">
-									<a class="mui-navigate-right" v-text="pathwayName" @tap="airConditionType">
+									<a class="mui-navigate-right" v-text="pathwayName" @tap="curtainType">
 
 									</a>
 								</li>
@@ -248,7 +248,7 @@
 					setTypeVal: function(devType) {
 						/*var domThis = e.currentTarget;
 						this.devType = domThis.getAttribute('data-type');*/
-						alert(devType)
+						//alert(devType)
 						this.devType = devType
 					},
 					selectedClass: function() {
@@ -275,10 +275,10 @@
 						initWebsocket(timestamp, message, _self.devType);
 
 					},
-					airConditionType: function() { //设置空调类型
+					curtainType: function() { //设置空调类型
 						var _self = this;
 						plus.nativeUI.actionSheet({
-							title: "空调轨道选择",
+							title: "窗帘轨道选择",
 							cancel: "取消",
 							buttons: [{
 								title: "单轨窗帘开关"

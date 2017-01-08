@@ -6,57 +6,190 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css" href="css/scene.css"/>
+		<link rel="stylesheet" type="text/css" href="css/scene.css" />
 	</head>
 
-	<body>
+	<body id="sceneApp">
 		<header class="mui-bar mui-bar-nav">
-		    <h1 class="mui-title">情景</h1>
+			<h1 class="mui-title">情景</h1>
+			<a id="info" class="mui-icon mui-icon-plusempty mui-pull-right" @tap="openSetScene" style="color: #999;"></a>
 		</header>
-		<div class="mui-content" id="sceneApp">
-		    <div class="scene-null mui-center">
-		    	<p>场景为空</p>
-		    	<button type="button" @tap="openSetScene" class="mui-btn mui-btn-outlined" style="font-size: 12px;margin-top:15px;">添加场景</button>
-		    </div>
-		</div> 
+		<div class="mui-content" >
+				<ul class="mui-table-view">
+					<template v-for="item in mainScene">
+						<li class="mui-table-view-cell"  @longtap="deleteSTA(item)"> 
+						<span>{{item.DEVICENAME}}</span>
+						<div class="mui-switch mui-switch-mini "  @tap="editSTA($event,item)">
+							<div class="mui-switch-handle"></div>
+						</div>
+					</li>
+					</template>
+					
+				</ul>
+
+			<div class="scene-null mui-center" v-show="!mainScene">
+				<p>场景为空</p>
+				<button type="button" @tap="openSetScene" class="mui-btn mui-btn-outlined" style="font-size: 12px;margin-top:15px;">添加场景</button>
+			</div>
+		</div>
 		<script src="../../js/mui.min.js"></script>
-		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue-1.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/zepto-min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			mui.init();
-			var sceneObj,
-				setScenePage;//添加场景页面
-			mui.plusReady(function(){
-				preLoadHtml();
+			mui.init({
+				gestureConfig: {
+					tap: true, //默认为true
+					doubletap: true, //默认为false
+					longtap: true, //默认为false
+				}
 			});
-			
-			mui.ready(function(){
+			var sceneObj, self, ws,
+				setScenePage; //添加场景页面
+			mui.plusReady(function() {
+				self = plus.webview.currentWebview();
+				preLoadHtml();
+				self.addEventListener("show", function() {
+					//loadTask();
+					loadHouses()
+				}, false);
+			});
+
+			mui.ready(function() {
 				initVue();
+				//loadTask();
+				initWebSocket();
+				loadHouses();
 			})
-			
-			
-			function initVue (){
-				sceneObj =new Vue({
-					el:"#sceneApp",
-					data:{
-						
+
+			function initVue() { 
+				sceneObj = new Vue({
+					el: "#sceneApp", 
+					data: {
+						mainScene: ''
 					},
-					methods:{
-						openSetScene:function(){
+					watch: {
+						mainScene: function() {
+							setTimeout(function() {
+								mui('.mui-content .mui-switch')['switch']();
+							}, 1000);
+
+						}
+					},
+					methods: {
+						openSetScene: function() {
+
 							setScenePage.show();
+						},
+						editSTA: function(e, item) {
+							plus.nativeUI.showWaiting("请稍后...")
+							var sta = "off";
+							account = JSON.parse(localStorage.getItem("account"));
+							if($(e.currentTarget).hasClass("mui-active")) {
+								sta = "on";
+							}
+							var msg = '#{"CMD":"edit","DEV":"trigger","DEVICENAME":"' + item.DEVICENAME + '","ROOMNAME":"' + item.ROOMNAME + '","DEVID":"' + item.BUTTON[0].BUTTONID + '","STA":"' + sta + '","TAG":"edit","USERID":"' + account.currentID + '","TYPE":"' + os + '"}*'
+							ws.send(msg);
+							console.log(msg);
+
+						},
+						deleteSTA:function(item){
+							var _self = this;
+							account = JSON.parse(localStorage.getItem("account"));
+							plus.device.vibrate(100);
+							plus.nativeUI.confirm("确定要删除此情景吗?", function(e) {
+								//console.log((e.index == 0) ? "Yes!" : "No!");
+								if(e.index != 0) return false;
+								var msg = '#{"CMD":"delete","DEV":"trigger","DEVICENAME":"' + item.devName + '","ROOMNAME":"' + item.devRoom + '","DEVID":"' + item.devid + '","TAG":"delete","USERID":"' + account.currentID + '","TYPE":"' + os + '"}*'
+								ws.send(msg);
+								console.log(msg);
+								_self.mainScene.$remove(item);
+							}, "删除", ["确定", "取消"]);
 						}
 					}
 				})
 			}
-			
+
 			/**
 			 * 预加载
 			 */
-			function preLoadHtml (){
+			function preLoadHtml() {
 				setScenePage = mui.preload({
-					url:"setScene.html",
-					id:"setScene"
+					url: "setScene.html",
+					id: "setScene"
 				})
+			}
+
+			function loadTask() {
+				sceneObj.$data.mainScene = JSON.parse(localStorage.getItem("mainScene"));
+				mui('.mui-content .mui-switch')['switch']();
+			}
+			
+			function loadHouses() {
+				//alert("我被执行了")
+				account = JSON.parse(localStorage.getItem("account"));
+				var message = '#{"CMD":"alldevice","USERID":"' + account.currentID + '","TAG":"queryHouse","TYPE":"' + os + '"}*';
+					console.log("情景----msg " + message)
+					ws.send(message);
+
+			}
+
+			function initWebSocket() {
+				ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws");
+				ws.onopen = function(event) {
+					console.log("修改情景")
+				};
+				ws.onmessage = function(event) {
+					var data = dataDispose(event.data)
+					if(data == CENTRT) {
+						console.log("心跳")
+						ws.send(data);
+						return;
+					}
+					switch(data.TAG) {
+						case "edit":
+							plus.nativeUI.closeWaiting();
+							console.log(data)
+
+							if(errorDispose(data)) {
+								mui.toast("修改成功");
+							}
+
+							break;
+						case "delete":
+							
+							plus.nativeUI.closeWaiting();
+							if(errorDispose(data)) {
+								mui.toast("删除成功");
+								
+							}
+							break;
+						case "queryHouse":
+							if(errorDispose(data)) {
+								var rooms = data.ROOMS;
+								console.log(JSON.stringify(rooms))
+								for(item in rooms){
+									if(rooms[item].ROOMNAME == 'contextual-model'){
+										sceneObj.$data.mainScene = rooms[item].DEVICE ;
+										
+									}
+								}
+								console.log(JSON.stringify(sceneObj.$data.mainScene))
+								mui('.mui-content .mui-switch')['switch']();
+							}
+							break;
+						default:
+							break;
+					}
+
+				}
+				ws.onclose = function(event) {
+					console.log("连接关闭");
+				}
+				ws.onerror = function(event) {
+					console.log('websocked error');
+				}
 			}
 		</script>
 	</body>

@@ -17,6 +17,7 @@ function dataDispose (re){
  * @param {Object} data
  */
 function errorDispose (data){
+	plus.nativeUI.closeWaiting();
 	var result  = true;
 	if( parseInt(data.ERRNO)  == -1){// error:0      成功     error:-1失败
 		if(data.ERRORMSG) mui.toast(data.ERRORMSG);

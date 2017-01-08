@@ -10,105 +10,195 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-		    <h1 class="mui-title">添加场景</h1>
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">添加场景</h1>
 		</header>
 		<div id="setScene" class="mui-content">
 			<ul class="mui-table-view">
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						
+						<input type="text" v-model="devName" placeholder="请输入场景名">
+					</div>
+				</form>
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" @tap="setCondition">
+					<a class="mui-navigate-right" @tap="setCondition" style="font-size: 14px;">
 						步骤一: 设置启动条件
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" @tap="setTasks">
+					<a class="mui-navigate-right" @tap="setTasks" style="font-size: 14px;">
 						步骤二: 添加执行任务
 					</a>
 				</li>
-				
+
 			</ul>
-		    
+			
+			<div class="mui-content-padded mui-text-center">
+				
+				<div class="sceneDetail" style="display: none;">
+					<div class="setCondition" v-show="timeobj.type">
+						<p>启动条件为：</p>
+						<p>{{timeobj.type}} {{timeobj.time}}</p>
+					</div>
+					<!--<div class="setTasks">
+						<p>执行任务</p>
+					</div>-->
+				</div>
+				<div class="" v-show="timeobj.type && setEvent">
+					<button @tap="addEvent" class="mui-btn ">添加</button>
+				</div>
+			</div>
+
 		</div>
 		<script src="../../js/mui.min.js"></script>
 		<script src="../../js/vue.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/reconnecting-websocket.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			mui.init();
-			var setSceneObj,customPage,tasksPage;
-			mui.plusReady(function(){
+			var setSceneObj, customPage, tasksPage, ws,self,mainTasks,openr;
+			mui.plusReady(function() {
+				self = plus.webview.currentWebview();
+				opener = self.opener();
+				openr 
+				self.addEventListener("hide",function(){
+					setSceneObj.$data.devName = "";
+					setSceneObj.$data.timeobj.type = "";
+					setSceneObj.$data.timeobj.time = "";
+					setSceneObj.$data.setEvent = "";
+					opener.evalJS("loadHouses()");
+				},false);
 				preLoadHtml();
 			});
-			mui.ready(function(){
+			mui.ready(function() {
 				initVue();
+				initWebSocket();
 			});
-			
-			function initVue (){
+
+			function initVue() {
 				setSceneObj = new Vue({
-					el:"#setScene",
-					data:{},
-					methods:{
-						setCondition:function(){
-							var btnArray = [{title:"只执行一次"},{title:"每天"},{title:"自定义"}];
+					el: "#setScene",
+					data: {
+						devName:"",
+						sceneTime: "",
+						timeobj: {
+							type: "",
+							time: ""
+						},
+						setEvent: "",
+
+					},
+					methods: {
+						setCondition: function() {
+							var btnArray = [{
+								title: "只执行一次"
+							}, {
+								title: "每天"
+							}, {
+								title: "自定义"
+							}];
 							//plus.nativeUI.actionSheet
 							plus.nativeUI.actionSheet({
-								title:"设置启动条件",
-								cancel:"取消",
-								buttons:btnArray
-							},function(e){
+								title: "设置启动条件",
+								cancel: "取消",
+								buttons: btnArray
+							}, function(e) {
 								var index = e.index;
-								switch (index){
+								switch(index) {
 									case 0:
 										console.log('取消')
 										break;
 									case 1:
-										console.log(index)
 										onlyDay();
 										break;
 									case 2:
-										console.log(index)
 										everyday();
 										break;
 									case 3:
-										console.log(index)
-										custom()
+										custom();
 										break;
 									default:
 										break;
 								}
 							})
 						},
-						setTasks:function(){
+						setTasks: function() {
+							mui.fire(tasksPage, "setHouse", {
+								houses: JSON.parse(localStorage.getItem("houses"))
+							})
 							tasksPage.show();
+						},
+						addEvent: function() {
+							account = JSON.parse(localStorage.getItem("account"));
+							var addTasks = JSON.parse(localStorage.getItem("addTasks"));
+							if(!addTasks){
+								mui.toast("请设置任务");
+								return false;
+							}
+							if(!this.sceneTime){
+								mui.toast("请设置时间");
+								return false;
+							}
+							if(!this.devName){
+								mui.toast("请输入名字");
+								return false;
+							} 
+								plus.nativeUI.showWaiting("请等待...");
+							var msg = '#{"CMD":"add","DEV":"event","DEVICENAME":"'+this.devName+'","ROOMNAME":"","EVENT":'+JSON.stringify(this.setEvent)+',"TAG":"addevent","USERID":"'+account.currentID+'","TYPE":"'+os+'","BUTTONNUM":"1","DEVICESORT":"0"}*';
+							console.log(msg) 
+							ws.send(msg);
+							localStorage.removeItem("addTasks");
+							
 						}
 					}
 				})
 			}
 			//只执行一次
-			function onlyDay (){
-				
+			function onlyDay() {
+				/*{“Y”:2016,“MO”:7,“D”:20,“H”:21,”MI”:15} */
 				var dTime = new Date();
 				dTime.setHours(6, 0);
 				plus.nativeUI.pickTime(function(e) {
 					var d = e.date;
-					console.log("您选择的时间是：" + d.getHours() + ":" + d.getMinutes())
+					//console.log("您选择的时间是：" + d.getHours() + ":" + d.getMinutes())
+					setSceneObj.$data.timeobj.time = d.getHours() + ":" + d.getMinutes();
+					setSceneObj.$data.timeobj.type = "执行一次";
+					setSceneObj.$data.sceneTime = {
+						"Y": d.getFullYear(),
+						"MO": (d.getMonth() + 1),
+						"D": d.getDate(),
+						"H": d.getHours(),
+						"MI": d.getMinutes()
+					};
+					console.log(JSON.stringify(setSceneObj.$data.sceneTime))
 				}, function(e) {
-					console.log("您没有选择时间") 
+					//console.log("您没有选择时间") 
+					setSceneObj.$data.sceneTime = null;
 				}, {
 					title: "请选择时间",
 					is24Hour: true,
 					time: dTime
 				});
-			
+
 			};
 			//每天执行
-			function everyday (){
+			function everyday() {
 				var dTime = new Date();
 				dTime.setHours(6, 0);
 				plus.nativeUI.pickTime(function(e) {
 					var d = e.date;
 					console.log("您选择的时间是：" + d.getHours() + ":" + d.getMinutes())
+					setSceneObj.$data.timeobj.time = d.getHours() + ":" + d.getMinutes();
+					setSceneObj.$data.timeobj.type = "每天执行";
+					setSceneObj.$data.sceneTime = {
+						"D": d.getDate(),
+						"H": d.getHours(),
+						"MI": d.getMinutes()
+					};
 				}, function(e) {
-					console.log("您没有选择时间") 
+					//console.log("您没有选择时间") 
+					setSceneObj.$data.sceneTime = null;
 				}, {
 					title: "请选择时间",
 					is24Hour: true,
@@ -116,20 +206,92 @@
 				});
 			};
 			//自定义
-			function custom (){
+			function custom() {
+				setSceneObj.$data.timeobj.type = "自定义时间";
 				customPage.show();
-				}
-			function preLoadHtml (){
+			}
+
+			function preLoadHtml() {
 				customPage = mui.preload({
-					url:"custom.html",
-					id:"custom"
+					url: "custom.html",
+					id: "custom"
 				})
 				tasksPage = mui.preload({
-					url:"setTasks.html",
-					id:"tasks"
+					url: "setTasks.html",
+					id: "tasks"
 				})
 			}
-			
+			document.addEventListener("setEvent",
+				function(e) {
+					if(!e.detail.item) return false;
+					setSceneObj.$data.setEvent = e.detail.item;
+					console.log(JSON.stringify(setSceneObj.$data.setEvent))
+				}, false);
+			document.addEventListener("setSecent",function(e){ 
+				setSceneObj.$data.sceneTime = e.detail.sceneTime;
+				console.log(JSON.stringify(setSceneObj.$data.sceneTime))
+			},false)
+			function initWebSocket() {
+				ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws");
+				ws.onopen = function(event) {
+					console.log("情景")
+				};
+				ws.onmessage = function(event) {
+					var data = dataDispose(event.data)
+					if(data == CENTRT) {
+						console.log("心跳")
+						ws.send(data);
+						return;
+					}
+
+					switch(data.TAG) {
+						case "addevent":
+
+							account = JSON.parse(localStorage.getItem("account"));
+							
+							if(errorDispose(data)) {
+								if(data.TYPE == "HardWare"){
+									mui.toast("添加成功");
+								console.log(JSON.stringify(data))
+								data.DEVICEID = JSON.parse(data.DEVICEID);
+								//mainScene[data.DEVID].
+								
+								var condition = [{
+									DEV:"timer",
+									DEVID:data.DEVICEID[0],
+									value:setSceneObj.$data.sceneTime
+								}]
+								var msg = '#{"CMD":"add","DEV":"trigger","DEVICENAME":"'+setSceneObj.$data.devName+'","ROOMNAME":"contextual-model","STA":"off","IF":'+JSON.stringify(condition)+',"THEN":"","TAG":"addTrigger","USERID":"'+account.currentID+'","TYPE":"'+os+'","BUTTONNUM":"1","DEVICESORT":"0"}*';
+								ws.send(msg);
+								console.log(msg);
+								}
+								
+							} 
+
+							break;
+						case "addTrigger":
+							plus.nativeUI.closeWaiting();
+							if(errorDispose(data)) {
+								if(data.TYPE == "HardWare"){
+								console.log(JSON.stringify(data))
+								/*var mainScene = JSON.parse(localStorage.getItem("mainScene")) || [];
+								mainScene.push(mainTasks);
+								localStorage.setItem("mainScene",JSON.stringify(mainScene));*/
+								}
+							}
+							break;
+						default:
+							break;
+					}
+
+				}
+				ws.onclose = function(event) {
+					console.log("连接关闭");
+				}
+				ws.onerror = function(event) {
+					console.log('websocked error');
+				}
+			}
 		</script>
 	</body>
 

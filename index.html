@@ -62,10 +62,16 @@
 			function initWebsocket() {
 				ws = new ReconnectingWebSocket("ws://123.56.176.67:9010/ws"); //开启长连接
 				ws.onopen = function(e) {
-					console.log("main-----开启");
 					//读取本地存储，检查是否登录 true 登录过    false 没有登录过
 					var account = JSON.parse(localStorage.getItem("account"));
 					var isLogin = localStorage.getItem("isLogin");
+					var addmsg = '#{"CMD":"addroom","USERID":"'+account.currentID+'","TAG":"firstAdd","TYPE":"'+os+'","ROOMNAME":"contextual-model","ROOMPIC":"","ROOMSORT":"0"}*';
+					var firstAdd = JSON.stringify(localStorage.getItem("firstAdd"));
+					if(!firstAdd){
+						ws.send(addmsg);
+					}
+					console.log("main-----开启");
+					
 					if(isLogin) {
 						var message = '#{ "CMD":"login","USERNAME":"' + account.userName + '","PASSWORD":"' + account.passWord + '","TAG":"mainLogin","TYPE":"' + os + '"}*';
 						console.log("main-login " + message)
@@ -101,6 +107,14 @@
 								
 							}
 
+							break;
+						case "firstAdd":
+							'{"ERRNO":"0","ERRORMSG":"增加房间成功","CMD":"back","TAG":"addroom","ROOMNAME":"测试情景房间哈哈哈"}' 
+							if(data.ERRNO == 0 && data.ERRORMSG == '增加房间成功'){
+								localStorage.setItem("firstAdd","true");
+							}else{
+								localStorage.setItem("firstAdd","false");
+							}
 							break;
 						default:
 							break;
